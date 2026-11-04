@@ -1,0 +1,1058 @@
+{
+ "add authentication to an api": {
+  "ids": [
+   "skill:twilio-security-api-auth",
+   "skill:box-content-api",
+   "skill:twilio-verify-send-otp",
+   "agent:security-reviewer",
+   "agent:silent-failure-hunter",
+   "skill:mixpanel-auth",
+   "skill:building-mcp-server-on-cloudflare",
+   "skill:neon-postgres",
+   "skill:security-review",
+   "skill:laravel-security"
+  ],
+  "scores": [
+   12.9779,
+   10.1167,
+   9.1751,
+   7.5181,
+   7.5181,
+   6.8552,
+   6.8552,
+   6.2681,
+   6.2681,
+   6.2681
+  ],
+  "total": 15
+ },
+ "api and integration design": {
+  "ids": [
+   "skill:api-design",
+   "skill:api-connector-builder",
+   "agent:database-reviewer",
+   "skill:mcp-server-patterns",
+   "skill:x-api"
+  ],
+  "scores": [
+   44.9762,
+   28.163,
+   20.1741,
+   18.5699,
+   12.163
+  ],
+  "total": 21
+ },
+ "api-design": {
+  "ids": [
+   "skill:api-design",
+   "skill:api-connector-builder",
+   "agent:database-reviewer",
+   "skill:mcp-server-patterns"
+  ],
+  "scores": [
+   50.9762,
+   25.2796,
+   20.1741,
+   18.5699
+  ],
+  "total": 10
+ },
+ "architecture and design patterns": {
+  "ids": [
+   "skill:architecture-decision-records",
+   "skill:hexagonal-architecture",
+   "skill:design-system",
+   "agent:architecture-critic",
+   "agent:architect",
+   "agent:code-architect",
+   "skill:blueprint",
+   "skill:intent-driven-development",
+   "skill:uml-and-software-architecture-visualization",
+   "skill:django-patterns"
+  ],
+  "scores": [
+   33.9722,
+   33.6463,
+   32.6966,
+   31.4722,
+   29.1649,
+   25.6401,
+   22.25,
+   22.0,
+   14.637,
+   14.2251
+  ],
+  "total": 39
+ },
+ "authentication oauth jwt": {
+  "ids": [],
+  "scores": [],
+  "total": 0
+ },
+ "aws lambda cold start": {
+  "ids": [
+   "skill:catalyst-by-zoho"
+  ],
+  "scores": [
+   13.7045
+  ],
+  "total": 1
+ },
+ "backend api framework": {
+  "ids": [
+   "skill:api-design",
+   "skill:api-connector-builder",
+   "skill:backend-patterns",
+   "skill:mcp-server-patterns",
+   "agent:database-reviewer"
+  ],
+  "scores": [
+   34.2796,
+   25.2796,
+   18.7015,
+   18.5699,
+   17.5
+  ],
+  "total": 20
+ },
+ "build a document from a template": {
+  "ids": [
+   "skill:article-writing",
+   "skill:twilio-content-template-builder",
+   "skill:template",
+   "skill:competitive-report-structure",
+   "agent:cpp-build-resolver",
+   "skill:latex-doctor",
+   "skill:citations"
+  ],
+  "scores": [
+   25.0,
+   20.9955,
+   17.5156,
+   16.0,
+   14.1585,
+   9.2553,
+   8.2553
+  ],
+  "total": 14
+ },
+ "build failed with no error message": {
+  "ids": [
+   "skill:investigation-mode"
+  ],
+  "scores": [
+   8.25
+  ],
+  "total": 1
+ },
+ "caveman mode lazy senior developer": {
+  "ids": [
+   "skill:caveman-mode"
+  ],
+  "scores": [
+   50.0445
+  ],
+  "total": 1
+ },
+ "ci cd pipeline automation": {
+  "ids": [
+   "skill:expo-cicd-workflows",
+   "skill:deployments-cicd",
+   "skill:circleci-config",
+   "agent:deployment-expert",
+   "skill:github-ops",
+   "skill:render-cli",
+   "skill:deployment-patterns"
+  ],
+  "scores": [
+   48.3416,
+   47.3058,
+   36.0954,
+   36.0205,
+   13.1081,
+   13.1081,
+   12.5205
+  ],
+  "total": 10
+ },
+ "code refactoring large codebase": {
+  "ids": [
+   "agent:security-reviewer",
+   "skill:generate-snapshot",
+   "skill:security-scan",
+   "agent:architect",
+   "agent:type-design-analyzer",
+   "agent:security-auditor",
+   "skill:supply-chain",
+   "skill:security-review"
+  ],
+  "scores": [
+   11.5991,
+   10.4169,
+   10.3491,
+   10.3223,
+   9.8178,
+   9.5,
+   8.25,
+   8.25
+  ],
+  "total": 8
+ },
+ "code review and quality": {
+  "ids": [
+   "skill:ponytail-review",
+   "agent:code-reviewer",
+   "skill:code-review",
+   "skill:receiving-code-review",
+   "skill:flutter-dart-code-review",
+   "skill:plankton-code-quality",
+   "skill:requesting-code-review",
+   "skill:document-quality-check",
+   "skill:prediction-market-risk-review",
+   "agent:skill-reviewer"
+  ],
+  "scores": [
+   41.4945,
+   38.3605,
+   28.7919,
+   25.4869,
+   25.4869,
+   21.6167,
+   20.6152,
+   15.9928,
+   14.3954,
+   11.7365
+  ],
+  "total": 48
+ },
+ "code-review": {
+  "ids": [
+   "skill:code-review",
+   "skill:receiving-code-review",
+   "skill:flutter-dart-code-review",
+   "skill:requesting-code-review",
+   "skill:ponytail-review",
+   "agent:code-reviewer",
+   "agent:java-reviewer",
+   "skill:orch-refine-code",
+   "skill:codehealth-mcp",
+   "agent:reviewer"
+  ],
+  "scores": [
+   25.4869,
+   25.4869,
+   25.4869,
+   20.6152,
+   13.1895,
+   13.0554,
+   10.5306,
+   9.07,
+   8.2704,
+   7.758
+  ],
+  "total": 36
+ },
+ "competition math olympiad proof": {
+  "ids": [
+   "skill:math-olympiad"
+  ],
+  "scores": [
+   69.0399
+  ],
+  "total": 1
+ },
+ "core engineering practice standards": {
+  "ids": [],
+  "scores": [],
+  "total": 0
+ },
+ "create a new skill": {
+  "ids": [
+   "skill:skill-creator-plus",
+   "skill:skill-creator",
+   "skill:skill-development",
+   "agent:skill-reviewer",
+   "agent:agent-creator",
+   "skill:writing-skills",
+   "skill:skill-scout",
+   "skill:example-skill"
+  ],
+  "scores": [
+   38.8033,
+   35.8033,
+   35.8033,
+   33.7295,
+   29.1863,
+   28.1564,
+   13.8033,
+   10.6908
+  ],
+  "total": 40
+ },
+ "data database pipeline": {
+  "ids": [
+   "skill:database-migrations",
+   "agent:database-reviewer",
+   "skill:data-visualization",
+   "skill:data-scraper-agent",
+   "skill:recsys-pipeline-architect",
+   "skill:postgres-patterns",
+   "skill:data-throughput-accelerator",
+   "skill:d3-data-visualization",
+   "skill:threejs-data-visualization",
+   "skill:canvas2d-data-visualization"
+  ],
+  "scores": [
+   36.0066,
+   34.2376,
+   34.076,
+   34.076,
+   33.0946,
+   31.1025,
+   31.076,
+   25.076,
+   25.076,
+   25.076
+  ],
+  "total": 28
+ },
+ "data visualization charts": {
+  "ids": [
+   "skill:data-visualization",
+   "skill:d3-data-visualization",
+   "skill:threejs-data-visualization",
+   "skill:canvas2d-data-visualization",
+   "skill:dashboards-and-real-time-visualization",
+   "skill:scrollytelling-and-parallax-data-visualization",
+   "skill:grammar-of-graphics-and-declarative-visualization",
+   "skill:statistical-and-uncertainty-visualization",
+   "skill:typescript-data-visualization-engineering",
+   "skill:react-and-nextjs-data-visualization"
+  ],
+  "scores": [
+   56.4575,
+   52.2377,
+   47.4575,
+   47.4575,
+   37.1617,
+   36.2377,
+   35.3353,
+   33.0663,
+   31.4575,
+   27.3622
+  ],
+  "total": 12
+ },
+ "database query optimization": {
+  "ids": [
+   "agent:database-reviewer",
+   "skill:postgres-patterns",
+   "skill:database-migrations",
+   "skill:clickhouse-io",
+   "skill:jpa-patterns",
+   "skill:prisma-patterns",
+   "skill:mysql-patterns",
+   "skill:redis-patterns",
+   "skill:neon-postgres-egress-optimizer"
+  ],
+  "scores": [
+   38.5411,
+   36.5406,
+   30.3341,
+   27.5406,
+   23.9571,
+   23.9571,
+   20.4089,
+   16.25,
+   11.5406
+  ],
+  "total": 17
+ },
+ "debug a failing test": {
+  "ids": [
+   "skill:debug-failing-test"
+  ],
+  "scores": [
+   62.5773
+  ],
+  "total": 3
+ },
+ "debugging production incident": {
+  "ids": [
+   "skill:deployment-patterns",
+   "agent:deployment-expert",
+   "skill:deployments-cicd",
+   "skill:finishing-a-development-branch",
+   "skill:vercel-agent"
+  ],
+  "scores": [
+   28.253,
+   20.753,
+   16.25,
+   16.25,
+   10.3664
+  ],
+  "total": 5
+ },
+ "devops and cloud deployment": {
+  "ids": [],
+  "scores": [],
+  "total": 0
+ },
+ "docker container deployment": {
+  "ids": [
+   "skill:render-docker",
+   "skill:docker-patterns"
+  ],
+  "scores": [
+   26.4232,
+   26.4232
+  ],
+  "total": 2
+ },
+ "document-builder": {
+  "ids": [
+   "skill:article-writing",
+   "skill:competitive-report-structure",
+   "skill:dashboard-builder",
+   "skill:frontend-app-builder",
+   "skill:api-connector-builder",
+   "skill:team-builder",
+   "skill:twilio-content-template-builder",
+   "skill:sharepoint-spreadsheet-formula-builder"
+  ],
+  "scores": [
+   25.0,
+   16.0,
+   13.9903,
+   13.9903,
+   13.9903,
+   13.9903,
+   13.9903,
+   13.9903
+  ],
+  "total": 11
+ },
+ "explore the codebase agent": {
+  "ids": [
+   "skill:agent-development",
+   "agent:agent-creator",
+   "agent:agent-evaluator",
+   "skill:hook-development",
+   "skill:command-development",
+   "agent:code-explorer",
+   "skill:security-scan",
+   "agent:security-auditor",
+   "agent:security-reviewer"
+  ],
+  "scores": [
+   34.7694,
+   26.2694,
+   26.2694,
+   16.0,
+   16.0,
+   14.8991,
+   10.6923,
+   9.5,
+   9.5
+  ],
+  "total": 11
+ },
+ "fix a failing build": {
+  "ids": [
+   "agent:react-build-resolver",
+   "agent:java-build-resolver",
+   "agent:build-error-resolver",
+   "skill:build-run-debug",
+   "skill:error-handling",
+   "skill:systematic-debugging",
+   "skill:debug-failing-test",
+   "skill:gh-fix-ci",
+   "skill:orch-fix-defect",
+   "skill:circleci-builds"
+  ],
+  "scores": [
+   35.3632,
+   31.7796,
+   31.7796,
+   31.2796,
+   25.25,
+   22.25,
+   20.263,
+   19.3998,
+   19.3998,
+   14.449
+  ],
+  "total": 13
+ },
+ "fix my latex document errors": {
+  "ids": [
+   "skill:latex-doctor",
+   "skill:article-writing",
+   "skill:competitive-report-structure"
+  ],
+  "scores": [
+   41.997,
+   25.0,
+   16.0
+  ],
+  "total": 5
+ },
+ "frontend ui accessibility": {
+  "ids": [
+   "skill:frontend-a11y",
+   "skill:accessibility",
+   "skill:accessibility-and-inclusive-visualization",
+   "agent:a11y-architect",
+   "skill:impeccable"
+  ],
+  "scores": [
+   27.5788,
+   24.3815,
+   24.3815,
+   16.3982,
+   11.1251
+  ],
+  "total": 5
+ },
+ "git version control workflow": {
+  "ids": [
+   "skill:workflow",
+   "skill:token-budget-advisor"
+  ],
+  "scores": [
+   20.3642,
+   9.4059
+  ],
+  "total": 2
+ },
+ "grpc streaming backpressure": {
+  "ids": [],
+  "scores": [],
+  "total": 0
+ },
+ "how to bake sourdough bread at home": {
+  "ids": [],
+  "scores": [],
+  "total": 0
+ },
+ "humanize this text make it sound less robotic": {
+  "ids": [
+   "skill:humanizer"
+  ],
+  "scores": [
+   63.4996
+  ],
+  "total": 1
+ },
+ "improve accessibility wcag": {
+  "ids": [
+   "skill:accessibility",
+   "skill:accessibility-and-inclusive-visualization",
+   "agent:a11y-architect",
+   "skill:frontend-a11y"
+  ],
+  "scores": [
+   47.5417,
+   38.3815,
+   33.7555,
+   26.3454
+  ],
+  "total": 5
+ },
+ "improve performance of a slow query": {
+  "ids": [
+   "skill:react-performance",
+   "agent:performance-optimizer",
+   "skill:swiftui-performance-audit",
+   "skill:android-performance",
+   "skill:web-perf"
+  ],
+  "scores": [
+   37.628,
+   34.375,
+   33.875,
+   28.628,
+   19.157
+  ],
+  "total": 6
+ },
+ "it crashes when i open it": {
+  "ids": [
+   "agent:pytorch-build-resolver",
+   "skill:test-triage"
+  ],
+  "scores": [
+   7.6602,
+   6.4102
+  ],
+  "total": 2
+ },
+ "it hangs on startup": {
+  "ids": [],
+  "scores": [],
+  "total": 0
+ },
+ "kafka consumer group rebalancing": {
+  "ids": [],
+  "scores": [],
+  "total": 0
+ },
+ "kubernetes cluster operations": {
+  "ids": [
+   "skill:kubernetes-patterns",
+   "skill:physical-ai-infrastructure-setup-and-resilient-scaling",
+   "agent:architect",
+   "skill:deployments-cicd"
+  ],
+  "scores": [
+   32.6406,
+   10.539,
+   9.5,
+   8.25
+  ],
+  "total": 4
+ },
+ "machine learning model training": {
+  "ids": [
+   "agent:mle-reviewer",
+   "skill:mle-workflow",
+   "skill:ml-adoption-playbook",
+   "skill:pytorch-patterns",
+   "skill:huggingface-llm-trainer",
+   "skill:transformers-js"
+  ],
+  "scores": [
+   18.9364,
+   17.4364,
+   12.6562,
+   12.5237,
+   12.5237,
+   9.3775
+  ],
+  "total": 6
+ },
+ "math-olympiad": {
+  "ids": [
+   "skill:math-olympiad"
+  ],
+  "scores": [
+   56.4319
+  ],
+  "total": 1
+ },
+ "mcp-server-patterns": {
+  "ids": [
+   "skill:mcp-server-patterns",
+   "skill:build-mcp-server",
+   "skill:building-mcp-server-on-cloudflare"
+  ],
+  "scores": [
+   65.067,
+   52.8998,
+   52.8998
+  ],
+  "total": 24
+ },
+ "migrate to a new framework": {
+  "ids": [
+   "skill:render-migrate-from-heroku",
+   "agent:uplift-migrator",
+   "skill:prisma-cli",
+   "skill:prisma-patterns",
+   "skill:render-cron-jobs",
+   "skill:database-migrations",
+   "skill:use-dom",
+   "skill:google-workspace-ops",
+   "skill:shopify-onboarding-merchant"
+  ],
+  "scores": [
+   18.6538,
+   6.1634,
+   4.9134,
+   4.9134,
+   4.9134,
+   4.9134,
+   4.6634,
+   4.6634,
+   4.6634
+  ],
+  "total": 9
+ },
+ "my changes were not saved": {
+  "ids": [
+   "skill:moody-s-rating-analysis"
+  ],
+  "scores": [
+   6.8522
+  ],
+  "total": 1
+ },
+ "nothing showing on screen": {
+  "ids": [
+   "skill:agent-browser-verify"
+  ],
+  "scores": [
+   8.0
+  ],
+  "total": 1
+ },
+ "numpy vectorized computation": {
+  "ids": [],
+  "scores": [],
+  "total": 0
+ },
+ "postgres index bloat vacuum": {
+  "ids": [],
+  "scores": [],
+  "total": 0
+ },
+ "prompt-optimizer": {
+  "ids": [
+   "skill:prompt-optimizer",
+   "agent:harness-optimizer"
+  ],
+  "scores": [
+   45.8328,
+   23.6973
+  ],
+  "total": 8
+ },
+ "python testing patterns pytest": {
+  "ids": [
+   "skill:python-testing"
+  ],
+  "scores": [
+   39.7558
+  ],
+  "total": 2
+ },
+ "quantum chromodynamics lattice simulation": {
+  "ids": [],
+  "scores": [],
+  "total": 0
+ },
+ "react component patterns": {
+  "ids": [
+   "skill:react-patterns",
+   "skill:zoom-meeting-sdk-web-component-view",
+   "agent:react-reviewer",
+   "agent:react-build-resolver",
+   "skill:react-testing",
+   "skill:react-and-nextjs-data-visualization",
+   "skill:react-performance",
+   "skill:react-best-practices",
+   "skill:swiftui-ui-patterns",
+   "skill:vue-patterns"
+  ],
+  "scores": [
+   25.856,
+   20.488,
+   17.7957,
+   17.7957,
+   17.2957,
+   15.6961,
+   15.6961,
+   15.6961,
+   12.3,
+   12.3
+  ],
+  "total": 19
+ },
+ "redis cache invalidation strategy": {
+  "ids": [],
+  "scores": [],
+  "total": 0
+ },
+ "refactor legacy code": {
+  "ids": [],
+  "scores": [],
+  "total": 0
+ },
+ "research partner literature review": {
+  "ids": [
+   "skill:research-partner",
+   "skill:literature-review"
+  ],
+  "scores": [
+   42.7928,
+   38.9668
+  ],
+  "total": 2
+ },
+ "rest graphql api endpoint": {
+  "ids": [
+   "skill:api-design",
+   "skill:api-connector-builder",
+   "skill:mcp-server-patterns",
+   "agent:database-reviewer"
+  ],
+  "scores": [
+   38.6585,
+   25.2796,
+   18.5699,
+   17.5
+  ],
+  "total": 4
+ },
+ "review code i did not write": {
+  "ids": [
+   "skill:code-review",
+   "agent:code-reviewer",
+   "agent:code-explorer",
+   "agent:code-architect",
+   "skill:codebase-onboarding",
+   "skill:coding-standards",
+   "skill:api-design",
+   "skill:python-patterns",
+   "agent:planner",
+   "skill:receiving-code-review"
+  ],
+  "scores": [
+   44.4869,
+   35.0554,
+   28.7974,
+   28.7974,
+   27.4978,
+   27.1217,
+   25.25,
+   24.0991,
+   23.5,
+   22.1478
+  ],
+  "total": 17
+ },
+ "security review vulnerability": {
+  "ids": [
+   "skill:security-review",
+   "agent:security-reviewer"
+  ],
+  "scores": [
+   26.5981,
+   23.7914
+  ],
+  "total": 2
+ },
+ "security-review": {
+  "ids": [
+   "skill:security-review",
+   "agent:security-reviewer",
+   "skill:code-review",
+   "skill:flutter-dart-code-review",
+   "agent:java-reviewer",
+   "agent:php-reviewer",
+   "agent:vue-reviewer",
+   "agent:code-reviewer",
+   "agent:react-reviewer",
+   "agent:csharp-reviewer"
+  ],
+  "scores": [
+   26.5981,
+   16.9392,
+   14.1604,
+   14.1604,
+   11.5015,
+   8.729,
+   8.729,
+   8.729,
+   8.729,
+   8.729
+  ],
+  "total": 20
+ },
+ "set up continuous integration": {
+  "ids": [
+   "skill:continuous-learning",
+   "skill:continuous-agent-loop",
+   "skill:continuous-learning-v2",
+   "skill:autonomous-agent-harness"
+  ],
+  "scores": [
+   21.8765,
+   21.8765,
+   16.4073,
+   5.4691
+  ],
+  "total": 4
+ },
+ "ship a release": {
+  "ids": [],
+  "scores": [],
+  "total": 0
+ },
+ "silent failure hunter agent": {
+  "ids": [
+   "agent:silent-failure-hunter",
+   "skill:agent-development",
+   "agent:agent-creator",
+   "agent:agent-evaluator"
+  ],
+  "scores": [
+   84.4866,
+   34.7694,
+   26.2694,
+   26.2694
+  ],
+  "total": 6
+ },
+ "tdd-workflow": {
+  "ids": [
+   "skill:tdd-workflow",
+   "skill:workflow",
+   "skill:django-tdd",
+   "agent:tdd-guide",
+   "skill:laravel-tdd",
+   "skill:quarkus-tdd",
+   "skill:springboot-tdd"
+  ],
+  "scores": [
+   28.4098,
+   20.3642,
+   17.5156,
+   13.6367,
+   13.1367,
+   13.1367,
+   13.1367
+  ],
+  "total": 13
+ },
+ "terraform module state locking": {
+  "ids": [],
+  "scores": [],
+  "total": 0
+ },
+ "testing and qa automation": {
+  "ids": [
+   "skill:browser-qa",
+   "skill:game-playtest"
+  ],
+  "scores": [
+   20.4512,
+   8.4147
+  ],
+  "total": 2
+ },
+ "the deploy never finishes": {
+  "ids": [
+   "skill:investigation-mode"
+  ],
+  "scores": [
+   12.0786
+  ],
+  "total": 1
+ },
+ "the page is stuck": {
+  "ids": [
+   "skill:investigation-mode",
+   "skill:agent-browser-verify",
+   "skill:render-scaling",
+   "skill:temporal-developer"
+  ],
+  "scores": [
+   14.0057,
+   11.9797,
+   6.0057,
+   5.7557
+  ],
+  "total": 4
+ },
+ "the screen is blank": {
+  "ids": [
+   "skill:agent-browser-verify"
+  ],
+  "scores": [
+   8.0
+  ],
+  "total": 1
+ },
+ "typescript type safety": {
+  "ids": [
+   "agent:typescript-reviewer",
+   "skill:typescript-data-visualization-engineering",
+   "agent:reviewer",
+   "agent:fsharp-reviewer",
+   "agent:maintainer",
+   "agent:build-error-resolver",
+   "agent:agent-sdk-verifier-ts",
+   "skill:error-handling",
+   "skill:nestjs-patterns",
+   "skill:prisma-patterns"
+  ],
+  "scores": [
+   28.6588,
+   24.1791,
+   8.8687,
+   8.8687,
+   8.8157,
+   8.8157,
+   8.8157,
+   7.5657,
+   7.5657,
+   7.5657
+  ],
+  "total": 21
+ },
+ "useEffect react hook dependency array": {
+  "ids": [],
+  "scores": [],
+  "total": 0
+ },
+ "webpack code splitting lazy load": {
+  "ids": [],
+  "scores": [],
+  "total": 0
+ },
+ "websocket reconnection backoff": {
+  "ids": [],
+  "scores": [],
+  "total": 0
+ },
+ "write a new feature": {
+  "ids": [
+   "agent:planner",
+   "agent:code-architect",
+   "skill:api-design",
+   "skill:plan-orchestrate",
+   "skill:coding-standards",
+   "skill:react-patterns",
+   "skill:python-patterns",
+   "skill:backend-patterns",
+   "skill:orch-add-feature",
+   "skill:orch-change-feature"
+  ],
+  "scores": [
+   27.3286,
+   27.3286,
+   25.25,
+   25.0,
+   22.25,
+   22.0,
+   22.0,
+   22.0,
+   18.4271,
+   18.4271
+  ],
+  "total": 20
+ },
+ "writing technical documentation": {
+  "ids": [
+   "skill:documentation-lookup",
+   "agent:docs-lookup",
+   "agent:comment-analyzer",
+   "skill:search-company-knowledge"
+  ],
+  "scores": [
+   20.4766,
+   13.6589,
+   10.218,
+   8.718
+  ],
+  "total": 4
+ },
+ "zzzzqqqq nonexistent gibberish token": {
+  "ids": [],
+  "scores": [],
+  "total": 0
+ }
+}

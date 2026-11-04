@@ -1,0 +1,633 @@
+#!/usr/bin/env python3
+"""Pure lexical search over the library index.
+
+No embeddings, on purpose:
+
+  * the server must start offline, per session, with no model download
+  * a lexical scorer can be implemented independently in Python and
+    TypeScript and be **required to agree exactly** -- an embedding
+    scorer cannot be re-implemented by hand, and model drift would
+    silently change results
+  * the corpus carries its own supervision: `metadata.promptSignals`
+    holds 18 skills' worth of hand-curated activation phrases, and an
+    exact hit on one of them beats any fuzzy similarity
+
+Scoring
+-------
+    idf(t)       = ln(1 + N / df(t))            N = number of entries
+    name_exact   = 3.0 * idf(t)   t is a name token
+    name_partial = 1.5 * idf(t)   t is a prefix/substring of a name token
+    desc_match   = 1.0 * idf(t)   t is a description token
+    phrase       = 6.0            a query bigram matches a name bigram
+    signal       = 8.0 * idf(t)   t is in metadata.promptSignals.phrases
+    task_match   = 25.0           the query matches a row of the task index
+    task_content = 8.0            the query has the row's content, verb dropped
+    task_head    = 16.0           the row's content is the query's HEAD noun
+    tier_bias    = +1.0 / +0.25 / 0.0
+    agent_bias   = +0.5
+
+The tier bias is multiplied by `(1 - name_exact_hit)`: tiering must never
+override a direct name match, it only breaks ties among weak,
+description-only matches. The maximum tier bias (1.0) is well below a
+single idf contribution (~3.0-6.0), so it cannot reorder a strong match.
+
+Two rules filter the scored entries:
+
+  token coverage -- an entry must match two thirds of the query's
+                    *distinctive* tokens, and at least two of them
+                    when the query has two or more. A distinctive
+                    token is one that appears in fewer than 1.8% of
+                    the corpus; a common word like "write" carries no
+                    information about which entry the query wants.
+
+  task rows      -- a hand-written row of the task index fires when
+                    the query has 60% of the row's tokens (the strict
+                    match, full bonus) or all of the row's *content*
+                    -- the row's tokens with its leading verb dropped
+                    (the content match, smaller bonus). "write a REST
+                    API" is the "Build an API" row.
+
+                    A content match whose token is the query's HEAD
+                    noun -- the thing the query is *about*, not the
+                    context it mentions -- earns more than a plain
+                    content match. "write a REST API" is about an API,
+                    so the "Build an API" row fires; "add
+                    authentication to an api" is about
+                    authentication, so the row does not fire and the
+                    authentication skill keeps the top slot.
+
+Results are limited three ways, so a query never returns 976 rows:
+
+  1. score threshold -- only `score > 0`; a pure-stopword query returns 0
+  2. hard cap -- `limit`, default 10, max 50
+  3. relevance floor -- drop hits below `0.25 * topScore`
+
+Tie-break order is fixed, because the TypeScript server must produce the
+identical ordering: score desc, tier asc, skill before agent, shorter name
+first, then lexicographic name.
+"""
+import math
+import os
+import re
+import sys
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+BASE = os.path.dirname(os.path.dirname(HERE))
+sys.path.insert(0, os.path.join(BASE, 'mcp', 'build'))
+
+from build_index import tokenize, bigrams, head_tokens, STOPWORDS   # noqa: E402
+
+
+DEFAULT_LIMIT = 10
+MAX_LIMIT = 50
+RELEVANCE_FLOOR = 0.25
+
+WEIGHT_NAME_EXACT = 3.0
+WEIGHT_NAME_PARTIAL = 1.5
+WEIGHT_DESC = 1.0
+WEIGHT_PHRASE = 6.0
+WEIGHT_SIGNAL = 8.0
+WEIGHT_TASK = 25.0
+# A task row can fire two ways, and they are not equally strong.
+#
+# The strict match -- 60% of the row's own tokens are in the query --
+# means the query used the row's words, and earns the full bonus.
+#
+# The content match -- the row's content is present, verb dropped --
+# only means the query named the object. "add authentication to an api"
+# contains "api", which fires the "Build an API" row; at the full
+# bonus that pushed `twilio-security-api-auth` -- the skill that is
+# actually about authentication -- down to fifth. A smaller bonus
+# keeps the row's skills in the running without outranking the more
+# specific match.
+WEIGHT_TASK_CONTENT = 8.0
+# A HEAD match -- the row's content token is the query's head noun --
+# is stronger evidence than a mere content match, because position
+# says what the query is *about*.
+#
+# "write a REST API" is about an API, so the "Build an API" row fires.
+# "add authentication to an api" is about authentication, and "api" is
+# only the thing being added to, so the row does not fire and the
+# authentication skill keeps the top slot.
+WEIGHT_TASK_HEAD = 16.0
+# On a HEAD match, the row's FIRST entry earns the row's full bonus
+# (`WEIGHT_TASK`), and the alternatives earn the head bonus. The row
+# already says which entry it recommends -- `api-design` is listed
+# first for "Build an API" -- so this applies the table's own curation
+# instead of a new constant.
+#
+# Why the split matters. The comparison that decides "write a REST
+# API" reduces, in closed form, to
+#
+#     diff = HEAD - PHRASE - 3*idf(rest) + idf(api)
+#
+# and the idf part is corpus-dependent: `df(rest)` was 20 in one tree
+# and 12 in the other, so idf(rest) moved from 4.006 to 4.376 while
+# the fixed bonuses stayed put. With one bonus for every member of the
+# row the margin was +0.199 locally and -0.810 in the smaller tree --
+# the same query, two answers. With the split the margin is +9.2 and
+# +8.2, because the curated signal now outweighs the drift in the
+# automatic evidence instead of merely competing with it.
+WEIGHT_TASK_HEAD_FIRST = WEIGHT_TASK
+# A task row's *first* entry is its documented first choice; the rest
+# are alternatives. The row's note says so in prose -- "`api-design`
+# covers resource naming, ...", "Use the build resolver for the
+# language" -- but the scorer cannot read prose, so the order was lost
+# and the row's members were ranked only by whatever their names
+# happened to score.
+#
+# A strict match therefore demotes the row's later members by this
+# amount. Demoting rather than promoting matters: the relevance floor
+# is a fraction of the *top* score, so raising the ceiling can evict a
+# weaker but relevant entry from the bottom of the list. Measured over
+# the labelled query set, demoting 3.0 lifts rank-1 and rank-3 counts
+# while evicting nothing; the content branch is left alone, because a
+# content match says the query named the row's object, not that it
+# asked for that specific task.
+TASK_DEMOTE = 3.0
+TIER_BIAS = {1: 1.0, 2: 0.25, 3: 0.0}
+AGENT_BIAS = 0.5
+
+# A token is "generic" when it appears in more than this fraction of the
+# corpus. Generic tokens are excluded from the token-coverage
+# requirement: the requirement exists to stop a single common word from
+# matching everything, but it must require the *discriminating* tokens.
+#
+# "write documentation" is the case that forced this. The rule demanded
+# two of the query's two tokens, so `documentation-lookup` and
+# `notion-research-documentation` -- whose names contain
+# "documentation" -- were dropped for not also containing "write", and
+# the only survivor was `mixpanelyst`, which mentions both words in its
+# description and nothing else.
+#
+# 1.8% of 1078 entries is 19 documents. A token in 20 or more is
+# common enough that requiring it is a filter on luck rather than on
+# relevance. The ratio was chosen by measuring, over a labelled query
+# set, how many entries each threshold let through and where the
+# wanted skill ended up -- see `mcp/scripts/eval_unified.py`.
+GENERIC_TOKEN_DF_RATIO = 0.018
+
+
+def _phrase_tokens_match(phrase, q_tokens):
+    """Do all of the phrase's content words appear in the query?
+
+    The phrase is tokenized with the same tokenizer as the query, so the
+    function words inside a phrase ("the page is stuck") drop out and only
+    the content words have to be present. The order does not matter:
+    "stuck page" and "page stuck" are the same symptom.
+
+    This is deliberately stricter than the substring test. `vercel-cli`
+    lists "build failed" among its symptoms, and a query of "fix a
+    failing build" contains neither the phrase nor the word "failed" --
+    so `vercel-cli` earns no credit for a build failure it cannot fix.
+    """
+    p_toks = tokenize(phrase)
+    if not p_toks:
+        return False
+    q_set = set(q_tokens)
+    return all(t in q_set for t in p_toks)
+
+
+class SearchIndex:
+    """The inverted index over the library, built once at startup."""
+
+    def __init__(self, data):
+        self.data = data
+        self.entries = list(data['skills']) + list(data['agents'])
+        self.n = len(self.entries)
+        self.by_id = {e['id']: e for e in self.entries}
+
+        # idf over the whole corpus (skills + agents)
+        self.df = {}
+        for e in self.entries:
+            toks = set(e['tokens']['name']) | set(e['tokens']['desc'])
+            for t in toks:
+                self.df[t] = self.df.get(t, 0) + 1
+
+        # curated activation phrases, by entry id
+        #
+        # These are matched as PHRASES, not as loose tokens. The phrases are
+        # user-facing symptom descriptions ("the page is stuck", "build
+        # failed", "nothing showing"), not skill names. Matching their
+        # individual words gave unrelated skills credit for a query --
+        # `vercel-cli` lists "build failed" among its symptoms, so it scored
+        # highly for "fix a failing build" while having nothing to do with
+        # it. A phrase has to appear in the query as a phrase to count.
+        self.signals = {}
+        for e in self.entries:
+            ps = e['frontmatter'].get('prompt_signals') or {}
+            phrases = [p.lower().strip() for p in (ps.get('phrases') or [])
+                       if p and p.strip()]
+            if phrases:
+                self.signals[e['id']] = phrases
+
+        # task rows, for the task-shaped query path
+        self.tasks = data.get('tasks') or []
+
+        # the task index names skills and agents; map name -> task rows
+        self.skill_tasks = {}
+        self.agent_tasks = {}
+        # ...and, per entry, the position it holds in each row. The
+        # table lists its *primary* entry first -- `api-design` for
+        # "Build an API", `error-handling` for "Fix a failing build" --
+        # and the row's note says which one that is. The position is
+        # that curation, made machine-readable.
+        #
+        # The two columns are numbered independently, so an agent at
+        # agent-position 0 is NOT the row's first choice: the row's
+        # primary entry is its first *skill*. An agent in the agents
+        # column is an additional specialist the note points at --
+        # "`database-reviewer` is PostgreSQL-specific: query
+        # optimisation, schema design, security." -- and 51 of the 73
+        # rows list one. So the agent positions start after the skill
+        # positions, and only the first skill holds position 0.
+        self.task_positions = {}
+        for t in self.tasks:
+            skills = t.get('skills') or []
+            agents = t.get('agents') or []
+            for pos, s in enumerate(skills):
+                self.skill_tasks.setdefault(s, []).append(t['task'])
+                self.task_positions[(s, t['task'])] = pos
+            for pos, a in enumerate(agents):
+                self.agent_tasks.setdefault(a, []).append(t['task'])
+                self.task_positions[(a, t['task'])] = len(skills) + pos
+
+        # each row's content-token sets, by row text. The builder
+        # computes them, so both servers match a row the same way.
+        self.task_content = {}
+        for t in self.tasks:
+            self.task_content[t['task']] = [list(c) for c in (t.get('content') or [])]
+
+    def idf(self, t):
+        return math.log(1.0 + self.n / float(self.df.get(t, 0) or 1))
+
+    def is_generic(self, t):
+        """Is this token too common to discriminate?
+
+        A token that appears in more than `GENERIC_TOKEN_DF_RATIO` of the
+        corpus carries almost no information about which entry a query
+        wants. "write" appears in 37 of 1078 entries; requiring an entry
+        to contain it is a filter on luck, not on relevance.
+        """
+        df = self.df.get(t, 0)
+        return df > self.n * GENERIC_TOKEN_DF_RATIO
+
+    def _task_content_matches(self, task, q_tokens, heads=None, e=None):
+        """Does the query contain the task row's *content*?
+
+        The row's content is the row's tokens with its leading verb
+        dropped -- "Build an API" -> ["api"]. The row may list several
+        alternatives ("Write a document / report / deck"), and the row
+        fires when the query contains one of them.
+
+        The sets are computed by the index builder and stored in the
+        index, so both servers match a row the same way.
+
+        A single content token fires the row when it is *distinctive*
+        -- a word like "api" appears in too many entries to identify a
+        task on its own -- OR when it is the query's HEAD noun. "write
+        a REST API" is about an API, so the "Build an API" row fires
+        even though "api" is common. Two or more content tokens have
+        to be *all* present. That is what keeps "write tests" from
+        reaching "Fix flaky / failing tests": that row's alternatives
+        are ["flaky"] and ["failing", "tests"], and the second needs
+        both words.
+
+        Returns the bonus to award -- 0 for no match, `WEIGHT_TASK_HEAD`
+        for a head match, `WEIGHT_TASK_CONTENT` otherwise.
+
+        `e` is the entry being scored. It is needed because a HEAD
+        match splits the bonus by the row's curation: the row's first
+        choice earns the row's full bonus, and the alternatives earn
+        the head bonus.
+        """
+        q_set = set(q_tokens)
+        if heads is None:
+            heads = set()
+        best = 0.0
+        for content in self.task_content.get(task, ()):
+            if not content:
+                continue
+            if len(content) == 1:
+                tok = content[0]
+                if tok not in q_set:
+                    continue
+                if not self.is_generic(tok):
+                    best = max(best, WEIGHT_TASK_CONTENT)
+                elif tok in heads:
+                    best = max(best, self._head_bonus(e, task))
+                continue
+            if all(t in q_set for t in content):
+                best = max(best, WEIGHT_TASK_CONTENT)
+        return best
+
+    def _head_bonus(self, e, task):
+        """The head bonus, with the row's curation applied.
+
+        The row lists its *primary* entry first and its note says so
+        in prose -- "`api-design` covers resource naming, status codes,
+        pagination, versioning, rate limits." -- but the scorer cannot
+        read prose. So the first choice earns the row's full bonus on a
+        head match, and the alternatives earn the smaller head bonus.
+
+        Without this split the curated signal merely competed with the
+        automatic evidence, and the competition was decided by the
+        corpus: the same query ranked differently in two trees that
+        hold the same skills. See `WEIGHT_TASK_HEAD_FIRST`.
+        """
+        if e is None:
+            return WEIGHT_TASK_HEAD
+        pos = self.task_positions.get((e['name'], task))
+        if pos is None or pos == 0:
+            return WEIGHT_TASK_HEAD_FIRST
+        return WEIGHT_TASK_HEAD
+
+    def coverage_tokens(self, q_tokens):
+        """The query tokens that the coverage rule counts.
+
+        Generic tokens are dropped, and duplicates are collapsed. If
+        nothing is left -- a query made entirely of common words -- the
+        full token list is used, so the rule still applies to it.
+        """
+        specific = []
+        seen = set()
+        for t in q_tokens:
+            if t in seen:
+                continue
+            seen.add(t)
+            if not self.is_generic(t):
+                specific.append(t)
+        return specific if specific else list(dict.fromkeys(q_tokens))
+
+    def __getitem__(self, key):
+        """The raw index data, so a caller can reach `skills`, `tasks`,
+        `domains` and the rest without a second loader."""
+        return self.data[key]
+
+    def get(self, key, default=None):
+        """Dict-style read of the raw index data.
+
+        The server treats the index both as a searchable object and as the
+        plain document it was built from; this keeps the two views the
+        same object rather than two copies that can drift.
+        """
+        return self.data.get(key, default)
+
+    def keys(self):
+        return self.data.keys()
+
+    # ------------------------------------------------------------- scoring
+    def score_entry(self, e, q_tokens, q_bigrams, query_lower='', heads=None):
+        """(score, matched_on, token_hits, structured) for one entry.
+
+        `token_hits` is the set of *query* tokens this entry matched.
+        It is separate from `matched_on`, which also carries the phrases
+        and task rows that matched -- the coverage rule below needs to
+        count tokens only.
+
+        `structured` is True when the entry matched a curated
+        `promptSignals` phrase, a task-index row, or a name bigram.
+        Those are authoritative hand-written matches, so the token
+        coverage rule does not apply to them.
+        """
+        score = 0.0
+        matched = set()
+        token_hits = set()
+        structured = False
+        name_tokens = e['tokens']['name']
+        desc_tokens = set(e['tokens']['desc'])
+        name_bigrams = set(e['tokens'].get('name_bigrams') or [])
+
+        name_exact_hit = False
+        for t in q_tokens:
+            idf = self.idf(t)
+            if t in name_tokens:
+                score += WEIGHT_NAME_EXACT * idf
+                matched.add(t)
+                token_hits.add(t)
+                name_exact_hit = True
+            elif any(t in nt for nt in name_tokens if len(nt) > len(t)):
+                score += WEIGHT_NAME_PARTIAL * idf
+                matched.add(t)
+                token_hits.add(t)
+            if t in desc_tokens:
+                score += WEIGHT_DESC * idf
+                matched.add(t)
+                token_hits.add(t)
+
+        for bg in q_bigrams:
+            if bg in name_bigrams:
+                score += WEIGHT_PHRASE
+                matched.add(bg)
+                structured = True
+
+        sig = self.signals.get(e['id'])
+        if sig:
+            # A phrase must appear in the query as a phrase. The curated
+            # phrases are symptom descriptions ("the page is stuck"), so a
+            # loose word match would credit unrelated skills.
+            for p in sig:
+                if p in query_lower or _phrase_tokens_match(p, q_tokens):
+                    score += WEIGHT_SIGNAL
+                    matched.add(p)
+                    structured = True
+                    break
+
+        # A task-shaped query ("fix a failing build") routes better through
+        # the hand-written task index than through any automatic score.
+        #
+        # The row has to be *substantially* present in the query. An
+        # earlier "all but one token" rule was too loose: "fix a failing
+        # build" matched the row "Build a dashboard" on the single word
+        # "build", which put four dashboard/API builders above
+        # `error-handling`. The rule below needs at least 60% of the row's
+        # content words, and at least two of them when the row has two or
+        # more -- so "my build keeps failing" still finds "Fix a failing
+        # build", but "fix a failing build" no longer finds "Build a
+        # dashboard".
+        #
+        # The 60% rule reads the WHOLE row, verb included. The rows are
+        # written "<verb> <object>" -- "Build an API" -- so it demanded
+        # the query's verb as well as its object, and "write a REST API"
+        # never reached the row that names the right skills. The row
+        # also fires, for a smaller bonus, when the query contains the
+        # row's *content* (the row's verb dropped) -- which is what
+        # "write a REST API" has.
+        if e['kind'] == 'skill':
+            tasks = self.skill_tasks.get(e['name'])
+        else:
+            tasks = self.agent_tasks.get(e['name'])
+        if tasks:
+            for task in tasks:
+                t_toks = tokenize(task)
+                strict = False
+                if t_toks:
+                    overlap = sum(1 for t in t_toks if t in q_tokens)
+                    needed = max(1, -(-len(t_toks) * 6 // 10))   # ceil(60%)
+                    if len(t_toks) >= 2:
+                        needed = max(2, needed)
+                    strict = overlap >= needed
+                if strict:
+                    score += self._row_bonus(WEIGHT_TASK, e, task)
+                    matched.add(task)
+                    structured = True
+                    break
+                bonus = self._task_content_matches(task, q_tokens, heads, e)
+                if bonus:
+                    score += bonus
+                    matched.add(task)
+                    structured = True
+                    break
+
+        # Tier bias, suppressed when the name matched exactly.
+        bias = TIER_BIAS.get(e.get('tier', 3), 0.0) * (0.0 if name_exact_hit else 1.0)
+        score += bias
+        if e['kind'] == 'agent':
+            score += AGENT_BIAS
+
+        return score, sorted(matched), token_hits, structured
+
+    # -------------------------------------------------------------- search
+    def _row_bonus(self, base, e, task):
+        """The row's curation, applied to one of its members.
+
+        The task table lists a row's *primary* entry first, and its
+        note says which one that is. A later member is an alternative,
+        so it is demoted -- the row's first choice is what the row
+        recommends, and the scorer cannot read the prose that says so.
+
+        Only the strict branch uses this. A content match means the
+        query named the row's object ("write a REST API" reaches "Build
+        an API"), not that it asked for that specific task, so the
+        row's members stay on equal footing there.
+        """
+        pos = self.task_positions.get((e['name'], task))
+        if pos is None or pos == 0:
+            return base
+        return base - TASK_DEMOTE
+
+    def search(self, query, limit=DEFAULT_LIMIT, kind=None, tier=None,
+               domain=None, include_body=False):
+        q_tokens = tokenize(query)
+        if not q_tokens:
+            return {'query': query, 'total_matched': 0, 'returned': 0,
+                    'truncated': False, 'note': '', 'results': []}
+        q_bigrams = bigrams(q_tokens)
+        query_lower = ' '.join((query or '').lower().split())
+        # The query's head nouns -- what it is *about*, as opposed to the
+        # context it mentions. The task-row rule uses this to tell
+        # "write a REST API" (about an API) from "add authentication to
+        # an api" (about authentication).
+        heads = head_tokens(query)
+
+        scored = []
+        for e in self.entries:
+            if kind and e['kind'] != kind:
+                continue
+            if tier is not None and e.get('tier') != tier:
+                continue
+            if domain and e.get('domain') != domain:
+                continue
+            s, matched, token_hits, structured = self.score_entry(
+                e, q_tokens, q_bigrams, query_lower, heads)
+            if s <= 0:
+                continue
+            # Token coverage. A single generic token is not a match:
+            # "how to bake sourdough bread at home" matched
+            # `shopify-polaris-app-home` on the word "home", and
+            # "quantum chromodynamics lattice simulation" matched
+            # `web-game-foundations` on "simulation". An entry has to
+            # match at least two thirds of the query's tokens, and at
+            # least two when the query has two or more.
+            #
+            # An entry that matched a curated phrase, a task row or a
+            # name bigram is exempt: those are hand-written, and the
+            # task row "Review code I did not write" legitimately shares
+            # only "code", "not" and "review" with its query.
+            #
+            # The rule counts only the *discriminating* query tokens.
+            # "write documentation" has two tokens, so the rule demanded
+            # both -- and `documentation-lookup`, whose name contains
+            # "documentation", was dropped for not also containing
+            # "write". The subject of the query was the one token that
+            # carried the information; the generic verb was noise.
+            cov_tokens = self.coverage_tokens(q_tokens)
+            if not structured:
+                needed = max(1, -(-len(cov_tokens) * 2 // 3))
+                if len(cov_tokens) >= 2:
+                    needed = max(2, needed)
+                hits = sum(1 for t in cov_tokens if t in token_hits)
+                if hits < needed:
+                    continue
+            scored.append((s, e, matched))
+
+        # The fixed tie-break order. The TypeScript server must produce the
+        # identical ordering, or the agreement test fails.
+        scored.sort(key=lambda t: (
+            -t[0],
+            t[1].get('tier', 3),
+            0 if t[1]['kind'] == 'skill' else 1,
+            len(t[1]['name']),
+            t[1]['name'],
+        ))
+
+        total = len(scored)
+        if not scored:
+            return {'query': query, 'total_matched': 0, 'returned': 0,
+                    'truncated': False, 'note': '', 'results': []}
+
+        top = scored[0][0]
+        floor = top * RELEVANCE_FLOOR
+        scored = [t for t in scored if t[0] >= floor]
+
+        limit = max(1, min(int(limit or DEFAULT_LIMIT), MAX_LIMIT))
+        truncated = len(scored) > limit
+        shown = scored[:limit]
+
+        results = []
+        for s, e, matched in shown:
+            r = {
+                'id': e['id'],
+                'kind': e['kind'],
+                'name': e['name'],
+                'title': e.get('title', e['name']),
+                'description': e.get('desc', ''),
+                'tier': e.get('tier', 3),
+                'domain': e.get('domain', ''),
+                'score': round(s, 4),
+                'matched_on': matched,
+                'path': e.get('path', ''),
+            }
+            if include_body:
+                r['frontmatter'] = e.get('frontmatter', {})
+            results.append(r)
+
+        note = ''
+        if truncated:
+            note = ('Showing %d of %d matches. Refine the query to narrow it '
+                    'down.' % (limit, len(scored)))
+        return {
+            'query': query,
+            'total_matched': total,
+            'returned': len(results),
+            'truncated': truncated,
+            'note': note,
+            'results': results,
+        }
+
+
+def load_index(path=None):
+    import json
+    p = path or os.path.join(BASE, 'mcp', 'data', 'index.json')
+    with open(p, encoding='utf-8') as fh:
+        return SearchIndex(json.load(fh))
+
+
+if __name__ == '__main__':
+    q = ' '.join(sys.argv[1:]) or 'accessibility audit WCAG'
+    idx = load_index()
+    out = idx.search(q, limit=10)
+    print('%s  (total %d, returned %d)' % (q, out['total_matched'], out['returned']))
+    for r in out['results']:
+        print('  %-34s %6.2f  tier %d  %s' % (
+            r['id'], r['score'], r['tier'], ','.join(r['matched_on'])[:60]))

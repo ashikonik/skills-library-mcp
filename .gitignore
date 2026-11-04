@@ -1,0 +1,20 @@
+# The skills and the agents ARE this repository. They are tracked.
+
+# Third-party clone with its own .git -- a nested repo would become a
+# gitlink and break this repository's history.
+ponytail/.git
+
+# Python
+__pycache__/
+*.pyc
+
+# Node
+mcp/node_modules/
+mcp/dist/
+
+# Build artefacts -- the index is derived from the tree, so it is
+# rebuilt rather than tracked.
+mcp/data/index.json
+
+# Per-step build logs and their snapshots.
+logs/

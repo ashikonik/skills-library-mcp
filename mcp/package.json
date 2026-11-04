@@ -1,0 +1,30 @@
+{
+  "name": "skills-library-mcp",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MCP server over the local 976-skill, 102-agent library",
+  "type": "module",
+  "bin": {
+    "skills-library-mcp": "dist/index.js"
+  },
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "bash scripts/run-tests.sh",
+    "test:search": "node --test dist/tests/search.test.js",
+    "test:frontmatter": "node --test dist/tests/frontmatter.test.js",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.2",
+    "yaml": "^2.8.1",
+    "zod": "^4.1.13"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

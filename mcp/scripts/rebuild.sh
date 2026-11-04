@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+# Rebuild everything the MCP server needs, from scratch, and prove it works.
+#
+#   ./rebuild.sh          build the index, install deps, compile, test
+#   ./rebuild.sh --ci     the same, but treat any warning as a failure
+#
+# The order matters:
+#
+#   1. the index is built from the library, so it comes first;
+#   2. the TypeScript is compiled, because the tests import from dist/;
+#   3. the tests run last, against the compiled output.
+#
+# `npm ci` is used rather than `npm install` so the lockfile decides the
+# dependency tree exactly -- a server that starts offline needs to start
+# with the versions that were tested.
+set -euo pipefail
+
+HERE="$(cd "$(dirname "$0")" && pwd)"
+MCP_ROOT="$(cd "$HERE/.." && pwd)"
+LIBRARY_ROOT="$(cd "$MCP_ROOT/.." && pwd)"
+cd "$MCP_ROOT"
+
+CI=0
+[ "${1:-}" = "--ci" ] && CI=1
+
+step() { echo; echo "==> $*"; }
+
+step "building the search index"
+python3 "$LIBRARY_ROOT/mcp/build/build_index.py"
+
+step "installing dependencies"
+if [ -f package-lock.json ]; then
+  npm ci --no-audit --no-fund
+else
+  npm install --no-audit --no-fund
+fi
+
+step "compiling the TypeScript server"
+npm run build
+
+step "smoke test: the server starts and answers"
+node "$MCP_ROOT/scripts/smoke.mjs"
+
+step "running the TypeScript tests"
+npm test
+
+step "running the end-to-end test"
+# Drives the compiled server as a real subprocess over real stdio:
+# dry run, apply, verify on disk, uninstall, verify gone. It points
+# HOME at a temporary tree, so it never touches the real harness
+# directories.
+node "$MCP_ROOT/scripts/e2e.mjs"
+
+step "running the Python test suite"
+python3 "$LIBRARY_ROOT/mcp/tests/test_mcp.py"
+
+step "running the cross-implementation agreement gate"
+python3 "$LIBRARY_ROOT/mcp/tests/test_agreement.py"
+
+step "running the protocol test"
+python3 "$LIBRARY_ROOT/mcp/tests/test_jsonrpc.py"
+
+echo
+echo "REBUILD: PASS"
+echo "The server is at $MCP_ROOT/dist/index.js"
