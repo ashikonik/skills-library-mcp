@@ -30,6 +30,7 @@ from packs import (                    # noqa: E402
     publishable as pack_publishable,
     packs as pack_records,
 )
+from provenance import TERMS_QUOTES    # noqa: E402
 
 
 def own_pack_names():
@@ -420,20 +421,18 @@ def write_notice(path, provenance):
             w('| `%s` | %s | %s |'
               % (e['name'], e.get('kind', 'skill'), _licence_label(e)))
         w('')
-    w('`document-builder` deserves a specific note. It is the')
-    w('maintainer\'s own pack, but it vendors Anthropic\'s `docx`, `pptx`,')
-    w('`xlsx` and `pdf` skills under `vendor/`, and their `LICENSE.txt` says:')
-    w('')
-    w('> ADDITIONAL RESTRICTIONS: Notwithstanding anything in the Agreement')
-    w('> to the contrary, users may not:')
-    w('>')
-    w('> - Extract these materials from the Services or retain copies of')
-    w('>   these materials outside the Services')
-    w('> - Reproduce or copy these materials, except for temporary copies')
-    w('>   created automatically during authorized use of the Services')
-    w('> - Distribute, sublicense, or transfer these materials to any')
-    w('>   third party')
-    w('')
+        # Where the upstream published terms a reader can check, quote
+        # them. A paraphrase is a claim about the terms; a quotation is
+        # the terms, and the reader can go and look.
+        quote = TERMS_QUOTES.get(owner)
+        if quote:
+            # The source line already ends in a colon; adding another
+            # would print `marketplace::`.
+            w(quote[0] if quote[0].endswith(':') else '%s:' % quote[0])
+            w('')
+            for line in quote[1:]:
+                w(line)
+            w('')
     w('That is the plain text of the terms, and publishing the pack does')
     w('the thing it forbids. The pack is included because the owner asked')
     w('for it; the vendored copies remain Anthropic\'s.')

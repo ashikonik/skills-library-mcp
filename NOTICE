@@ -148,6 +148,10 @@ OpenAI declares this plugin proprietary; the repository LICENSE permits use by t
 | `validation` | skill | Proprietary |
 | `vulnerability-writeup` | skill | Proprietary |
 
+The plugin's own `plugin.json` manifest, which declares the licence:
+
+> "license": "Proprietary"
+
 ### Figma — 16 entries
 
 Figma's Developer Terms govern this work; they grant Figma a licence to distribute it as part of the Figma product.
@@ -204,6 +208,12 @@ Anthropic's LICENSE says the plugin is proprietary to Anthropic, PBC, and may no
 | `scan-researcher` | agent | SEE LICENSE IN LICENSE |
 | `scan-verifier` | agent | SEE LICENSE IN LICENSE |
 
+The plugin's own `LICENSE` file, at the official plugin marketplace:
+
+> This software, including its prompts, agent and skill definitions, workflows, server code, and documentation (the "Plugin"), is proprietary to Anthropic, PBC and its affiliates ("Anthropic").
+>
+> Except as the Agreement expressly permits, you may not: (a) distribute, publish, sublicense, sell, or otherwise make the Plugin or any modified version of it available to any third party; (b) use the Plugin or any part of it with, or to develop, any non-Anthropic product or service, including any competing product; or (c) remove or obscure this notice.
+
 ### Microsoft — 4 entries
 
 Microsoft's Pylance licence, clause 2(e): you may not share, publish, distribute, or lease the software.
@@ -214,6 +224,10 @@ Microsoft's Pylance licence, clause 2(e): you may not share, publish, distribute
 | `pylance-python-profiling` | skill | other (unrecognised) |
 | `pylance-refactoring` | skill | other (unrecognised) |
 | `python-fact-grounded-coding` | skill | other (unrecognised) |
+
+The Pylance extension's own `LICENSE.txt`, clause 2(e) of the Microsoft Software License Terms:
+
+> You may not: ... (e) share, publish, distribute, or lease the software (except for any distributable code, subject to the terms above), provide the software as a stand-alone offering for others to use, or transfer the software or this agreement to any third party.
 
 ### GitHub (Copilot Chat) — 3 entries
 
@@ -257,19 +271,13 @@ This pack vendors Anthropic's document skills, whose licence forbids extracting 
 |---|---|---|
 | `document-builder` | skill | MIT |
 
-`document-builder` deserves a specific note. It is the
-maintainer's own pack, but it vendors Anthropic's `docx`, `pptx`,
-`xlsx` and `pdf` skills under `vendor/`, and their `LICENSE.txt` says:
+The vendored `LICENSE.txt` inside the pack, at `skills/document-builder/vendor/*/LICENSE.txt`:
 
-> ADDITIONAL RESTRICTIONS: Notwithstanding anything in the Agreement
-> to the contrary, users may not:
+> ADDITIONAL RESTRICTIONS: Notwithstanding anything in the Agreement to the contrary, users may not:
 >
-> - Extract these materials from the Services or retain copies of
->   these materials outside the Services
-> - Reproduce or copy these materials, except for temporary copies
->   created automatically during authorized use of the Services
-> - Distribute, sublicense, or transfer these materials to any
->   third party
+> - Extract these materials from the Services or retain copies of these materials outside the Services
+> - Reproduce or copy these materials, except for temporary copies created automatically during authorized use of the Services
+> - Distribute, sublicense, or transfer these materials to any third party
 
 That is the plain text of the terms, and publishing the pack does
 the thing it forbids. The pack is included because the owner asked

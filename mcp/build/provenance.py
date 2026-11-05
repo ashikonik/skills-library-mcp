@@ -392,6 +392,64 @@ INCLUDE_WITH_TERMS = {
 }
 
 
+# The upstream's own words, quoted verbatim, for the upstreams that
+# published terms a reader can check.
+#
+# The NOTICE quotes these rather than summarising them, because the
+# whole point of the section is that the reader can see exactly what
+# the terms say and decide for themselves. A paraphrase would be a
+# claim about the terms; a quotation is the terms.
+#
+# Each is the clause that forbids redistribution, taken from the
+# upstream's own licence file. The source is named so the claim is
+# checkable, and so the quote cannot be silently swapped later.
+TERMS_QUOTES = {
+    'Anthropic': (
+        'The plugin\'s own `LICENSE` file, at the official plugin '
+        'marketplace:',
+        '> This software, including its prompts, agent and skill '
+        'definitions, workflows, server code, and documentation (the '
+        '"Plugin"), is proprietary to Anthropic, PBC and its affiliates '
+        '("Anthropic").',
+        '>',
+        '> Except as the Agreement expressly permits, you may not: (a) '
+        'distribute, publish, sublicense, sell, or otherwise make the '
+        'Plugin or any modified version of it available to any third '
+        'party; (b) use the Plugin or any part of it with, or to '
+        'develop, any non-Anthropic product or service, including any '
+        'competing product; or (c) remove or obscure this notice.',
+    ),
+    'Microsoft': (
+        'The Pylance extension\'s own `LICENSE.txt`, clause 2(e) of the '
+        'Microsoft Software License Terms:',
+        '> You may not: ... (e) share, publish, distribute, or lease the '
+        'software (except for any distributable code, subject to the '
+        'terms above), provide the software as a stand-alone offering '
+        'for others to use, or transfer the software or this agreement '
+        'to any third party.',
+    ),
+    'This library (hand-authored)': (
+        'The vendored `LICENSE.txt` inside the pack, at '
+        '`skills/document-builder/vendor/*/LICENSE.txt`:',
+        '> ADDITIONAL RESTRICTIONS: Notwithstanding anything in the '
+        'Agreement to the contrary, users may not:',
+        '>',
+        '> - Extract these materials from the Services or retain copies '
+        'of these materials outside the Services',
+        '> - Reproduce or copy these materials, except for temporary '
+        'copies created automatically during authorized use of the '
+        'Services',
+        '> - Distribute, sublicense, or transfer these materials to any '
+        'third party',
+    ),
+    'OpenAI': (
+        'The plugin\'s own `plugin.json` manifest, which declares the '
+        'licence:',
+        '> "license": "Proprietary"',
+    ),
+}
+
+
 def classify_text(t):
     """The SPDX-ish name of the licence in a licence file."""
     t = t.lower()
