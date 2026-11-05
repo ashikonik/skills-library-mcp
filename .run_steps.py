@@ -68,6 +68,15 @@ STEPS = [
         'desc': 'Build the MCP search index from the library',
     },
     {
+        'name': 'doc-counts',
+        'command': [PY, 'mcp/build/fill_doc_counts.py'],
+        'touched': ['mcp/README.md', 'mcp/docs/ARCHITECTURE.md',
+                    'mcp/docs/REGISTERING.md', 'mcp/docs/TOOL_REFERENCE.md'],
+        'validate': None,
+        'desc': ('Fill the counts in the documentation from the index, so '
+                 'no document describes a library other than this one'),
+    },
+    {
         'name': 'build-server',
         'command': ['npm', 'run', 'build'],
         'cwd': 'mcp',

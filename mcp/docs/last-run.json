@@ -1,312 +1,39 @@
 {
-  "ended_at": "2026-11-04T17:10:11Z",
+  "ended_at": "2026-11-05T15:47:58Z",
   "failed_steps": [],
   "git": {
-    "commit_after": "07f161b438429439f3cdc680a1fb6b8e3889b0a8",
-    "commit_before": "07f161b438429439f3cdc680a1fb6b8e3889b0a8",
+    "commit_after": "7f39be6e85443f5301b9eb9b584af67c71da723f",
+    "commit_before": "7f39be6e85443f5301b9eb9b584af67c71da723f",
     "dirty_after": true,
     "dirty_before": true
   },
-  "run_id": "20261104T170623Z",
-  "started_at": "2026-11-04T17:06:23Z",
+  "run_id": "20261105T154758Z",
+  "started_at": "2026-11-05T15:47:58Z",
   "status": "pass",
   "steps": [
     {
       "changed": [],
-      "command": "/usr/bin/python3 .build_library.py",
-      "desc": "Scan the machine and rebuild skills/ + agents/ + .library_data.json",
-      "duration_s": 14.2,
-      "ended_at": "2026-11-04T17:06:37Z",
+      "command": "/usr/bin/python3 mcp/build/provenance.py",
+      "desc": "Resolve the licence and the real owner of every entry in the library",
+      "duration_s": 0.52,
+      "ended_at": "2026-11-05T15:47:58Z",
       "exit_code": 0,
-      "log": "01-build-library.log",
+      "log": "01-provenance.log",
       "missing_before": [],
       "n": 1,
-      "name": "build-library",
+      "name": "provenance",
       "sha256_after": {
-        ".library_data.json": "fa211a515df1347ab8f20743487e68fa1bd15b77d7e936276762dafba5838b27"
+        "mcp/data/provenance.json": "2371bed051fa9e1ee42ba2ede2aeee783fdcef23ae701c12cadac31f2726d9a4"
       },
       "sha256_before": {
-        ".library_data.json": "fa211a515df1347ab8f20743487e68fa1bd15b77d7e936276762dafba5838b27"
+        "mcp/data/provenance.json": "2371bed051fa9e1ee42ba2ede2aeee783fdcef23ae701c12cadac31f2726d9a4"
       },
-      "snapshot_dir": "snapshot/01-build-library",
-      "started_at": "2026-11-04T17:06:23Z",
+      "snapshot_dir": "snapshot/01-provenance",
+      "started_at": "2026-11-05T15:47:58Z",
       "status": "pass",
       "touched": [
-        ".library_data.json"
+        "mcp/data/provenance.json"
       ],
-      "validation": {
-        "assertions": [
-          "skill count == 976",
-          "agent count == 102",
-          "skill name set unchanged vs snapshot",
-          "agent name set unchanged vs snapshot",
-          "no description shorter than snapshot",
-          "descriptions that grew: 0",
-          "desc_source == yaml for 975 skills",
-          "desc_source == body for 1 skills",
-          "math-olympiad and accessibility carry full descriptions"
-        ],
-        "exit_code": 0,
-        "problems": []
-      }
-    },
-    {
-      "changed": [],
-      "command": "/usr/bin/python3 .build_guide.py",
-      "desc": "Regenerate ROUTING_GUIDE.md from .library_data.json",
-      "duration_s": 1.39,
-      "ended_at": "2026-11-04T17:06:39Z",
-      "exit_code": 0,
-      "log": "02-build-guide.log",
-      "missing_before": [],
-      "n": 2,
-      "name": "build-guide",
-      "sha256_after": {
-        "ROUTING_GUIDE.md": "ccdff4138d1f7ca0e1eea642b9093201406acecf298cb2a3bb5db342066636ec"
-      },
-      "sha256_before": {
-        "ROUTING_GUIDE.md": "ccdff4138d1f7ca0e1eea642b9093201406acecf298cb2a3bb5db342066636ec"
-      },
-      "snapshot_dir": "snapshot/02-build-guide",
-      "started_at": "2026-11-04T17:06:37Z",
-      "status": "pass",
-      "touched": [
-        "ROUTING_GUIDE.md"
-      ],
-      "validation": {
-        "assertions": [
-          "ROUTING_GUIDE.md size == 206970 bytes"
-        ],
-        "exit_code": 0,
-        "problems": []
-      }
-    },
-    {
-      "changed": [],
-      "command": "/usr/bin/python3 .gen_report.py",
-      "desc": "Regenerate SKILLS_AND_AGENTS_REPORT.md (independent machine scan)",
-      "duration_s": 20.55,
-      "ended_at": "2026-11-04T17:06:59Z",
-      "exit_code": 0,
-      "log": "03-gen-report.log",
-      "missing_before": [],
-      "n": 3,
-      "name": "gen-report",
-      "sha256_after": {
-        "SKILLS_AND_AGENTS_REPORT.md": "afc0a00421b0d854e2abaec26a2cc5fd33a48d72f0577ecf3e85023c5b6c949c"
-      },
-      "sha256_before": {
-        "SKILLS_AND_AGENTS_REPORT.md": "afc0a00421b0d854e2abaec26a2cc5fd33a48d72f0577ecf3e85023c5b6c949c"
-      },
-      "snapshot_dir": "snapshot/03-gen-report",
-      "started_at": "2026-11-04T17:06:39Z",
-      "status": "pass",
-      "touched": [
-        "SKILLS_AND_AGENTS_REPORT.md"
-      ],
-      "validation": {
-        "assertions": [
-          "SKILLS_AND_AGENTS_REPORT.md size == 359624 bytes",
-          "report rows checked against library: 975",
-          "report agrees with .library_data.json"
-        ],
-        "exit_code": 0,
-        "problems": []
-      }
-    },
-    {
-      "changed": [
-        "mcp/data/index.json"
-      ],
-      "command": "/usr/bin/python3 mcp/build/build_index.py",
-      "desc": "Build the MCP search index from the library",
-      "duration_s": 2.51,
-      "ended_at": "2026-11-04T17:07:02Z",
-      "exit_code": 0,
-      "log": "04-build-index.log",
-      "missing_before": [],
-      "n": 4,
-      "name": "build-index",
-      "sha256_after": {
-        "mcp/data/index.json": "733c9f07258cad18f16f1e06253c62689445ab57108cd555354c6400893d097e"
-      },
-      "sha256_before": {
-        "mcp/data/index.json": "a3df85831136056aa67bc24cbf6cc96bab06aadb57528b17d828497586f146d1"
-      },
-      "snapshot_dir": "snapshot/04-build-index",
-      "started_at": "2026-11-04T17:06:59Z",
-      "status": "pass",
-      "touched": [
-        "mcp/data/index.json"
-      ],
-      "validation": {
-        "assertions": [
-          "schema_version == 1",
-          "counts: {\"1\": 108, \"2\": 269, \"3\": 701}",
-          "skills count == 976",
-          "agents count == 102",
-          "index entries == 1078"
-        ],
-        "exit_code": 0,
-        "problems": []
-      }
-    },
-    {
-      "changed": [],
-      "command": "npm run build",
-      "desc": "Compile the TypeScript MCP server",
-      "duration_s": 2.66,
-      "ended_at": "2026-11-04T17:07:05Z",
-      "exit_code": 0,
-      "log": "05-build-server.log",
-      "missing_before": [],
-      "n": 5,
-      "name": "build-server",
-      "sha256_after": {
-        "mcp/dist": "dir:829373261dc9193b6c8e8afc44a92785231d7352fee4f4aadf904d17b43696d6"
-      },
-      "sha256_before": {
-        "mcp/dist": "dir:829373261dc9193b6c8e8afc44a92785231d7352fee4f4aadf904d17b43696d6"
-      },
-      "snapshot_dir": "snapshot/05-build-server",
-      "started_at": "2026-11-04T17:07:02Z",
-      "status": "pass",
-      "touched": [
-        "mcp/dist"
-      ],
-      "validation": null
-    },
-    {
-      "changed": [],
-      "command": "/usr/bin/python3 .verify_all.py",
-      "desc": "Run the full verification suite",
-      "duration_s": 102.33,
-      "ended_at": "2026-11-04T17:08:47Z",
-      "exit_code": 0,
-      "log": "06-verify-all.log",
-      "missing_before": [],
-      "n": 6,
-      "name": "verify-all",
-      "sha256_after": {},
-      "sha256_before": {},
-      "snapshot_dir": "snapshot/06-verify-all",
-      "started_at": "2026-11-04T17:07:05Z",
-      "status": "pass",
-      "touched": [],
-      "validation": null
-    },
-    {
-      "changed": [],
-      "command": "/usr/bin/python3 .verify_determinism.py",
-      "desc": "Rebuild everything a second time and prove the output is byte-identical",
-      "duration_s": 71.47,
-      "ended_at": "2026-11-04T17:09:58Z",
-      "exit_code": 0,
-      "log": "07-determinism.log",
-      "missing_before": [],
-      "n": 7,
-      "name": "determinism",
-      "sha256_after": {},
-      "sha256_before": {},
-      "snapshot_dir": "snapshot/07-determinism",
-      "started_at": "2026-11-04T17:08:47Z",
-      "status": "pass",
-      "touched": [],
-      "validation": null
-    },
-    {
-      "changed": [],
-      "command": "/usr/bin/python3 mcp/tests/test_mcp.py",
-      "desc": "Run the MCP server test suite",
-      "duration_s": 1.51,
-      "ended_at": "2026-11-04T17:10:00Z",
-      "exit_code": 0,
-      "log": "08-mcp-tests.log",
-      "missing_before": [],
-      "n": 8,
-      "name": "mcp-tests",
-      "sha256_after": {},
-      "sha256_before": {},
-      "snapshot_dir": "snapshot/08-mcp-tests",
-      "started_at": "2026-11-04T17:09:58Z",
-      "status": "pass",
-      "touched": [],
-      "validation": null
-    },
-    {
-      "changed": [],
-      "command": "/usr/bin/python3 mcp/tests/test_agreement.py",
-      "desc": "Assert the TypeScript and Python servers rank identically",
-      "duration_s": 4.98,
-      "ended_at": "2026-11-04T17:10:05Z",
-      "exit_code": 0,
-      "log": "09-mcp-agreement.log",
-      "missing_before": [],
-      "n": 9,
-      "name": "mcp-agreement",
-      "sha256_after": {},
-      "sha256_before": {},
-      "snapshot_dir": "snapshot/09-mcp-agreement",
-      "started_at": "2026-11-04T17:10:00Z",
-      "status": "pass",
-      "touched": [],
-      "validation": null
-    },
-    {
-      "changed": [],
-      "command": "/usr/bin/python3 mcp/tests/test_jsonrpc.py",
-      "desc": "Speak raw JSON-RPC to both servers and compare their answers",
-      "duration_s": 0.61,
-      "ended_at": "2026-11-04T17:10:05Z",
-      "exit_code": 0,
-      "log": "10-mcp-protocol.log",
-      "missing_before": [],
-      "n": 10,
-      "name": "mcp-protocol",
-      "sha256_after": {},
-      "sha256_before": {},
-      "snapshot_dir": "snapshot/10-mcp-protocol",
-      "started_at": "2026-11-04T17:10:05Z",
-      "status": "pass",
-      "touched": [],
-      "validation": null
-    },
-    {
-      "changed": [],
-      "command": "npm test",
-      "desc": "Run the TypeScript test suite with Node's built-in runner",
-      "duration_s": 1.83,
-      "ended_at": "2026-11-04T17:10:07Z",
-      "exit_code": 0,
-      "log": "11-mcp-node-tests.log",
-      "missing_before": [],
-      "n": 11,
-      "name": "mcp-node-tests",
-      "sha256_after": {},
-      "sha256_before": {},
-      "snapshot_dir": "snapshot/11-mcp-node-tests",
-      "started_at": "2026-11-04T17:10:05Z",
-      "status": "pass",
-      "touched": [],
-      "validation": null
-    },
-    {
-      "changed": [],
-      "command": "node scripts/e2e.mjs",
-      "desc": "Drive the compiled server over stdio: install a skill, check it on disk, uninstall it",
-      "duration_s": 3.66,
-      "ended_at": "2026-11-04T17:10:11Z",
-      "exit_code": 0,
-      "log": "12-mcp-e2e.log",
-      "missing_before": [],
-      "n": 12,
-      "name": "mcp-e2e",
-      "sha256_after": {},
-      "sha256_before": {},
-      "snapshot_dir": "snapshot/12-mcp-e2e",
-      "started_at": "2026-11-04T17:10:07Z",
-      "status": "pass",
-      "touched": [],
       "validation": null
     }
   ]

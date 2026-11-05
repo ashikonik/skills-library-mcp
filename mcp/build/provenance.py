@@ -18,12 +18,25 @@ The result is a redistribution verdict per entry:
   redistributable   the licence permits redistribution -- MIT, Apache-2.0,
                     BSD, ISC, MPL, CC-BY. Its terms ride along in the
                     repository's NOTICE and CREDITS.
+  included-with-terms
+                    the licence does *not* permit redistribution, but the
+                    repository's owner instructed that the entry be shipped
+                    anyway. The upstream's terms are quoted verbatim in the
+                    NOTICE, so the reader sees exactly what they are.
   restricted        anything else -- Proprietary, UNLICENSED, a LicenseRef,
                     or no licence stated anywhere. Such content cannot be
                     published, because publishing it would grant rights the
                     author did not grant.
   personal          the maintainer's own project files. They leak machine
                     paths and belong to a private repository.
+  fixture           a test input that happens to look like a skill. It is
+                    never published, whatever its licence says.
+
+The `included-with-terms` verdict is a decision by the repository's
+owner, not a licence judgement. It exists because the owner asked for
+these entries to be shipped and accepted that this redistributes
+material whose terms do not grant it. The verdict records that as an
+explicit, attributed exception rather than leaving it implied.
 
 This is a *derived* artifact, like the index: it is rebuilt from the
 library tree, and nothing at runtime depends on it.
@@ -92,7 +105,155 @@ DECLARED = {
         'owner': 'Paul Bakaus',
         'repository': 'https://github.com/pbakaus/impeccable',
     },
+    # `review-agent` ships inside the Codex binary, with no licence file
+    # beside it, so the resolver found no terms and called it
+    # restricted. The same file is published verbatim in OpenAI's own
+    # `codex` repository, which is Apache-2.0 -- `SKILL.md` and
+    # `agents/openai.yaml` are byte-identical to the copies under
+    # `codex-rs/skills/src/assets/samples/review-agent/`. So the terms
+    # are known, and they permit redistribution.
+    'review-agent': {
+        'license': 'Apache-2.0',
+        'owner': 'OpenAI (Codex)',
+        'repository': 'https://github.com/openai/codex',
+    },
 }
+
+# The entries whose terms were investigated and found not to permit
+# redistribution, or not to exist at all. Each one gets the reason
+# that the investigation actually established, so the NOTICE states a
+# finding rather than a shrug. The licence is left as it was found --
+# these entries stay excluded either way -- but the reason is recorded
+# per entry, which is what `reason_for` falls back to.
+EXCLUSION_REASONS = {
+    'claude-security': "Anthropic's own LICENSE says the plugin is "
+                       "proprietary and that it may not be made available "
+                       "to any third party",
+    'explore': "Anthropic's own LICENSE says the plugin is proprietary and "
+               "that it may not be made available to any third party",
+    'patch-generator': "Anthropic's own LICENSE says the plugin is "
+                       "proprietary and that it may not be made available "
+                       "to any third party",
+    'patch-verifier': "Anthropic's own LICENSE says the plugin is "
+                       "proprietary and that it may not be made available "
+                       "to any third party",
+    'scan-inventory': "Anthropic's own LICENSE says the plugin is "
+                      "proprietary and that it may not be made available "
+                      "to any third party",
+    'scan-loader': "Anthropic's own LICENSE says the plugin is proprietary "
+                   "and that it may not be made available to any third party",
+    'scan-researcher': "Anthropic's own LICENSE says the plugin is "
+                        "proprietary and that it may not be made available "
+                        "to any third party",
+    'scan-verifier': "Anthropic's own LICENSE says the plugin is "
+                     "proprietary and that it may not be made available "
+                     "to any third party",
+    'pylance-docs': "Microsoft's Pylance licence, clause 2(e): you may not "
+                    "share, publish, distribute, or lease the software",
+    'pylance-python-profiling': "Microsoft's Pylance licence, clause 2(e): "
+                                "you may not share, publish, distribute, or "
+                                "lease the software",
+    'pylance-refactoring': "Microsoft's Pylance licence, clause 2(e): you "
+                            "may not share, publish, distribute, or lease "
+                            "the software",
+    'python-fact-grounded-coding': "Microsoft's Pylance licence, clause "
+                                   "2(e): you may not share, publish, "
+                                   "distribute, or lease the software",
+    'agy-customizations': "Antigravity is proprietary Google software with "
+                          "its own terms of service",
+    'antigravity-guide': "Antigravity is proprietary Google software with "
+                          "its own terms of service",
+    'automation': "Antigravity is proprietary Google software with its own "
+                  "terms of service",
+    'generative_ui': "Antigravity is proprietary Google software with its "
+                      "own terms of service",
+    'migrate-workflows': "Antigravity is proprietary Google software with "
+                          "its own terms of service",
+    'permissioned-github': "Antigravity is proprietary Google software with "
+                           "its own terms of service",
+    'plugin': "Antigravity is proprietary Google software with its own terms "
+              "of service",
+    'report_researcher': "Antigravity is proprietary Google software with its "
+                         "own terms of service",
+    'run-workflow': "Antigravity is proprietary Google software with its own "
+                    "terms of service",
+    'ui-plugin-navigation': "Antigravity is proprietary Google software with "
+                            "its own terms of service",
+    'plugin-creator': "ships inside the Codex binary and is not published in "
+                      "OpenAI's Apache-2.0 codex repository, so no terms "
+                      "accompany it",
+    'provision-droplet': "the digitalocean/CodexPlugin repository has no "
+                         "LICENSE file and its manifest names no licence",
+    'magicpath': "the manifest says UNLICENSED and the upstream repository "
+                 "has no LICENSE file, so no rights are granted",
+    'Ask': "ships in the Copilot Chat extension, not in the MIT-licensed "
+           "vscode-copilot-chat repository",
+    'Explore': "ships in the Copilot Chat extension, not in the MIT-licensed "
+               "vscode-copilot-chat repository",
+    'Plan': "ships in the Copilot Chat extension, not in the MIT-licensed "
+            "vscode-copilot-chat repository",
+    'ecc-coordinator': "an installed opencode agent with no upstream copy on "
+                       "the machine, so no terms could be found",
+    'document-builder': "this pack vendors Anthropic's document skills, "
+                        "whose terms forbid redistribution, so the pack "
+                        "cannot be shipped whole",
+}
+
+# The terms that could not be established from the tree, checked
+# against the upstream by hand. Each of these was investigated; the
+# note records what was found, so the next person does not have to
+# repeat the search. An entry whose terms forbid redistribution stays
+# excluded -- a credits entry cannot turn a prohibition into a
+# permission -- and the reason is written down here rather than left
+# as a silent gap.
+#
+# The Anthropic plugin (`claude-security`) carries its own LICENSE,
+# which says the plugin "is proprietary to Anthropic, PBC" and that
+# "you may not ... distribute, publish, sublicense, sell, or otherwise
+# make the Plugin or any modified version of it available to any third
+# party". Nine entries are covered by it.
+#
+# Figma's Developer Terms (`LicenseRef-Figma-Developer-Terms`) cover
+# the sixteen `figma-*` entries. They are published by OpenAI but
+# written by Figma, and Figma's terms govern them.
+#
+# The Pylance extension's own licence is a Microsoft Software License
+# whose clause 2(e) says "You may not: ... share, publish, distribute,
+# or lease the software". The resolver reported it as "other
+# (unrecognised)" because the text is not one of the standard licences
+# it knows -- the terms are perfectly clear, and they forbid
+# redistribution.
+#
+# Google's Antigravity is proprietary software with its own terms of
+# service; the ten entries built into it carry no open licence.
+#
+# The OpenAI plugin marketplace declares its own terms per plugin.
+# `life-science-research`, `codex-security`, `openai-developers`,
+# `hex` and `openai-ads-conversions` are "Proprietary"; the
+# `openai-templates` and `plugin-management` caches are too. Other
+# plugins in the same repository -- `notion`, `remotion`, `github`,
+# `gmail` -- are MIT, and the resolver already publishes those.
+#
+# `plugin-creator` ships inside the Codex binary but is NOT in the
+# Apache-2.0 `codex` repository, so the terms cannot be established
+# from an upstream that is published.
+#
+# `MagicPathAI/agent-skills` is a public repository with no LICENSE
+# file and a manifest that says "UNLICENSED". No permission is
+# granted, so nothing is.
+#
+# `digitalocean/CodexPlugin` has no LICENSE file and its manifest
+# names no licence.
+#
+# The three Copilot Chat agents (`Ask`, `Explore`, `Plan`) come from
+# the installed VS Code extension's global storage. The
+# `microsoft/vscode-copilot-chat` repository is MIT, but it does not
+# contain these agent definitions -- they ship in the extension, under
+# Microsoft's product terms.
+#
+# `ecc-coordinator` is an installed opencode agent with no upstream
+# copy anywhere on the machine, so no terms can be found for it.
+#
 
 # The `ponytail/` directory is an upstream clone, kept whole. Its skills
 # are copied into `skills/` by the ordinary scanner, which records the
@@ -135,6 +296,16 @@ RESTRICTED_PACKS = {
     for p in pack_records() if p.get('restricted')
 }
 
+# The packs the manifest marks as published-under-terms: the owner
+# instructed that they ship even though the terms do not grant
+# redistribution.
+INCLUDED_PACKS = {
+    p['name']: p.get('included_with_terms_reason', 'published at the '
+                     "owner's instruction, under terms that do not grant "
+                     'redistribution')
+    for p in pack_records() if p.get('included_with_terms')
+}
+
 # Test fixtures, not content. The `plugin-eval` plugin ships example
 # plugins under `fixtures/`, and the scanner picks their skills up like
 # any other's. They are placeholder skills -- "alpha", "beta",
@@ -144,6 +315,81 @@ RESTRICTED_PACKS = {
 # are: they are not the work anybody shipped.
 TEST_FIXTURE_NAMES = ('alpha', 'beta', 'minimal-plugin-skill')
 TEST_FIXTURE_PATH = os.path.join('fixtures', '')
+
+
+# The entries the repository's owner instructed to be published even
+# though their terms do not grant redistribution.
+#
+# This is an explicit, attributed exception, not an oversight: the
+# upstream terms were read, they forbid redistribution, and the owner
+# asked for the content anyway. The NOTICE quotes each upstream's terms
+# so a reader can see exactly what they are, and names the author of
+# every entry so the credit is unambiguous.
+#
+# The list is by *owner*, not by entry, so that adding another skill
+# from one of these upstreams does not silently change the licence
+# posture of the repository. A new upstream has to be added here
+# deliberately.
+INCLUDE_WITH_TERMS = {
+    # OpenAI's plugin repository declares most of its plugins
+    # "Proprietary". The terms are published in the repository's own
+    # LICENSE file and forbid redistribution.
+    'OpenAI': 'OpenAI declares this plugin proprietary; the repository '
+              'LICENSE permits use by the licensee only.',
+    # Figma's Developer Terms govern the Figma plugin skills. The terms
+    # grant Figma a licence to distribute them as part of the Figma
+    # product, not to third parties.
+    'Figma': "Figma's Developer Terms govern this work; they grant Figma "
+             'a licence to distribute it as part of the Figma product.',
+    # Antigravity is proprietary Google software with its own terms of
+    # service, and no licence accompanies these entries.
+    'Google (Antigravity)': 'Antigravity is proprietary Google software '
+                             'with its own terms of service, and no licence '
+                             'accompanies these entries.',
+    # Anthropic's plugin LICENSE says the plugin is proprietary to
+    # Anthropic, PBC, and may not be made available to any third party.
+    'Anthropic': "Anthropic's LICENSE says the plugin is proprietary to "
+                 'Anthropic, PBC, and may not be made available to any '
+                 'third party.',
+    # Microsoft's Pylance licence, clause 2(e): you may not share,
+    # publish, distribute, or lease the software.
+    'Microsoft': "Microsoft's Pylance licence, clause 2(e): you may not "
+                 'share, publish, distribute, or lease the software.',
+    # These three agents ship in the Copilot Chat extension, not in the
+    # MIT-licensed vscode-copilot-chat repository.
+    'GitHub (Copilot Chat)': 'ships in the Copilot Chat extension, not in '
+                              'the MIT-licensed vscode-copilot-chat '
+                              'repository',
+    # The manifest says UNLICENSED and the upstream repository has no
+    # LICENSE file, so no rights are granted.
+    'MagicPathAI': 'the manifest says UNLICENSED and the upstream '
+                   'repository has no LICENSE file, so no rights are granted',
+    # Ships inside the Codex binary and is not published in OpenAI's
+    # Apache-2.0 codex repository, so no terms accompany it.
+    'OpenAI (Codex)': 'ships inside the Codex binary and is not published in '
+                       "OpenAI's Apache-2.0 codex repository, so no terms "
+                       'accompany it',
+    # The digitalocean/CodexPlugin repository has no LICENSE file and its
+    # manifest names no licence.
+    'DigitalOcean': 'the digitalocean/CodexPlugin repository has no LICENSE '
+                     'file and its manifest names no licence',
+    # An installed opencode agent with no upstream copy on the machine, so
+    # no terms could be found.
+    'Affaan Mustafa (affaan-m/ECC)': 'an installed opencode agent with no '
+                                      'upstream copy on the machine, so no '
+                                      'terms could be found',
+    # The maintainer's own pack, which vendors Anthropic's document
+    # skills under `vendor/`. Their LICENSE says the materials may not be
+    # extracted from the Services, copied, or distributed to any third
+    # party -- which is precisely what shipping the pack would do. The
+    # pack's own work (the SKILL.md and the references) is the
+    # maintainer's; the vendored copies are Anthropic's.
+    'This library (hand-authored)': "this pack vendors Anthropic's document "
+                                    'skills, whose licence forbids '
+                                    'extracting them from the Services, '
+                                    'copying them, or distributing them to '
+                                    'any third party',
+}
 
 
 def classify_text(t):
@@ -461,24 +707,97 @@ def describe(src):
     return owner, repo, url, lic, lic_src, container
 
 
-def verdict_for(name, src, lic):
+def verdict_for(name, src, lic, owner=None):
     if src.startswith(PERSONAL_ROOTS) and name in PERSONAL_EXCLUDE:
         return 'personal'
     # A fixture is a test input that happens to look like a skill. It
     # is never published, whatever its licence says.
     if TEST_FIXTURE_PATH in src and name in TEST_FIXTURE_NAMES:
         return 'fixture'
-    # An own pack whose own licence permits redistribution is
-    # publishable -- unless the manifest marks it restricted, because
-    # something it *vendors* does not permit redistribution. The pack is
-    # then the maintainer's own work that cannot be shipped whole.
+    # A pack the manifest marks as restricted cannot ship whole, because
+    # something it vendors does not permit redistribution.
     if name in RESTRICTED_PACKS:
         return 'restricted'
+    # A pack the manifest marks as included-under-terms ships, but on the
+    # owner's instruction rather than on the licence.
+    if name in INCLUDED_PACKS:
+        return 'included-with-terms'
+    if lic is not None and any(lic.startswith(p) for p in PERMISSIVE):
+        # The licence permits redistribution. That decides it, whatever
+        # the owner is -- an entry whose terms allow redistribution is
+        # published on the strength of those terms, not on an exception.
+        return 'redistributable'
+    # The owner asked for these to be shipped. The terms still do not
+    # grant redistribution, so the verdict says so explicitly and the
+    # NOTICE quotes them.
+    if owner in INCLUDE_WITH_TERMS:
+        return 'included-with-terms'
     if lic is None:
         return 'restricted'
-    if any(lic.startswith(p) for p in PERMISSIVE):
-        return 'redistributable'
     return 'restricted'
+
+
+# The licences that forbid redistribution outright, as opposed to the
+# ones that simply could not be identified. The distinction matters in
+# the NOTICE: "we could not find the terms" is a gap in the research,
+# and "the terms forbid it" is an answer. Both keep the entry out of
+# the tree, but only one of them is a decision.
+NON_PERMISSIVE = {
+    'Proprietary': 'the upstream declares the work proprietary',
+    'UNLICENSED': 'the upstream declares no licence, so grants no rights',
+    'LicenseRef-Figma-Developer-Terms':
+        "Figma's Developer Terms govern this work",
+    'SEE LICENSE IN LICENSE':
+        "the upstream's own licence forbids redistribution",
+    'other (custom terms)': 'the upstream uses terms of its own',
+}
+
+
+def reason_for(verdict, lic, owner=None, name=None):
+    """Why an entry is published or not, in words.
+
+    A verdict of "restricted" is a decision, and the decision should be
+    legible: either the upstream's terms forbid redistribution, or the
+    terms could not be established. Those are different facts, and a
+    reader of the NOTICE is entitled to know which one applies.
+
+    For "included-with-terms" the reason is the upstream's own position,
+    quoted rather than summarised: this entry is published despite those
+    terms, and the reader is entitled to see them.
+    """
+    if verdict == 'redistributable':
+        return ''
+    if verdict == 'fixture':
+        return 'a test fixture, not published content'
+    if verdict == 'personal':
+        return "the maintainer's own file from a private project"
+    if verdict == 'included-with-terms':
+        # The upstream's terms, as read from the source, and the fact
+        # that they do not grant redistribution.
+        if name in INCLUDED_PACKS:
+            return INCLUDED_PACKS[name]
+        detail = INCLUDE_WITH_TERMS.get(owner)
+        if detail:
+            return detail
+        if name in EXCLUSION_REASONS:
+            return EXCLUSION_REASONS[name]
+        if lic in NON_PERMISSIVE:
+            return NON_PERMISSIVE[lic]
+        return ('the upstream terms do not grant redistribution, and the '
+                'repository owner instructed that this entry be published '
+                'anyway')
+    # A reason that was established by investigating this particular
+    # entry beats a general rule about its licence.
+    if name in EXCLUSION_REASONS:
+        return EXCLUSION_REASONS[name]
+    if lic in NON_PERMISSIVE:
+        return NON_PERMISSIVE[lic]
+    if owner == 'Google (Antigravity)':
+        return ('Antigravity is proprietary software with its own terms '
+                'of service, and no licence accompanies these entries')
+    if lic:
+        return 'the terms could not be established as permitting redistribution'
+    return 'no licence was found'
 
 
 def resolve(library_data=None):
@@ -523,6 +842,7 @@ def resolve(library_data=None):
                 lic = pack_licence(name) or 'MIT'
                 lic_src = ('own work (%s)' % lic) if lic != 'MIT' else 'own work'
                 owner = 'This library (hand-authored)'
+            verdict = verdict_for(name, src, lic, owner)
             out.append({
                 'kind': 'agent' if kind == 'held_aside' else kind,
                 'held_aside': kind == 'held_aside',
@@ -535,7 +855,11 @@ def resolve(library_data=None):
                 'repository': repo,
                 'url': url,
                 'container': container,
-                'verdict': verdict_for(name, src, lic),
+                'verdict': verdict,
+                # Why this entry is not published, in words. The NOTICE
+                # prints it, so the reason is a recorded finding rather
+                # than a gap somebody has to re-investigate.
+                'reason': reason_for(verdict, lic, owner, name),
             })
     return out
 

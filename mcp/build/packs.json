@@ -30,7 +30,6 @@
     "it declares Apache-2.0 in its LICENSE.txt, and that is what it ships",
     "under."
   ],
-
   "packs": [
     {
       "name": "caveman-mode",
@@ -47,8 +46,8 @@
       "summary": "Three layers -- SPECIFY -> BUILD -> VERIFY. Produces .docx/.pptx/.xlsx/PDF/markdown.",
       "detail": "Three-layer pipeline (SPECIFY -> BUILD -> VERIFY) for producing finished `.docx` / `.pptx` / `.xlsx` / PDF / markdown deliverables with diagrams and charts. Mandatory spec interview, strict source fidelity (no invented facts), drift control across long documents, sanity-check pass before delivery. Bundles its own vendored docx/pptx/xlsx/pdf/frontend-design skills under `vendor/` so it works standalone.",
       "why": "The marketplace `artifact-template-*` skills give you a template; this gives you a *process* with a mandatory verification pass.",
-      "restricted": true,
-      "restricted_reason": "It bundles Anthropic's docx, pptx, xlsx and pdf skills under `vendor/`, and their terms forbid redistribution. The pack is the maintainer's own work, but the vendored copies inside it are not, so the pack as a whole cannot be published."
+      "included_with_terms": true,
+      "included_with_terms_reason": "It vendors Anthropic's docx, pptx, xlsx and pdf skills under `vendor/`, whose LICENSE says the materials may not be extracted from the Services, copied, or distributed to any third party. The pack's own work is the maintainer's; the vendored copies are Anthropic's. The repository owner instructed that the pack be published anyway, so it is published and the NOTICE quotes the vendored terms verbatim."
     },
     {
       "name": "humanizer",

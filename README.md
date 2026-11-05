@@ -1,6 +1,6 @@
 # Skills & Agents Library — with a local MCP server
 
-**853 skills** and **93 agents** in one library, plus a local
+**972 skills** and **102 agents** in one library, plus a local
 MCP server that lets any coding agent find them.
 
 The library is the content: markdown instruction files with YAML frontmatter —
@@ -26,9 +26,9 @@ Then, in a fresh session:
 
 | Path | What it is |
 |---|---|
-| `skills/<name>/` | 853 skills — `SKILL.md` plus every supporting file |
-| `agents/<name>.md` | 93 standalone agent definitions |
-| `agents/_agent-specific/` | 6 pipeline-internal agents, with a README explaining each |
+| `skills/<name>/` | 972 skills — `SKILL.md` plus every supporting file |
+| `agents/<name>.md` | 102 standalone agent definitions |
+| `agents/_agent-specific/` | 14 pipeline-internal agents, with a README explaining each |
 | `mcp/` | **The MCP server** — two implementations, one specification |
 | `ponytail/` | An upstream collection, kept whole under its own MIT licence |
 | `ROUTING_GUIDE.md` | The routing guide: task → skill/agent lookup, in 38 domains |
@@ -40,6 +40,10 @@ Every bundled skill and agent keeps **its own licence**. This repository's MIT
 licence covers the server, the tooling and the packs written for it — not the
 third-party content. `CREDITS.md` says who wrote each piece and under what
 terms; `NOTICE` says what was excluded and why.
+
+Some of the bundled content is here under terms that do **not** grant
+redistribution, at the repository owner's instruction. Those entries are
+listed in full in `NOTICE`, with the upstream terms quoted.
 
 ---
 
@@ -170,6 +174,10 @@ is redistributed on those terms. [`CREDITS.md`](CREDITS.md) attributes every
 entry to its real upstream owner; [`NOTICE`](NOTICE) records what was left out
 and why.
 
-141 entries are **not** in this repository, because their licence does
-not permit redistribution. Publishing them would grant rights their authors
-did not grant.
+135 entries are here under terms that **do not** grant redistribution,
+at the repository owner's instruction. `NOTICE` lists them in full and quotes
+the upstream terms, so the position is explicit rather than implied.
+
+5 entries are **not** in this repository: the maintainer's own
+private project files and a plugin's test fixtures. Both are listed in
+`NOTICE`.

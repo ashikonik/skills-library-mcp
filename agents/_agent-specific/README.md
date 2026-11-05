@@ -1,6 +1,6 @@
 # Pipeline-internal agents — not for direct invocation
 
-These 6 definitions are **dispatch targets**, not standalone tools.
+These 14 definitions are **dispatch targets**, not standalone tools.
 Each one is invoked by an orchestrating agent as part of a larger
 workflow. Invoking one directly will fail or produce nonsense,
 because they expect parameters (a scan root, a workspace clone, a
@@ -14,8 +14,16 @@ reproducible.
 | `analyzer` | skill-creator-plus | eval loop — internal post-hoc analyzer | marketplace:claude-plugins-official |
 | `comparator` | skill-creator-plus | eval loop — internal blind comparator | marketplace:claude-plugins-official |
 | `documentation-writer` | VS Code Python extension | extension-internal agent | vscode-extension |
+| `explore` | claude-security | dispatched by researcher/verifier/patch agents | marketplace:claude-plugins-official |
 | `grader` | skill-creator-plus | eval loop — internal grader | marketplace:claude-plugins-official |
 | `logs-reader` | osmo-cli | spawned by the main OSMO agent | plugin:nvidia |
+| `patch-generator` | claude-security | fix job — dispatched by the fix job | marketplace:claude-plugins-official |
+| `patch-verifier` | claude-security | fix job — dispatched by the fix job | marketplace:claude-plugins-official |
+| `report_researcher` | Gemini Antigravity | hidden background sub-agent | gemini-antigravity |
+| `scan-inventory` | claude-security | scan pipeline — dispatched by the scan job | marketplace:claude-plugins-official |
+| `scan-loader` | claude-security | scan pipeline — dispatched by the scan job | marketplace:claude-plugins-official |
+| `scan-researcher` | claude-security | scan pipeline — dispatched by the scan job | marketplace:claude-plugins-official |
+| `scan-verifier` | claude-security | scan pipeline — dispatched by the scan job | marketplace:claude-plugins-official |
 | `workflow-expert` | osmo-cli | spawned by the main OSMO agent | plugin:nvidia |
 
 The "Original source" column names the *container* the agent came

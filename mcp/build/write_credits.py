@@ -28,6 +28,7 @@ sys.path.insert(0, HERE)
 from packs import (                    # noqa: E402
     by_name as pack_by_name,
     publishable as pack_publishable,
+    packs as pack_records,
 )
 
 
@@ -39,6 +40,23 @@ def own_pack_names():
     can never list a pack the library does not have.
     """
     return list(pack_publishable())
+
+
+def included_pack_names():
+    """The own packs that are published under terms that do not grant
+    redistribution.
+
+    These are the maintainer's own work, but something they vendor does
+    not permit redistribution -- so they are listed separately, under the
+    owner's instruction, rather than under the MIT licence that covers
+    the rest of the repository's own work.
+    """
+    return [p['name'] for p in pack_records()
+            if p.get('included_with_terms')]
+
+
+# The packs published under terms, as a set, for the checks below.
+INCLUDED_PACK_NAMES = set(included_pack_names())
 
 
 def pack_summary(name):
@@ -134,6 +152,14 @@ MIT License
 
 Copyright (c) {year} {holder}
 
+This licence covers this repository's own work: the MCP server, the
+index builder, the installers, the tests, the documentation, and the
+skills written for this library. It does NOT cover the third-party
+skills and agents bundled under `skills/` and `agents/` -- they keep
+the terms their authors gave them, and some of them are here under
+terms that do not grant redistribution. See `NOTICE` for the full
+position and `CREDITS.md` for the attribution.
+
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
@@ -160,8 +186,157 @@ def write_license(path):
     return path
 
 
+def _upstream_link(entry):
+    """A link to where an entry came from, when it is known.
+
+    The repository URL is preferred: it is where the work lives, and it
+    is where somebody can go to get it. The plain URL is the fallback,
+    and an entry with neither gets no link at all rather than a broken
+    one.
+    """
+    repo = entry.get('repository')
+    url = entry.get('url')
+    if repo:
+        if repo.startswith('http'):
+            return repo
+        return 'https://github.com/%s' % repo
+    return url or ''
+
+
+# Where a container's own marketplace lives, when the entry's own
+# manifest names no repository of its own.
+#
+# The `repository` field records the *container* a plugin came from --
+# OpenAI's `plugins` repo ships the Figma plugin, so Figma's entries
+# carry OpenAI's URL. That is where the file was found, but it is not
+# where the work came from, and a credits entry pointing there sends
+# the reader to the wrong author. The author's own home is the honest
+# link, so the container is only used when the author has no upstream
+# of their own.
+CONTAINER_HOMES = {
+    'marketplace:claude-plugins-official':
+        'https://github.com/anthropics/skills',
+    'marketplace:claude-code': 'https://github.com/anthropics/claude-code',
+    'codex-system': 'https://github.com/openai/codex',
+    'gemini-antigravity': 'https://antigravity.google',
+    'vscode-copilot-chat': 'https://github.com/microsoft/vscode-copilot-chat',
+    'openai': 'https://github.com/openai/plugins',
+}
+
+# The owners whose work is not at a GitHub URL at all.
+OWNER_HOMES = {
+    'Figma': 'https://www.figma.com',
+    'OpenAI': 'https://github.com/openai/plugins',
+    'OpenAI (Codex)': 'https://github.com/openai/codex',
+    'Anthropic': 'https://github.com/anthropics/skills',
+    'Google (Antigravity)': 'https://antigravity.google',
+    'Microsoft': 'https://github.com/microsoft',
+    'GitHub (Copilot Chat)': 'https://github.com/microsoft/vscode-copilot-chat',
+    'MagicPathAI': 'https://www.magicpath.ai',
+    'DigitalOcean': 'https://www.digitalocean.com',
+}
+
+
+def _upstream_label(entry):
+    """(label, url) for where an entry came from.
+
+    The link has to point at the *author's* work, not at the container
+    the file was found in. OpenAI's `plugins` repository is where the
+    Figma plugin was found; Figma wrote it, and Figma's own terms
+    govern it -- so the reader is sent to Figma.
+    """
+    owner = owner_of(entry)
+    container = entry.get('container') or ''
+    repo = entry.get('repository')
+
+    # The author's own home wins over any repository the entry carries,
+    # because a repository named in a plugin manifest is usually the
+    # *publisher's* repository, not the author's. Figma's plugin is
+    # distributed through OpenAI's `plugins` repo and names it, but
+    # Figma wrote it.
+    home = OWNER_HOMES.get(owner)
+    if home:
+        return (owner, home)
+
+    # An entry with no owner of its own falls back to its container's
+    # home, and then to the repository its manifest named.
+    if owner == 'Unknown':
+        home = CONTAINER_HOMES.get(container)
+        if home:
+            return (container, home)
+
+    if repo:
+        return (repo.rstrip('/').split('/')[-1], _upstream_link(entry))
+
+    url = entry.get('url')
+    if url:
+        return (owner if owner != 'Unknown' else 'upstream', url)
+
+    return (owner if owner != 'Unknown' else '—', None)
+
+
+def _licence_label(entry):
+    """The licence, in the words the upstream used."""
+    lic = entry.get('license')
+    if lic:
+        return lic
+    if entry.get('license_source'):
+        return 'not stated (%s)' % entry['license_source']
+    return 'not stated'
+
+
+def write_excluded_list(w, restricted, personal, fixture):
+    """Name every excluded entry, with its author and its licence.
+
+    The point of a credits file is that somebody can find the author of
+    every piece of work in the project. An entry that is not shipped is
+    still somebody's work, and the honest way to record it is to name
+    it, attribute it, and say where it lives -- not to leave a hole in
+    the catalogue that nobody can account for.
+
+    Nothing is redistributed by this list. It is metadata: a name, an
+    author, a licence, a URL.
+    """
+    groups = [
+        ('Licence does not permit redistribution', restricted,
+         'These entries are **not** in this repository. Their terms do '
+         'not permit redistribution, and a credits entry cannot turn '
+         'a prohibition into a permission. Each one is listed here so '
+         'the work is accounted for and its author credited; to use '
+         'one, go to its upstream.'),
+        ("The maintainer's own private project files", personal,
+         'These are the maintainer\'s own files, from personal projects '
+         'that are not published work. They are not in this repository, '
+         'and they are listed here only so the count reconciles.'),
+        ('Test fixtures, not published content', fixture,
+         'Placeholder entries that ship inside a plugin\'s `fixtures/` '
+         'directory. The scanner picks them up like any other skill; '
+         'they are not content, and they are not published.'),
+    ]
+    groups = [g for g in groups if g[1]]
+
+    for title, entries, blurb in groups:
+        if not entries:
+            continue
+        w('### %s (%d)' % (title, len(entries)))
+        w('')
+        w(blurb)
+        w('')
+        w('| Entry | Kind | Author | Licence | Why it is not published | Upstream |')
+        w('|---|---|---|---|---|---|')
+        for e in sorted(entries, key=lambda x: (owner_of(x).lower(), x['name'])):
+            label, link = _upstream_label(e)
+            upstream = ('[%s](%s)' % (label, link) if link else label)
+            w('| `%s` | %s | %s | %s | %s | %s |'
+              % (e['name'], e.get('kind', 'skill'), owner_of(e),
+                 _licence_label(e), e.get('reason', 'not published'),
+                 upstream))
+        w('')
+
+
 def write_notice(path, provenance):
     published = [e for e in provenance if e['verdict'] == 'redistributable']
+    terms = [e for e in provenance if e['verdict'] == 'included-with-terms']
     restricted = [e for e in provenance if e['verdict'] == 'restricted']
     personal = [e for e in provenance if e['verdict'] == 'personal']
     fixture = [e for e in provenance if e['verdict'] == 'fixture']
@@ -172,9 +347,16 @@ def write_notice(path, provenance):
     w('')
     w('This repository bundles content that is **not** covered by this')
     w("repository's own MIT licence. Each bundled skill and agent keeps the")
-    w('licence its author gave it. The complete attribution is in')
-    w('`CREDITS.md`; the licences themselves travel with the content, in')
-    w('each plugin manifest and each upstream `LICENSE` file.')
+    w('licence its author gave it, and the complete attribution is in')
+    w('`CREDITS.md`.')
+    w('')
+    w('**Some of the bundled content is here under terms that do not grant')
+    w('redistribution.** Those entries are listed, with the upstream\'s own')
+    w('terms quoted, in [Entries published under terms that do not permit')
+    w('redistribution](#entries-published-under-terms-that-do-not-permit-redistribution)')
+    w('below. The repository\'s owner instructed that they be included; the')
+    w('upstreams did not grant the right. The position is stated here so')
+    w('that it is on the record rather than implied.')
     w('')
     w('## What the MIT licence covers')
     w('')
@@ -186,7 +368,14 @@ def write_notice(path, provenance):
     w('  `.build_library.py`, `.build_guide.py`, `.gen_report.py`;')
     w('- the installers, the test suite and the documentation;')
     w('- the skills written for this library: %s.'
-      % ', '.join('`%s`' % n for n in own_pack_names()))
+      % ', '.join('`%s`' % n for n in own_pack_names()
+                  if n not in INCLUDED_PACK_NAMES))
+    w('')
+    w('`document-builder` is the exception among the library\'s own packs: it')
+    w('is the maintainer\'s work, but it vendors Anthropic\'s document skills')
+    w('under `vendor/`, whose terms forbid redistributing them. It is')
+    w('published at the owner\'s instruction and listed in the section')
+    w('below, and the vendored copies remain Anthropic\'s.')
     w('')
     w('`skill-creator-plus` is derived from Anthropic\'s `skill-creator`')
     w('(Apache-2.0), with additional references, scripts and an eval-review')
@@ -197,31 +386,88 @@ def write_notice(path, provenance):
     w('')
     w('Every other skill and agent under `skills/` and `agents/` is third-')
     w('party work, redistributed under its own licence. Some are MIT, some')
-    w('are Apache-2.0, one is CC-BY-4.0. The licence file for each one is')
-    w('in the upstream project it came from, and the attribution is listed')
-    w('in `CREDITS.md`.')
+    w('are Apache-2.0, one is CC-BY-4.0, and %d are under terms that do not'
+      % len(terms))
+    w('permit redistribution — see the section below. The licence file for')
+    w('each one is in the upstream project it came from, and the')
+    w('attribution is listed in `CREDITS.md`.')
+    w('')
+    w('## Entries published under terms that do not permit redistribution')
+    w('')
+    w('These %d entries are in this repository because the repository\'s'
+      % len(terms))
+    w('owner instructed that they be included. Their upstream terms do not')
+    w('grant redistribution, and shipping them redistributes material whose')
+    w('authors did not agree to that. They are listed here, in full, so')
+    w('that the position is explicit rather than buried.')
+    w('')
+    terms_by_owner = defaultdict(list)
+    for e in terms:
+        terms_by_owner[owner_of(e)].append(e)
+    for owner in sorted(terms_by_owner,
+                        key=lambda o: (-len(terms_by_owner[o]), o)):
+        entries = terms_by_owner[owner]
+        w('### %s — %d %s'
+          % (owner, len(entries), 'entry' if len(entries) == 1 else 'entries'))
+        w('')
+        detail = _terms_detail(entries).rstrip('.')
+        detail = detail[0].upper() + detail[1:] if detail else detail
+        w('%s.' % detail)
+        w('')
+        w('| Entry | Kind | Licence |')
+        w('|---|---|---|')
+        for e in sorted(entries, key=lambda x: x['name']):
+            w('| `%s` | %s | %s |'
+              % (e['name'], e.get('kind', 'skill'), _licence_label(e)))
+        w('')
+    w('`document-builder` deserves a specific note. It is the')
+    w('maintainer\'s own pack, but it vendors Anthropic\'s `docx`, `pptx`,')
+    w('`xlsx` and `pdf` skills under `vendor/`, and their `LICENSE.txt` says:')
+    w('')
+    w('> ADDITIONAL RESTRICTIONS: Notwithstanding anything in the Agreement')
+    w('> to the contrary, users may not:')
+    w('>')
+    w('> - Extract these materials from the Services or retain copies of')
+    w('>   these materials outside the Services')
+    w('> - Reproduce or copy these materials, except for temporary copies')
+    w('>   created automatically during authorized use of the Services')
+    w('> - Distribute, sublicense, or transfer these materials to any')
+    w('>   third party')
+    w('')
+    w('That is the plain text of the terms, and publishing the pack does')
+    w('the thing it forbids. The pack is included because the owner asked')
+    w('for it; the vendored copies remain Anthropic\'s.')
     w('')
     w('## Entries that were left out')
     w('')
-    w('An entry is published only if its own licence permits redistribution.')
-    w('Publishing material whose licence forbids it would grant rights the')
-    w('author did not grant, so those entries are **not** in this repository.')
-    w('')
     w('| Reason | Count |')
     w('|---|---:|')
-    w('| Published | %d |' % len(published))
-    w('| Excluded — the licence does not permit redistribution | %d |' % len(restricted))
+    w('| Published — the licence permits redistribution | %d |' % len(published))
+    w('| Published — the owner\'s instruction; the terms do not permit it | %d |'
+      % len(terms))
     w('| Excluded — the maintainer\'s own private project files | %d |' % len(personal))
     w('| Excluded — test fixtures, not published content | %d |' % len(fixture))
     w('')
-    w('The excluded entries are not listed here by name, because naming them')
-    w('would defeat the point of excluding them: they would still be')
-    w('pointed at. The count is the honest disclosure — the excluded set is')
-    w('regenerated by `mcp/build/provenance.py`, which resolves a licence')
-    w('per entry from the container manifest, the nearest `LICENSE` file,')
-    w('the installed package metadata, or the entry\'s own frontmatter, in')
-    w('that order.')
+    if restricted:
+        w('%d entries are excluded because their licence does not permit'
+          % len(restricted))
+        w('redistribution and the owner did not instruct otherwise. They')
+        w('are named below, with their author, their licence and where they')
+        w('came from. Naming an entry here attributes it; it does not')
+        w('redistribute it.')
+    else:
+        w('No entry is excluded on licence grounds. The entries that are not')
+        w('here are the maintainer\'s own private project files and the')
+        w('test fixtures, both listed below.')
     w('')
+    w('The lists are generated from the same provenance table that decides')
+    w('what is published, by `mcp/build/provenance.py`, which resolves a')
+    w('licence per entry from the container manifest, the nearest `LICENSE`')
+    w('file, the installed package metadata, or the entry\'s own')
+    w('frontmatter, in that order. It cannot drift from what actually')
+    w('shipped.')
+    w('')
+    write_excluded_list(w, restricted, personal, fixture)
     w('## Third-party components')
     w('')
     w('The `ponytail/` directory is an upstream clone kept whole, with its')
@@ -245,8 +491,29 @@ def write_notice(path, provenance):
     return path
 
 
+def _terms_detail(entries):
+    """The upstream terms for one author's entries, as a sentence.
+
+    Two entries from one upstream share one set of terms, so the terms
+    are printed once per upstream rather than once per entry -- the
+    table below already says which entries each applies to.
+    """
+    from provenance import INCLUDE_WITH_TERMS
+    owner = owner_of(entries[0])
+    detail = INCLUDE_WITH_TERMS.get(owner)
+    if detail:
+        return detail
+    # A per-entry reason that was established by investigating that
+    # entry beats the general rule.
+    for e in entries:
+        if e.get('reason'):
+            return e['reason']
+    return 'published at the owner\'s instruction'
+
+
 def write_credits(path, provenance):
-    published = [e for e in provenance if e['verdict'] == 'redistributable']
+    published = [e for e in provenance
+                 if e['verdict'] in ('redistributable', 'included-with-terms')]
 
     by_owner = defaultdict(list)
     for e in published:
@@ -278,12 +545,52 @@ def write_credits(path, provenance):
 
     # Biggest contributors first; ties broken by name so the file is stable.
     ordered = sorted(by_owner.items(), key=lambda kv: (-len(kv[1]), kv[0]))
+    terms_owners = {owner_of(e) for e in provenance
+                     if e['verdict'] == 'included-with-terms'}
     for owner, entries in ordered:
         lics = licenses_of(entries)
         lic = ', '.join(sorted(lics)) if lics else '—'
         repo = repo_of(entries)
         upstream = '[%s](%s)' % (repo.rsplit('/', 1)[-1], repo) if repo else '—'
-        w('| %s | %d | %s | %s |' % (owner, len(entries), lic, upstream))
+        # An author with entries under terms that do not grant
+        # redistribution gets a marker, so the row is not read as "all of
+        # this author's entries are here on a permissive licence".
+        note = ' *(some under terms)*' if owner in terms_owners else ''
+        w('| %s%s | %d | %s | %s |' % (owner, note, len(entries), lic, upstream))
+
+    # The entries published under terms that do not grant redistribution,
+    # listed by author, so the credit for them is as explicit as the
+    # credit for everything else.
+    terms_entries = [e for e in provenance
+                     if e['verdict'] == 'included-with-terms']
+    if terms_entries:
+        w('')
+        w('### The entries published under terms that do not grant')
+        w('redistribution')
+        w('')
+        w('These %d %s here at the repository owner\'s instruction.'
+          % (len(terms_entries),
+             'entry is' if len(terms_entries) == 1 else 'entries are'))
+        w('Their upstream terms do not grant redistribution. `NOTICE` lists')
+        w('them all and quotes the terms; this is the credit.')
+        w('')
+        terms_by_owner = defaultdict(list)
+        for e in terms_entries:
+            terms_by_owner[owner_of(e)].append(e)
+        for owner in sorted(terms_by_owner,
+                            key=lambda o: (-len(terms_by_owner[o]), o)):
+            entries = terms_by_owner[owner]
+            w('**%s** — %d %s'
+              % (owner, len(entries),
+                 'entry' if len(entries) == 1 else 'entries'))
+            w('')
+            for e in sorted(entries, key=lambda x: x['name']):
+                label, link = _upstream_label(e)
+                upstream = ('[%s](%s)' % (label, link) if link else label)
+                w('- `%s` (%s) — %s — %s'
+                  % (e['name'], e.get('kind', 'skill'),
+                     _licence_label(e), upstream))
+            w('')
 
     w('')
     w('## The individual copyright holders')
@@ -360,11 +667,10 @@ def write_credits(path, provenance):
     w('copies are Anthropic\'s, under Anthropic\'s own terms, and each one')
     w('carries its `LICENSE.txt`.')
     w('')
-    w('Because those terms forbid redistribution, `document-builder` itself is')
-    w('**not** in this repository — it is in the working library, where the')
-    w('bundled copies came from, and it is left out of the published tree')
-    w('whole rather than shipped with its vendored content stripped out. It')
-    w('is counted among the excluded entries in `NOTICE`.')
+    w('Because those terms forbid redistribution, `document-builder` is')
+    w('published under the owner\'s instruction rather than on the strength')
+    w('of a licence. It is listed among the entries whose terms do not grant')
+    w('redistribution in `NOTICE`, with the vendored terms quoted there.')
     w('')
     w('- Author: Anthropic, PBC')
     w('- Upstream: <https://github.com/anthropics/skills>')
@@ -377,12 +683,24 @@ def write_credits(path, provenance):
     w('repository\'s MIT licence:')
     w('')
     for name in own_pack_names():
+        if name in INCLUDED_PACK_NAMES:
+            continue
         w('- `%s` — %s' % (name, pack_summary(name)))
     w('')
     w('`skill-creator-plus` is derived from Anthropic\'s `skill-creator`')
     w('(Apache-2.0), with additional references, scripts and an eval-review')
     w('viewer. Its upstream terms are noted here because they apply to the')
     w('part it derives from.')
+    w('')
+    for name in own_pack_names():
+        if name not in INCLUDED_PACK_NAMES:
+            continue
+        w('`%s` is the repository\'s own work too, but it vendors' % name)
+        w('material whose terms do not grant redistribution, so it is not')
+        w('covered by the MIT licence above. It is published at the')
+        w('owner\'s instruction and listed in `NOTICE` among the entries')
+        w('whose terms do not permit redistribution, with the vendored')
+        w('terms quoted there.')
     w('')
     w('## The server')
     w('')
@@ -392,6 +710,22 @@ def write_credits(path, provenance):
     w('')
     w('It depends on `@modelcontextprotocol/sdk` (MIT), `zod` (MIT) and')
     w('`yaml` (ISC), which are not redistributed here.')
+    w('')
+    w('## Every published entry')
+    w('')
+    w('The complete list: every entry this repository publishes, who wrote')
+    w('it, under what terms, and where it came from. The counts above')
+    w('summarise it; this is the attribution itself.')
+    w('')
+    w('| Entry | Kind | Author | Terms | Upstream |')
+    w('|---|---|---|---|---|')
+    for e in sorted(published, key=lambda x: (x.get('kind', 'skill'),
+                                               x['name'])):
+        label, link = _upstream_label(e)
+        upstream = ('[%s](%s)' % (label, link) if link else label)
+        w('| `%s` | %s | %s | %s | %s |'
+          % (e['name'], e.get('kind', 'skill'), owner_of(e),
+             _licence_label(e), upstream))
     w('')
     w('## How to check this file')
     w('')
@@ -410,19 +744,28 @@ def write_credits(path, provenance):
 
 
 def main():
-    prov_path = os.path.join(BASE, 'mcp', 'data', 'provenance.json')
-    with open(prov_path, encoding='utf-8') as fh:
-        provenance = json.load(fh)
-
+    # The tree the files are written *into* is the tree the provenance is
+    # read *from*. In the local library that is the local table, with the
+    # machine's absolute paths; in the published tree it is the published
+    # table, which has the container labels instead. Either way the file
+    # describes the tree it sits in -- which is the whole point of
+    # generating it from the table rather than writing it by hand.
     dst = os.environ.get('PUBLIC_TREE') or os.path.join(
         os.path.dirname(BASE), 'skills-library-mcp-public')
+
+    prov_path = os.path.join(dst, 'mcp', 'data', 'provenance.json')
+    if not os.path.isfile(prov_path):
+        prov_path = os.path.join(BASE, 'mcp', 'data', 'provenance.json')
+    with open(prov_path, encoding='utf-8') as fh:
+        provenance = json.load(fh)
 
     for p in (write_license(os.path.join(dst, 'LICENSE')),
               write_notice(os.path.join(dst, 'NOTICE'), provenance),
               write_credits(os.path.join(dst, 'CREDITS.md'), provenance)):
         print('wrote %s' % os.path.relpath(p, dst))
 
-    pub = sum(1 for e in provenance if e['verdict'] == 'redistributable')
+    pub = sum(1 for e in provenance
+              if e['verdict'] in ('redistributable', 'included-with-terms'))
     print('  credited %d published entries' % pub)
 
 

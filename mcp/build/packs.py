@@ -18,11 +18,12 @@ This module is the single reader. The rules it encodes:
   * **A pack with no licence file of its own is this repository's own
     work**, and this repository is MIT.
 
-  * **A pack can be marked `restricted`.** `document-builder` is the
-    maintainer's own work, but it vendors Anthropic's document skills
-    whose terms forbid redistribution -- so it is in the library and not
-    in the published tree. The manifest is where that fact lives, because
-    it is a fact about the pack and not about the licence resolver.
+  * **A pack can be marked `restricted`.** `document-builder` was the
+    case: it is the maintainer's own work, but it vendors Anthropic's
+    document skills whose terms forbid redistribution. The repository
+    owner instructed that it be shipped anyway, so the manifest marks it
+    `included_with_terms` instead -- a recorded decision, not an
+    oversight. The NOTICE quotes the vendored terms verbatim.
 
 The manifest is read once and cached, because five scripts ask for it in
 one build and the file does not change mid-build.
@@ -107,6 +108,10 @@ def is_restricted(name):
       * the manifest marks it `restricted` -- its own licence permits
         redistribution, but something it vendors does not;
       * its licence is not one that permits redistribution.
+
+    A pack marked `included_with_terms` is *not* restricted: the owner
+    instructed that it be shipped even though the terms do not grant
+    redistribution. It is published, and the NOTICE quotes the terms.
     """
     rec = by_name(name)
     if rec is None:
@@ -118,6 +123,12 @@ def is_restricted(name):
                    ('MIT', 'APACHE-2.0', 'APACHE', 'BSD', 'ISC', 'MPL', 'CC-BY'))
 
 
+def included_with_terms():
+    """The packs that are published under terms that do not grant
+    redistribution, at the owner's instruction."""
+    return [p['name'] for p in packs() if p.get('included_with_terms')]
+
+
 def publishable():
     """The packs that may be published, in manifest order."""
     return [p['name'] for p in packs() if not is_restricted(p['name'])]
@@ -126,8 +137,13 @@ def publishable():
 if __name__ == '__main__':
     # A quick self-check, so the module can be run standalone.
     for p in packs():
+        if p.get('included_with_terms'):
+            state = 'INCLUDED (terms)'
+        elif is_restricted(p['name']):
+            state = 'RESTRICTED'
+        else:
+            state = 'publishable'
         print('%-22s %-12s min_files=%-4d %s'
-              % (p['name'], licence_of(p['name']), p.get('min_files', 1),
-                 'RESTRICTED' if is_restricted(p['name']) else 'publishable'))
+              % (p['name'], licence_of(p['name']), p.get('min_files', 1), state))
     print()
     print('%d packs, %d publishable' % (len(packs()), len(publishable())))

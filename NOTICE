@@ -2,9 +2,16 @@ NOTICE
 
 This repository bundles content that is **not** covered by this
 repository's own MIT licence. Each bundled skill and agent keeps the
-licence its author gave it. The complete attribution is in
-`CREDITS.md`; the licences themselves travel with the content, in
-each plugin manifest and each upstream `LICENSE` file.
+licence its author gave it, and the complete attribution is in
+`CREDITS.md`.
+
+**Some of the bundled content is here under terms that do not grant
+redistribution.** Those entries are listed, with the upstream's own
+terms quoted, in [Entries published under terms that do not permit
+redistribution](#entries-published-under-terms-that-do-not-permit-redistribution)
+below. The repository's owner instructed that they be included; the
+upstreams did not grant the right. The position is stated here so
+that it is on the record rather than implied.
 
 ## What the MIT licence covers
 
@@ -17,6 +24,12 @@ The MIT licence in `LICENSE` covers the work in this repository:
 - the installers, the test suite and the documentation;
 - the skills written for this library: `caveman-mode`, `humanizer`, `latex-doctor`, `research-partner`, `skill-creator-plus`, `skill-library-adder`.
 
+`document-builder` is the exception among the library's own packs: it
+is the maintainer's work, but it vendors Anthropic's document skills
+under `vendor/`, whose terms forbid redistributing them. It is
+published at the owner's instruction and listed in the section
+below, and the vendored copies remain Anthropic's.
+
 `skill-creator-plus` is derived from Anthropic's `skill-creator`
 (Apache-2.0), with additional references, scripts and an eval-review
 viewer. Its upstream terms are noted here because they apply to the
@@ -26,30 +39,280 @@ part it derives from.
 
 Every other skill and agent under `skills/` and `agents/` is third-
 party work, redistributed under its own licence. Some are MIT, some
-are Apache-2.0, one is CC-BY-4.0. The licence file for each one is
-in the upstream project it came from, and the attribution is listed
-in `CREDITS.md`.
+are Apache-2.0, one is CC-BY-4.0, and 135 are under terms that do not
+permit redistribution — see the section below. The licence file for
+each one is in the upstream project it came from, and the
+attribution is listed in `CREDITS.md`.
+
+## Entries published under terms that do not permit redistribution
+
+These 135 entries are in this repository because the repository's
+owner instructed that they be included. Their upstream terms do not
+grant redistribution, and shipping them redistributes material whose
+authors did not agree to that. They are listed here, in full, so
+that the position is explicit rather than buried.
+
+### OpenAI — 89 entries
+
+OpenAI declares this plugin proprietary; the repository LICENSE permits use by the licensee only.
+
+| Entry | Kind | Licence |
+|---|---|---|
+| `alphafold-skill` | skill | Proprietary |
+| `artifact-template-analytics-dashboard` | skill | Proprietary |
+| `artifact-template-business-review` | skill | Proprietary |
+| `artifact-template-design-report` | skill | Proprietary |
+| `artifact-template-experiment-analysis` | skill | Proprietary |
+| `artifact-template-financial-budget` | skill | Proprietary |
+| `artifact-template-investment-committee-memo` | skill | Proprietary |
+| `artifact-template-legal-memorandum` | skill | Proprietary |
+| `artifact-template-market-trends-report` | skill | Proprietary |
+| `artifact-template-minimal-letterhead` | skill | Proprietary |
+| `artifact-template-operating-calendar` | skill | Proprietary |
+| `artifact-template-operating-review` | skill | Proprietary |
+| `artifact-template-project-kickoff` | skill | Proprietary |
+| `artifact-template-project-tracker` | skill | Proprietary |
+| `artifact-template-sales-pipeline` | skill | Proprietary |
+| `artifact-template-simple-dark-mode` | skill | Proprietary |
+| `artifact-template-simple-light-mode` | skill | Proprietary |
+| `artifact-template-strategy-memorandum` | skill | Proprietary |
+| `artifact-template-system-design` | skill | Proprietary |
+| `artifact-template-team-alignment` | skill | Proprietary |
+| `artifact-template-three-statement-forecast` | skill | Proprietary |
+| `attack-path-analysis` | skill | Proprietary |
+| `bgee-skill` | skill | Proprietary |
+| `bindingdb-skill` | skill | Proprietary |
+| `biobankjapan-phewas-skill` | skill | Proprietary |
+| `biorxiv-skill` | skill | Proprietary |
+| `biostudies-arrayexpress-skill` | skill | Proprietary |
+| `build-chatgpt-app` | skill | Proprietary |
+| `cbioportal-skill` | skill | Proprietary |
+| `cellxgene-skill` | skill | Proprietary |
+| `chatgpt-app-submission` | skill | Proprietary |
+| `chebi-skill` | skill | Proprietary |
+| `chembl-skill` | skill | Proprietary |
+| `civic-skill` | skill | Proprietary |
+| `clinicaltrials-skill` | skill | Proprietary |
+| `clinvar-variation-skill` | skill | Proprietary |
+| `deep-security-scan` | skill | Proprietary |
+| `efo-ontology-skill` | skill | Proprietary |
+| `encode-skill` | skill | Proprietary |
+| `ensembl-skill` | skill | Proprietary |
+| `epigraphdb-skill` | skill | Proprietary |
+| `eqtl-catalogue-skill` | skill | Proprietary |
+| `eva-skill` | skill | Proprietary |
+| `finding-discovery` | skill | Proprietary |
+| `finngen-phewas-skill` | skill | Proprietary |
+| `fix-finding` | skill | Proprietary |
+| `genebass-gene-burden-skill` | skill | Proprietary |
+| `gnomad-graphql-skill` | skill | Proprietary |
+| `gtex-eqtl-skill` | skill | Proprietary |
+| `gwas-catalog-skill` | skill | Proprietary |
+| `hex` | skill | Proprietary |
+| `hmdb-skill` | skill | Proprietary |
+| `human-protein-atlas-skill` | skill | Proprietary |
+| `ipd-skill` | skill | Proprietary |
+| `locus-to-gene-mapper-skill` | skill | Proprietary |
+| `metabolights-skill` | skill | Proprietary |
+| `mgnify-skill` | skill | Proprietary |
+| `ncbi-blast-skill` | skill | Proprietary |
+| `ncbi-clinicaltables-skill` | skill | Proprietary |
+| `ncbi-datasets-skill` | skill | Proprietary |
+| `ncbi-entrez-skill` | skill | Proprietary |
+| `ncbi-pmc-skill` | skill | Proprietary |
+| `openai-ads-conversions-setup` | skill | Proprietary |
+| `openai-api-troubleshooting` | skill | Proprietary |
+| `openai-platform-api-key` | skill | Proprietary |
+| `opentargets-skill` | skill | Proprietary |
+| `pharmgkb-skill` | skill | Proprietary |
+| `plugin-creator` | skill | not stated |
+| `plugin-management` | skill | Proprietary |
+| `pride-skill` | skill | Proprietary |
+| `propose-security-hardening` | skill | Proprietary |
+| `proteomexchange-skill` | skill | Proprietary |
+| `pubchem-pug-skill` | skill | Proprietary |
+| `quickgo-skill` | skill | Proprietary |
+| `rcsb-pdb-skill` | skill | Proprietary |
+| `reactome-skill` | skill | Proprietary |
+| `research-router-skill` | skill | Proprietary |
+| `rhea-skill` | skill | Proprietary |
+| `rnacentral-skill` | skill | Proprietary |
+| `security-diff-scan` | skill | Proprietary |
+| `string-skill` | skill | Proprietary |
+| `threat-model` | skill | Proprietary |
+| `tpmi-phewas-skill` | skill | Proprietary |
+| `track-findings` | skill | Proprietary |
+| `triage-finding` | skill | Proprietary |
+| `ukb-topmed-phewas-skill` | skill | Proprietary |
+| `uniprot-skill` | skill | Proprietary |
+| `validation` | skill | Proprietary |
+| `vulnerability-writeup` | skill | Proprietary |
+
+### Figma — 16 entries
+
+Figma's Developer Terms govern this work; they grant Figma a licence to distribute it as part of the Figma product.
+
+| Entry | Kind | Licence |
+|---|---|---|
+| `design-parity-review-agent` | agent | LicenseRef-Figma-Developer-Terms |
+| `design-system-rules-agent` | agent | LicenseRef-Figma-Developer-Terms |
+| `figma-code-connect` | skill | LicenseRef-Figma-Developer-Terms |
+| `figma-code-connect-agent` | agent | LicenseRef-Figma-Developer-Terms |
+| `figma-create-new-file` | skill | LicenseRef-Figma-Developer-Terms |
+| `figma-design-to-code` | skill | LicenseRef-Figma-Developer-Terms |
+| `figma-generate-design` | skill | LicenseRef-Figma-Developer-Terms |
+| `figma-generate-diagram` | skill | LicenseRef-Figma-Developer-Terms |
+| `figma-generate-library` | skill | LicenseRef-Figma-Developer-Terms |
+| `figma-implement-motion` | skill | LicenseRef-Figma-Developer-Terms |
+| `figma-implementation-agent` | agent | LicenseRef-Figma-Developer-Terms |
+| `figma-swiftui` | skill | LicenseRef-Figma-Developer-Terms |
+| `figma-use` | skill | LicenseRef-Figma-Developer-Terms |
+| `figma-use-figjam` | skill | LicenseRef-Figma-Developer-Terms |
+| `figma-use-motion` | skill | LicenseRef-Figma-Developer-Terms |
+| `figma-use-slides` | skill | LicenseRef-Figma-Developer-Terms |
+
+### Google (Antigravity) — 10 entries
+
+Antigravity is proprietary Google software with its own terms of service, and no licence accompanies these entries.
+
+| Entry | Kind | Licence |
+|---|---|---|
+| `agy-customizations` | skill | not stated |
+| `antigravity-guide` | skill | not stated |
+| `automation` | skill | not stated |
+| `generative_ui` | skill | not stated |
+| `migrate-workflows` | skill | not stated |
+| `permissioned-github` | skill | not stated |
+| `plugin` | skill | not stated |
+| `report_researcher` | agent | not stated |
+| `run-workflow` | skill | not stated |
+| `ui-plugin-navigation` | skill | not stated |
+
+### Anthropic — 9 entries
+
+Anthropic's LICENSE says the plugin is proprietary to Anthropic, PBC, and may not be made available to any third party.
+
+| Entry | Kind | Licence |
+|---|---|---|
+| `claude-security` | skill | SEE LICENSE IN LICENSE |
+| `claude-security` | agent | SEE LICENSE IN LICENSE |
+| `explore` | agent | SEE LICENSE IN LICENSE |
+| `patch-generator` | agent | SEE LICENSE IN LICENSE |
+| `patch-verifier` | agent | SEE LICENSE IN LICENSE |
+| `scan-inventory` | agent | SEE LICENSE IN LICENSE |
+| `scan-loader` | agent | SEE LICENSE IN LICENSE |
+| `scan-researcher` | agent | SEE LICENSE IN LICENSE |
+| `scan-verifier` | agent | SEE LICENSE IN LICENSE |
+
+### Microsoft — 4 entries
+
+Microsoft's Pylance licence, clause 2(e): you may not share, publish, distribute, or lease the software.
+
+| Entry | Kind | Licence |
+|---|---|---|
+| `pylance-docs` | skill | other (unrecognised) |
+| `pylance-python-profiling` | skill | other (unrecognised) |
+| `pylance-refactoring` | skill | other (unrecognised) |
+| `python-fact-grounded-coding` | skill | other (unrecognised) |
+
+### GitHub (Copilot Chat) — 3 entries
+
+Ships in the Copilot Chat extension, not in the MIT-licensed vscode-copilot-chat repository.
+
+| Entry | Kind | Licence |
+|---|---|---|
+| `Ask` | agent | not stated |
+| `Explore` | agent | not stated |
+| `Plan` | agent | not stated |
+
+### Affaan Mustafa (affaan-m/ECC) — 1 entry
+
+An installed opencode agent with no upstream copy on the machine, so no terms could be found.
+
+| Entry | Kind | Licence |
+|---|---|---|
+| `ecc-coordinator` | agent | not stated |
+
+### DigitalOcean — 1 entry
+
+The digitalocean/CodexPlugin repository has no LICENSE file and its manifest names no licence.
+
+| Entry | Kind | Licence |
+|---|---|---|
+| `provision-droplet` | skill | not stated (manifest) |
+
+### MagicPathAI — 1 entry
+
+The manifest says UNLICENSED and the upstream repository has no LICENSE file, so no rights are granted.
+
+| Entry | Kind | Licence |
+|---|---|---|
+| `magicpath` | skill | UNLICENSED |
+
+### This library (hand-authored) — 1 entry
+
+This pack vendors Anthropic's document skills, whose licence forbids extracting them from the Services, copying them, or distributing them to any third party.
+
+| Entry | Kind | Licence |
+|---|---|---|
+| `document-builder` | skill | MIT |
+
+`document-builder` deserves a specific note. It is the
+maintainer's own pack, but it vendors Anthropic's `docx`, `pptx`,
+`xlsx` and `pdf` skills under `vendor/`, and their `LICENSE.txt` says:
+
+> ADDITIONAL RESTRICTIONS: Notwithstanding anything in the Agreement
+> to the contrary, users may not:
+>
+> - Extract these materials from the Services or retain copies of
+>   these materials outside the Services
+> - Reproduce or copy these materials, except for temporary copies
+>   created automatically during authorized use of the Services
+> - Distribute, sublicense, or transfer these materials to any
+>   third party
+
+That is the plain text of the terms, and publishing the pack does
+the thing it forbids. The pack is included because the owner asked
+for it; the vendored copies remain Anthropic's.
 
 ## Entries that were left out
 
-An entry is published only if its own licence permits redistribution.
-Publishing material whose licence forbids it would grant rights the
-author did not grant, so those entries are **not** in this repository.
-
 | Reason | Count |
 |---|---:|
-| Published | 952 |
-| Excluded — the licence does not permit redistribution | 136 |
+| Published — the licence permits redistribution | 953 |
+| Published — the owner's instruction; the terms do not permit it | 135 |
 | Excluded — the maintainer's own private project files | 2 |
 | Excluded — test fixtures, not published content | 3 |
 
-The excluded entries are not listed here by name, because naming them
-would defeat the point of excluding them: they would still be
-pointed at. The count is the honest disclosure — the excluded set is
-regenerated by `mcp/build/provenance.py`, which resolves a licence
-per entry from the container manifest, the nearest `LICENSE` file,
-the installed package metadata, or the entry's own frontmatter, in
-that order.
+No entry is excluded on licence grounds. The entries that are not
+here are the maintainer's own private project files and the
+test fixtures, both listed below.
+
+The lists are generated from the same provenance table that decides
+what is published, by `mcp/build/provenance.py`, which resolves a
+licence per entry from the container manifest, the nearest `LICENSE`
+file, the installed package metadata, or the entry's own
+frontmatter, in that order. It cannot drift from what actually
+shipped.
+
+### The maintainer's own private project files (2)
+
+These are the maintainer's own files, from personal projects that are not published work. They are not in this repository, and they are listed here only so the count reconciles.
+
+| Entry | Kind | Author | Licence | Why it is not published | Upstream |
+|---|---|---|---|---|---|
+| `harvest-from-ecc` | skill | This library (hand-authored) | not stated | the maintainer's own file from a private project | This library (hand-authored) |
+| `hisabkora-context` | skill | This library (hand-authored) | not stated | the maintainer's own file from a private project | This library (hand-authored) |
+
+### Test fixtures, not published content (3)
+
+Placeholder entries that ship inside a plugin's `fixtures/` directory. The scanner picks them up like any other skill; they are not content, and they are not published.
+
+| Entry | Kind | Author | Licence | Why it is not published | Upstream |
+|---|---|---|---|---|---|
+| `alpha` | skill | Plugin Eval | MIT | a test fixture, not published content | [repo](https://example.com/repo) |
+| `beta` | skill | Plugin Eval | MIT | a test fixture, not published content | [repo](https://example.com/repo) |
+| `minimal-plugin-skill` | skill | Plugin Eval | MIT | a test fixture, not published content | [repo](https://example.com/repo) |
 
 ## Third-party components
 

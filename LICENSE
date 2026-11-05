@@ -2,6 +2,14 @@ MIT License
 
 Copyright (c) 2026 Md. Ashik-Uz-Zaman
 
+This licence covers this repository's own work: the MCP server, the
+index builder, the installers, the tests, the documentation, and the
+skills written for this library. It does NOT cover the third-party
+skills and agents bundled under `skills/` and `agents/` -- they keep
+the terms their authors gave them, and some of them are here under
+terms that do not grant redistribution. See `NOTICE` for the full
+position and `CREDITS.md` for the attribution.
+
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights

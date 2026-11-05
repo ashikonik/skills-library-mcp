@@ -67,6 +67,10 @@ licence covers the server, the tooling and the packs written for it — not the
 third-party content. `CREDITS.md` says who wrote each piece and under what
 terms; `NOTICE` says what was excluded and why.
 
+Some of the bundled content is here under terms that do **not** grant
+redistribution, at the repository owner's instruction. Those entries are
+listed in full in `NOTICE`, with the upstream terms quoted.
+
 ---
 
 ## The eight tools
@@ -196,9 +200,13 @@ is redistributed on those terms. [`CREDITS.md`](CREDITS.md) attributes every
 entry to its real upstream owner; [`NOTICE`](NOTICE) records what was left out
 and why.
 
-{n_dropped} entries are **not** in this repository, because their licence does
-not permit redistribution. Publishing them would grant rights their authors
-did not grant.
+{n_terms} entries are here under terms that **do not** grant redistribution,
+at the repository owner's instruction. `NOTICE` lists them in full and quotes
+the upstream terms, so the position is explicit rather than implied.
+
+{n_dropped} entries are **not** in this repository: the maintainer's own
+private project files and a plugin's test fixtures. Both are listed in
+`NOTICE`.
 """
 
 
@@ -209,7 +217,8 @@ def main():
               encoding='utf-8') as fh:
         provenance = json.load(fh)
 
-    published = [e for e in provenance if e['verdict'] == 'redistributable']
+    published = [e for e in provenance
+                 if e['verdict'] in ('redistributable', 'included-with-terms')]
     n_skills = sum(1 for e in published if e['kind'] == 'skill')
     n_agents = sum(1 for e in published if e['kind'] == 'agent'
                    and not e.get('held_aside'))
@@ -217,15 +226,19 @@ def main():
     # The excluded count covers everything that is not published. The
     # reason it is excluded matters, and the NOTICE breaks it down --
     # this number is the headline figure.
-    n_dropped = sum(1 for e in provenance if e['verdict'] != 'redistributable')
+    n_dropped = sum(1 for e in provenance
+                     if e['verdict'] not in ('redistributable',
+                                             'included-with-terms'))
+    n_terms = sum(1 for e in provenance
+                  if e['verdict'] == 'included-with-terms')
 
     text = README.format(n_skills=n_skills, n_agents=n_agents, n_held=n_held,
-                          n_dropped=n_dropped)
+                          n_dropped=n_dropped, n_terms=n_terms)
     path = os.path.join(DST, 'README.md')
     with open(path, 'w', encoding='utf-8') as fh:
         fh.write(text)
-    print('wrote README.md  (%d skills, %d agents, %d held aside, %d excluded)'
-          % (n_skills, n_agents, n_held, n_dropped))
+    print('wrote README.md  (%d skills, %d agents, %d held aside, %d excluded, '
+          '%d under terms)' % (n_skills, n_agents, n_held, n_dropped, n_terms))
 
 
 if __name__ == '__main__':

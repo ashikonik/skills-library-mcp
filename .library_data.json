@@ -1,6 +1,39 @@
 {
  "agents": [
   {
+   "copies": 1,
+   "desc": "Answers questions without making changes",
+   "desc_source": "yaml",
+   "ensemble": "",
+   "model": "",
+   "name": "Ask",
+   "path": "agents/Ask.md",
+   "source": "vscode-copilot-chat",
+   "tools": "['search', 'read', 'web', 'vscode/memory', 'github/issue_read', 'github.vscode-pull-request-github/issue_fetch', 'github.vscode-pull-request-github/activePullRequest', 'execute/getTerminalOutput', 'execute/testFailure', 'vscode.mermaid-markdown-features/renderMermaidDiagram', 'vscode/askQuestions']"
+  },
+  {
+   "copies": 1,
+   "desc": "Fast read-only codebase exploration and Q&A subagent. Prefer over manually chaining multiple search and file-reading operations to avoid cluttering the main conversation. Safe to call in parallel. Specify thoroughness: quick, medium, or thorough.",
+   "desc_source": "yaml",
+   "ensemble": "",
+   "model": "['Claude Haiku 4.5 (copilot)', 'Gemini 3 Flash (Preview) (copilot)', 'Auto (copilot)']",
+   "name": "Explore",
+   "path": "agents/Explore.md",
+   "source": "vscode-copilot-chat",
+   "tools": "['search', 'read', 'web', 'vscode/memory', 'github/issue_read', 'github.vscode-pull-request-github/issue_fetch', 'github.vscode-pull-request-github/activePullRequest', 'execute/getTerminalOutput', 'execute/testFailure']"
+  },
+  {
+   "copies": 1,
+   "desc": "Researches and outlines multi-step plans",
+   "desc_source": "yaml",
+   "ensemble": "",
+   "model": "",
+   "name": "Plan",
+   "path": "agents/Plan.md",
+   "source": "vscode-copilot-chat",
+   "tools": "['search', 'read', 'web', 'vscode/memory', 'github/issue_read', 'github.vscode-pull-request-github/issue_fetch', 'github.vscode-pull-request-github/activePullRequest', 'execute/getTerminalOutput', 'execute/testFailure', 'vscode/askQuestions', 'agent']"
+  },
+  {
    "copies": 18,
    "desc": "Accessibility Architect specializing in WCAG 2.2 compliance for Web and Native platforms. Use PROACTIVELY when designing UI components, establishing design systems, or auditing code for inclusive user experiences.",
    "desc_source": "yaml",
@@ -120,6 +153,17 @@
    "path": "agents/chief-of-staff.md",
    "source": "ecc",
    "tools": "[\"Read\", \"Grep\", \"Glob\", \"Bash\", \"Edit\", \"Write\"]"
+  },
+  {
+   "copies": 1,
+   "desc": "The dedicated Claude Security orchestrator. Hand it an unattended job — \"fully scan this repository and patch what you find; I understand it will use a lot of tokens\" — and it runs the whole thing itself: capturing the revision, driving the multi-agent scan through the claude-security:scan workflow, assembling the verified report, and turning survivors into targeted patch files you apply when you choose, each verified by a panel of agents before it is written. Best as the main agent of a session.",
+   "desc_source": "yaml",
+   "ensemble": "orchestrates the scan and fix pipelines",
+   "model": "inherit",
+   "name": "claude-security",
+   "path": "agents/claude-security.md",
+   "source": "marketplace:claude-plugins-official",
+   "tools": "Read, Glob, Grep, Bash, Write, Edit, AskUserQuestion, Workflow, Workflow(claude-security:scan), TaskCreate, TaskGet, TaskList, TaskUpdate, TaskOutput, TaskStop, Agent(claude-security:scan-inventory, claude-security:scan-researcher, claude-security:scan-verifier, claude-security:scan-loader, claude-security:patch-generator, claude-security:patch-verifier, claude-security:explore)"
   },
   {
    "copies": 26,
@@ -276,6 +320,28 @@
    "tools": ""
   },
   {
+   "copies": 1,
+   "desc": "You are the Design Parity Review Agent for this plugin.",
+   "desc_source": "body",
+   "ensemble": "",
+   "model": "",
+   "name": "design-parity-review-agent",
+   "path": "agents/design-parity-review-agent.md",
+   "source": "plugin:figma",
+   "tools": ""
+  },
+  {
+   "copies": 1,
+   "desc": "You are the Design System Rules Agent for the Figma plugin.",
+   "desc_source": "body",
+   "ensemble": "",
+   "model": "",
+   "name": "design-system-rules-agent",
+   "path": "agents/design-system-rules-agent.md",
+   "source": "plugin:figma",
+   "tools": ""
+  },
+  {
    "copies": 17,
    "desc": "Django/Python build, migration, and dependency error resolution specialist. Fixes pip/Poetry errors, migration conflicts, import errors, Django configuration issues, and collectstatic failures with minimal changes. Use when Django setup or startup fails.",
    "desc_source": "yaml",
@@ -331,6 +397,17 @@
    "tools": "[\"Read\", \"Write\", \"Edit\", \"Bash\", \"Grep\", \"Glob\"]"
   },
   {
+   "copies": 1,
+   "desc": "ECC pipeline coordinator. Runs the full Plan → Build(TDD) → Verify → Review → Commit workflow for a feature, delegating to planner, tdd-guide, code-reviewer, and security-reviewer. Use when asked to run the ECC pipeline or /ecc.",
+   "desc_source": "yaml",
+   "ensemble": "ECC pipeline — Plan -> TDD -> Verify -> Review -> Commit",
+   "model": "",
+   "name": "ecc-coordinator",
+   "path": "agents/ecc-coordinator.md",
+   "source": "opencode-installed",
+   "tools": ""
+  },
+  {
    "copies": 8,
    "desc": "Pulls detailed profile, company, and activity data for qualified leads. Enriches prospects with recent news, funding data, content interests, and mutual overlap.",
    "desc_source": "yaml",
@@ -351,6 +428,28 @@
    "path": "agents/fastapi-reviewer.md",
    "source": "ecc",
    "tools": "[\"Read\", \"Grep\", \"Glob\", \"Bash\"]"
+  },
+  {
+   "copies": 1,
+   "desc": "You are the Figma Code Connect Agent for this plugin.",
+   "desc_source": "body",
+   "ensemble": "",
+   "model": "",
+   "name": "figma-code-connect-agent",
+   "path": "agents/figma-code-connect-agent.md",
+   "source": "plugin:figma",
+   "tools": ""
+  },
+  {
+   "copies": 1,
+   "desc": "You are the Figma Implementation Agent for this plugin.",
+   "desc_source": "body",
+   "ensemble": "",
+   "model": "",
+   "name": "figma-implementation-agent",
+   "path": "agents/figma-implementation-agent.md",
+   "source": "plugin:figma",
+   "tools": ""
   },
   {
    "copies": 41,
@@ -1047,6 +1146,13 @@
    "source": "vscode-extension"
   },
   {
+   "name": "explore",
+   "orchestrator": "claude-security",
+   "path": "agents/_agent-specific/explore.md",
+   "reason": "dispatched by researcher/verifier/patch agents",
+   "source": "marketplace:claude-plugins-official"
+  },
+  {
    "name": "grader",
    "orchestrator": "skill-creator-plus",
    "path": "agents/_agent-specific/grader.md",
@@ -1059,6 +1165,55 @@
    "path": "agents/_agent-specific/logs-reader.md",
    "reason": "spawned by the main OSMO agent",
    "source": "plugin:nvidia"
+  },
+  {
+   "name": "patch-generator",
+   "orchestrator": "claude-security",
+   "path": "agents/_agent-specific/patch-generator.md",
+   "reason": "fix job — dispatched by the fix job",
+   "source": "marketplace:claude-plugins-official"
+  },
+  {
+   "name": "patch-verifier",
+   "orchestrator": "claude-security",
+   "path": "agents/_agent-specific/patch-verifier.md",
+   "reason": "fix job — dispatched by the fix job",
+   "source": "marketplace:claude-plugins-official"
+  },
+  {
+   "name": "report_researcher",
+   "orchestrator": "Gemini Antigravity",
+   "path": "agents/_agent-specific/report_researcher.md",
+   "reason": "hidden background sub-agent",
+   "source": "gemini-antigravity"
+  },
+  {
+   "name": "scan-inventory",
+   "orchestrator": "claude-security",
+   "path": "agents/_agent-specific/scan-inventory.md",
+   "reason": "scan pipeline — dispatched by the scan job",
+   "source": "marketplace:claude-plugins-official"
+  },
+  {
+   "name": "scan-loader",
+   "orchestrator": "claude-security",
+   "path": "agents/_agent-specific/scan-loader.md",
+   "reason": "scan pipeline — dispatched by the scan job",
+   "source": "marketplace:claude-plugins-official"
+  },
+  {
+   "name": "scan-researcher",
+   "orchestrator": "claude-security",
+   "path": "agents/_agent-specific/scan-researcher.md",
+   "reason": "scan pipeline — dispatched by the scan job",
+   "source": "marketplace:claude-plugins-official"
+  },
+  {
+   "name": "scan-verifier",
+   "orchestrator": "claude-security",
+   "path": "agents/_agent-specific/scan-verifier.md",
+   "reason": "scan pipeline — dispatched by the scan job",
+   "source": "marketplace:claude-plugins-official"
   },
   {
    "name": "workflow-expert",
@@ -1258,6 +1413,17 @@
   },
   {
    "copies": 1,
+   "desc": "Comprehensive guide and reference for the Antigravity Customization System. Use to explain how customizations work, their loading priority, discovery mechanisms, and to guide the creation of skills, rules, plugins, hooks, and MCP servers.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "agy-customizations",
+   "path": "skills/agy-customizations/",
+   "rescued_from_tmp": false,
+   "source": "gemini-antigravity",
+   "title": "Antigravity Customization System Guide"
+  },
+  {
+   "copies": 1,
    "desc": "AI Elements component library guidance — pre-built React components for AI interfaces built on shadcn/ui. Use when building chat UIs, message displays, tool call rendering, streaming responses, reasoning panels, or any AI-native interface with the AI SDK.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -1378,6 +1544,17 @@
    "title": "Airtable Overview"
   },
   {
+   "copies": 1,
+   "desc": "Submit compact AlphaFold Protein Structure Database API requests for prediction, UniProt summary, sequence summary, and annotation lookups. Use when a user wants AlphaFold metadata or concise structure summaries",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "alphafold-skill",
+   "path": "skills/alphafold-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "alphafold-skill"
+  },
+  {
    "copies": 25,
    "desc": "Clean Architecture patterns for Android and Kotlin Multiplatform projects — module structure, dependency rules, UseCases, Repositories, and data layer patterns.",
    "desc_source": "yaml",
@@ -1420,6 +1597,17 @@
    "rescued_from_tmp": false,
    "source": "ecc",
    "title": "Angular Developer Guidelines"
+  },
+  {
+   "copies": 1,
+   "desc": "Provides a comprehensive guide, quick reference, and sitemap for Google Antigravity (AGY), including the Antigravity CLI (agy), Antigravity 2.0, Antigravity IDE, Python SDK, slash commands, keybindings, and customizations (skills, rules, MCP, sidecars). Activate this skill when the user asks questions about how to use, configure, or customize Antigravity, AGY, the agy CLI, the Antigravity IDE, or Antigravity 2.0.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "antigravity-guide",
+   "path": "skills/antigravity-guide/",
+   "rescued_from_tmp": false,
+   "source": "gemini-antigravity",
+   "title": "Google Antigravity (AGY) Guide & Sitemap"
   },
   {
    "copies": 24,
@@ -1478,6 +1666,237 @@
   },
   {
    "copies": 1,
+   "desc": "Create a spreadsheet using the Analytics Dashboard template and its retained reference file. Use when the user selects or names Analytics Dashboard. Monitor acquisition, engagement, retention, revenue, and conversion funnel KPIs with charts.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "artifact-template-analytics-dashboard",
+   "path": "skills/artifact-template-analytics-dashboard/",
+   "rescued_from_tmp": false,
+   "source": "codex-cache:0.1.1",
+   "title": "Analytics Dashboard"
+  },
+  {
+   "copies": 1,
+   "desc": "Create a presentation using the Business Review template and its retained reference file. Use when the user selects or names Business Review. Review business performance, KPIs, segment results, strategic priorities, decisions, and outlook.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "artifact-template-business-review",
+   "path": "skills/artifact-template-business-review/",
+   "rescued_from_tmp": false,
+   "source": "codex-cache:0.1.1",
+   "title": "Business Review"
+  },
+  {
+   "copies": 1,
+   "desc": "Create a document using the Design Report template and its retained reference file. Use when the user selects or names Design Report. Produce design reports with an executive summary, key findings, implications, recommendations, and appendix.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "artifact-template-design-report",
+   "path": "skills/artifact-template-design-report/",
+   "rescued_from_tmp": false,
+   "source": "codex-cache:0.1.1",
+   "title": "Design Report"
+  },
+  {
+   "copies": 1,
+   "desc": "Create a document using the Experiment Analysis template and its retained reference file. Use when the user selects or names Experiment Analysis. Analyze experiments with hypotheses, methodology, results, interpretation, limitations, and next steps.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "artifact-template-experiment-analysis",
+   "path": "skills/artifact-template-experiment-analysis/",
+   "rescued_from_tmp": false,
+   "source": "codex-cache:0.1.1",
+   "title": "Experiment Analysis"
+  },
+  {
+   "copies": 1,
+   "desc": "Create a spreadsheet using the Financial Budget template and its retained reference file. Use when the user selects or names Financial Budget. Model actuals, budget and scenario forecasts, variances, cash runway, and departmental plans.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "artifact-template-financial-budget",
+   "path": "skills/artifact-template-financial-budget/",
+   "rescued_from_tmp": false,
+   "source": "codex-cache:0.1.1",
+   "title": "Financial Budget"
+  },
+  {
+   "copies": 1,
+   "desc": "Create a document using the Investment Committee Memo template and its retained reference file. Use when the user selects or names Investment Committee Memo. Prepare investment committee memos with the thesis, transaction details, financial analysis, risks, and recommendation.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "artifact-template-investment-committee-memo",
+   "path": "skills/artifact-template-investment-committee-memo/",
+   "rescued_from_tmp": false,
+   "source": "codex-cache:0.1.1",
+   "title": "Investment Committee Memo"
+  },
+  {
+   "copies": 1,
+   "desc": "Create a document using the Legal Memorandum template and its retained reference file. Use when the user selects or names Legal Memorandum. Draft legal memoranda with the issue, brief answer, relevant facts, analysis, and conclusion.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "artifact-template-legal-memorandum",
+   "path": "skills/artifact-template-legal-memorandum/",
+   "rescued_from_tmp": false,
+   "source": "codex-cache:0.1.1",
+   "title": "Legal Memorandum"
+  },
+  {
+   "copies": 1,
+   "desc": "Create a presentation using the Market Trends Report template and its retained reference file. Use when the user selects or names Market Trends Report. Communicate market or industry trends, supporting evidence, implications, and recommended responses.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "artifact-template-market-trends-report",
+   "path": "skills/artifact-template-market-trends-report/",
+   "rescued_from_tmp": false,
+   "source": "codex-cache:0.1.1",
+   "title": "Market Trends Report"
+  },
+  {
+   "copies": 1,
+   "desc": "Create a document using the Minimal Letterhead template and its retained reference file. Use when the user selects or names Minimal Letterhead. Write professional business letters with sender, recipient, message, and signature fields in a minimal letterhead layout.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "artifact-template-minimal-letterhead",
+   "path": "skills/artifact-template-minimal-letterhead/",
+   "rescued_from_tmp": false,
+   "source": "codex-cache:0.1.1",
+   "title": "Minimal Letterhead"
+  },
+  {
+   "copies": 1,
+   "desc": "Create a spreadsheet using the Operating Calendar template and its retained reference file. Use when the user selects or names Operating Calendar. Plan annual and monthly operating milestones, campaigns, launches, deadlines, and recurring events.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "artifact-template-operating-calendar",
+   "path": "skills/artifact-template-operating-calendar/",
+   "rescued_from_tmp": false,
+   "source": "codex-cache:0.1.1",
+   "title": "Operating Calendar"
+  },
+  {
+   "copies": 1,
+   "desc": "Create a presentation using the Operating Review template and its retained reference file. Use when the user selects or names Operating Review. Run weekly operating reviews with scorecards, functional updates, risks, decisions, and action items.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "artifact-template-operating-review",
+   "path": "skills/artifact-template-operating-review/",
+   "rescued_from_tmp": false,
+   "source": "codex-cache:0.1.1",
+   "title": "Operating Review"
+  },
+  {
+   "copies": 1,
+   "desc": "Create a presentation using the Project Kickoff template and its retained reference file. Use when the user selects or names Project Kickoff. Align teams on project goals, scope, roles, milestones, risks, and the working model.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "artifact-template-project-kickoff",
+   "path": "skills/artifact-template-project-kickoff/",
+   "rescued_from_tmp": false,
+   "source": "codex-cache:0.1.1",
+   "title": "Project Kickoff"
+  },
+  {
+   "copies": 1,
+   "desc": "Create a spreadsheet using the Project Tracker template and its retained reference file. Use when the user selects or names Project Tracker. Manage workstreams, tasks, owners, status, priority, dates, launch pulse, and a Gantt schedule.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "artifact-template-project-tracker",
+   "path": "skills/artifact-template-project-tracker/",
+   "rescued_from_tmp": false,
+   "source": "codex-cache:0.1.1",
+   "title": "Project Tracker"
+  },
+  {
+   "copies": 1,
+   "desc": "Create a spreadsheet using the Sales Pipeline template and its retained reference file. Use when the user selects or names Sales Pipeline. Track opportunities, stages, owners, deal sizes, probabilities, forecasts, next steps, and risks.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "artifact-template-sales-pipeline",
+   "path": "skills/artifact-template-sales-pipeline/",
+   "rescued_from_tmp": false,
+   "source": "codex-cache:0.1.1",
+   "title": "Sales Pipeline"
+  },
+  {
+   "copies": 1,
+   "desc": "Create a presentation using the Simple Dark Mode template and its retained reference file. Use when the user selects or names Simple Dark Mode. Create clean dark-mode presentations with bold typography, simple sections, charts, and imagery.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "artifact-template-simple-dark-mode",
+   "path": "skills/artifact-template-simple-dark-mode/",
+   "rescued_from_tmp": false,
+   "source": "codex-cache:0.1.1",
+   "title": "Simple Dark Mode"
+  },
+  {
+   "copies": 1,
+   "desc": "Create a presentation using the Simple Light Mode template and its retained reference file. Use when the user selects or names Simple Light Mode. Create clean light-mode presentations with spacious typography, simple sections, charts, and imagery.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "artifact-template-simple-light-mode",
+   "path": "skills/artifact-template-simple-light-mode/",
+   "rescued_from_tmp": false,
+   "source": "codex-cache:0.1.1",
+   "title": "Simple Light Mode"
+  },
+  {
+   "copies": 1,
+   "desc": "Create a document using the Strategy Memorandum template and its retained reference file. Use when the user selects or names Strategy Memorandum. Present strategic context, choices, rationale, risks, milestones, and a clear recommendation.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "artifact-template-strategy-memorandum",
+   "path": "skills/artifact-template-strategy-memorandum/",
+   "rescued_from_tmp": false,
+   "source": "codex-cache:0.1.1",
+   "title": "Strategy Memorandum"
+  },
+  {
+   "copies": 1,
+   "desc": "Create a document using the System Design template and its retained reference file. Use when the user selects or names System Design. Document system architecture, requirements, components, data flows, APIs, tradeoffs, and operational considerations.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "artifact-template-system-design",
+   "path": "skills/artifact-template-system-design/",
+   "rescued_from_tmp": false,
+   "source": "codex-cache:0.1.1",
+   "title": "System Design"
+  },
+  {
+   "copies": 1,
+   "desc": "Create a presentation using the Team Alignment template and its retained reference file. Use when the user selects or names Team Alignment. Facilitate team offsites and planning with context, goals, priorities, decisions, and action items.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "artifact-template-team-alignment",
+   "path": "skills/artifact-template-team-alignment/",
+   "rescued_from_tmp": false,
+   "source": "codex-cache:0.1.1",
+   "title": "Team Alignment"
+  },
+  {
+   "copies": 1,
+   "desc": "Create a spreadsheet using the Three-Statement Forecast template and its retained reference file. Use when the user selects or names Three-Statement Forecast. Build an integrated income statement, balance sheet, and cash flow forecast with assumptions, checks, and an executive summary.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "artifact-template-three-statement-forecast",
+   "path": "skills/artifact-template-three-statement-forecast/",
+   "rescued_from_tmp": false,
+   "source": "codex-cache:0.1.1",
+   "title": "Three-Statement Forecast"
+  },
+  {
+   "copies": 1,
+   "desc": "Use when Codex is already in the attack-path-analysis phase of a security scan or the user explicitly asks to trace a security finding from source to sink and calibrate severity. Do not use as the primary trigger for full PR, commit, branch, patch, or repository scans.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "attack-path-analysis",
+   "path": "skills/attack-path-analysis/",
+   "rescued_from_tmp": true,
+   "source": "plugin:codex-security",
+   "title": "Security Attack Path Analysis"
+  },
+  {
+   "copies": 1,
    "desc": "Authentication integration guidance — Clerk (native Vercel Marketplace), Descope, and Auth0 setup for Next.js applications. Covers middleware auth patterns, sign-in/sign-up flows, and Marketplace provisioning. Use when implementing user authentication.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -1486,6 +1905,17 @@
    "rescued_from_tmp": true,
    "source": "plugin:vercel",
    "title": "Authentication Integrations"
+  },
+  {
+   "copies": 1,
+   "desc": "Interactive guide to design and create a scheduled background automation. Use this skill when the user wants to create an automated or recurring scheduled task (e.g. \"summarize my emails every morning\", \"every Monday send me a to-do list\"). Also triggered by the /automation slash command.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "automation",
+   "path": "skills/automation/",
+   "rescued_from_tmp": false,
+   "source": "gemini-antigravity",
+   "title": "Scheduled Automations"
   },
   {
    "copies": 24,
@@ -1607,6 +2037,61 @@
    "rescued_from_tmp": false,
    "source": "ecc",
    "title": "Benchmark Optimization Loop"
+  },
+  {
+   "copies": 1,
+   "desc": "Submit compact Bgee SPARQL requests for healthy wild-type expression metadata and ontology-aware lookup patterns. Use when a user wants concise Bgee summaries; save raw results only on request.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "bgee-skill",
+   "path": "skills/bgee-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "bgee-skill"
+  },
+  {
+   "copies": 1,
+   "desc": "Submit compact BindingDB REST API requests for ligand-target binding lookups by PDB, UniProt, or similarity search. Use when a user wants concise BindingDB summaries; save raw payloads only on request.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "bindingdb-skill",
+   "path": "skills/bindingdb-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "bindingdb-skill"
+  },
+  {
+   "copies": 1,
+   "desc": "Fetch compact BioBank Japan PheWAS summaries for single variants by accepting rsID, GRCh38, or GRCh37 input and resolving to the required GRCh37 query. Use when a user wants concise BBJ association results for one variant",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "biobankjapan-phewas-skill",
+   "path": "skills/biobankjapan-phewas-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "biobankjapan-phewas-skill"
+  },
+  {
+   "copies": 1,
+   "desc": "Submit compact bioRxiv and medRxiv API requests for details, publication-linkage, and DOI lookups. Use when a user wants concise preprint metadata summaries",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "biorxiv-skill",
+   "path": "skills/biorxiv-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "biorxiv-skill"
+  },
+  {
+   "copies": 1,
+   "desc": "Submit compact BioStudies and ArrayExpress API requests for free-text search and accession-based study retrieval. Use when a user wants concise BioStudies summaries",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "biostudies-arrayexpress-skill",
+   "path": "skills/biostudies-arrayexpress-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "biostudies-arrayexpress-skill"
   },
   {
    "copies": 8,
@@ -1794,6 +2279,17 @@
    "rescued_from_tmp": false,
    "source": "ecc",
    "title": "Browser QA — Automated Visual Testing & Interaction"
+  },
+  {
+   "copies": 1,
+   "desc": "Build, scaffold, refactor, and troubleshoot ChatGPT Apps SDK applications that combine an MCP server and widget UI. Use when Codex needs to design tools, register UI resources, wire the MCP Apps bridge or ChatGPT compatibility APIs, apply Apps SDK metadata or CSP or domain settings, or produce a docs-aligned project scaffold. Prefer a docs-first workflow by invoking the openai-docs skill or OpenAI developer docs MCP tools before generating code.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "build-chatgpt-app",
+   "path": "skills/build-chatgpt-app/",
+   "rescued_from_tmp": true,
+   "source": "plugin:openai-developers",
+   "title": "Build ChatGPT App"
   },
   {
    "copies": 1,
@@ -2138,6 +2634,28 @@
   },
   {
    "copies": 1,
+   "desc": "Submit compact cBioPortal API requests for studies, molecular profiles, mutations, clinical data, and samples. Use when a user wants concise cBioPortal summaries",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "cbioportal-skill",
+   "path": "skills/cbioportal-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "cbioportal-skill"
+  },
+  {
+   "copies": 1,
+   "desc": "Submit compact CELLxGENE Discover API requests for public collection and dataset metadata. Use when a user wants concise single-cell collection summaries",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "cellxgene-skill",
+   "path": "skills/cellxgene-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "cellxgene-skill"
+  },
+  {
+   "copies": 1,
    "desc": "Vercel Chat SDK expert guidance. Use when building multi-platform chat bots — Slack, Telegram, Microsoft Teams, Discord, Google Chat, GitHub, Linear — with a single codebase. Covers the Chat class, adapters, threads, messages, cards, modals, streaming, state management, and webhook setup.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -2146,6 +2664,39 @@
    "rescued_from_tmp": true,
    "source": "plugin:vercel",
    "title": "Vercel Chat SDK"
+  },
+  {
+   "copies": 1,
+   "desc": "Inspect a ChatGPT Apps MCP server codebase and generate chatgpt-app-submission.json with app info suggestions, tool hint justifications, test cases, and negative test cases, then report review-check findings and outputSchema warnings for submission review.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "chatgpt-app-submission",
+   "path": "skills/chatgpt-app-submission/",
+   "rescued_from_tmp": true,
+   "source": "plugin:openai-developers",
+   "title": "ChatGPT App Submission"
+  },
+  {
+   "copies": 1,
+   "desc": "Submit compact ChEBI 2.0 API requests for chemical search, compound lookup, ontology traversal, and structure metadata. Use when a user wants concise ChEBI summaries",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "chebi-skill",
+   "path": "skills/chebi-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "chebi-skill"
+  },
+  {
+   "copies": 1,
+   "desc": "Submit compact ChEMBL API requests for activity, molecule, target, mechanism, and text-search endpoints. Use when a user wants concise ChEMBL summaries",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "chembl-skill",
+   "path": "skills/chembl-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "chembl-skill"
   },
   {
    "copies": 1,
@@ -2269,6 +2820,17 @@
    "title": "Cite-check"
   },
   {
+   "copies": 1,
+   "desc": "Submit compact CIViC GraphQL requests for cancer variant interpretation schema inspection and targeted evidence retrieval. Use when a user wants concise CIViC summaries",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "civic-skill",
+   "path": "skills/civic-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "civic-skill"
+  },
+  {
    "copies": 24,
    "desc": "Persistent per-project memory for Claude Code. Auto-loads project context on session start, tracks sessions with git activity, and writes to native memory. Commands run deterministic Node.js scripts — behavior is consistent across model versions.",
    "desc_source": "yaml",
@@ -2313,6 +2875,17 @@
    "title": "CLAUDE.md Improver"
   },
   {
+   "copies": 1,
+   "desc": "The Claude Security menu — pick a job: scan the codebase (the whole repository or a scoped part of it), scan changes (this branch's or a pull request's diff, or one commit), or suggest patches (findings turned into targeted patch files, each verified by a panel of agents, that you apply when you choose).",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "claude-security",
+   "path": "skills/claude-security/",
+   "rescued_from_tmp": false,
+   "source": "marketplace:claude-plugins-official",
+   "title": "Claude Security"
+  },
+  {
    "copies": 24,
    "desc": "Trace every user-facing button/touchpoint through its full state change sequence to find bugs where functions individually work but cancel each other out, produce wrong final state, or leave the UI in an inconsistent state. Use when: systematic debugging found no bugs but users report broken buttons, or after any major refactor touching shared state stores.",
    "desc_source": "yaml",
@@ -2333,6 +2906,28 @@
    "rescued_from_tmp": false,
    "source": "ecc",
    "title": "ClickHouse Analytics Patterns"
+  },
+  {
+   "copies": 1,
+   "desc": "Submit compact ClinicalTrials.gov API v2 requests for study search, metadata, enums, search areas, and field statistics. Use when a user wants concise ClinicalTrials.gov summaries",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "clinicaltrials-skill",
+   "path": "skills/clinicaltrials-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "clinicaltrials-skill"
+  },
+  {
+   "copies": 1,
+   "desc": "Submit compact ClinVar Clinical Tables and NCBI Variation requests for search, VCV, RCV, SCV, and RefSNP lookups. Use when a user wants variant-level summaries or identifier mapping",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "clinvar-variation-skill",
+   "path": "skills/clinvar-variation-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "clinvar-variation-skill"
   },
   {
    "copies": 1,
@@ -2908,6 +3503,17 @@
   },
   {
    "copies": 1,
+   "desc": "Use when the user asks for a deep, exhaustive, multi-pass, or variance-reducing repository-wide or scoped-path Codex Security scan. Run repeated independent discovery passes over one resolved scope with worker-specific threat models, semantically merge candidates, synthesize one canonical validation threat model, then run validation, attack-path analysis, canonical JSON completion, and generated reporting once. Do not use for PRs, commits, branch diffs, or working-tree diffs.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "deep-security-scan",
+   "path": "skills/deep-security-scan/",
+   "rescued_from_tmp": true,
+   "source": "plugin:codex-security",
+   "title": "Deep Security Scan"
+  },
+  {
+   "copies": 1,
    "desc": "Use when a task mentions Deepnote, the connected Deepnote app, Deepnote OAuth connection, Deepnote docs, projects, workspaces, notebooks, blocks, integrations, or notebook runs.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -3106,6 +3712,17 @@
   },
   {
    "copies": 1,
+   "desc": "Produce finished documents - Word (.docx), PowerPoint (.pptx), Excel (.xlsx), PDF, and markdown - with diagrams, charts, and other visuals where they earn their place. Use this skill whenever the user asks for a document, report, deck, slides, presentation, memo, proposal, one-pager, whitepaper, spreadsheet, or any deliverable they intend to send, submit, present, or file. Trigger it even when the format is unstated (\"write up my findings\", \"put this together for the client\", \"I need something to show the team\") and whenever the user asks to add a diagram, chart, figure, or visual to a document. This skill enforces a specification interview before drafting, strict source fidelity with no invented facts, drift control across long documents, and a mandatory verification pass before delivery. It bundles its own copies of the docx, pptx, xlsx, pdf, and frontend-design skills so it works standalone.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "document-builder",
+   "path": "skills/document-builder/",
+   "rescued_from_tmp": false,
+   "source": "this-library",
+   "title": "Document Builder"
+  },
+  {
+   "copies": 1,
    "desc": "Document Quality Check skill for Datasite deal rooms. Use this skill whenever a deal team wants to audit document quality before going live to buyers. Triggers include: \"check document quality\", \"flag bad documents\", \"find password protected files\", \"check for blank documents\", \"PII check\", \"redaction review\", \"find corrupted files\", \"document audit\", \"quality check the data room\", \"are there any blank or broken files\", \"check for unredacted personal data\", or any request to verify that documents in the data room are complete, accessible, and safe to share. Use this skill proactively before a data room goes live. Do not use for renaming files (use smart-file-renaming) or for identifying missing sections (use gap-analysis).",
    "desc_source": "yaml",
    "locale_only": false,
@@ -3271,6 +3888,17 @@
   },
   {
    "copies": 1,
+   "desc": "Submit compact EFO OLS4 requests for search, term lookup, children, and descendants. Use when a user wants concise EFO resolution or ontology-expansion summaries",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "efo-ontology-skill",
+   "path": "skills/efo-ontology-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "efo-ontology-skill"
+  },
+  {
+   "copies": 1,
    "desc": "Email sending integration guidance — Resend (native Vercel Marketplace) with React Email templates. Covers API setup, transactional emails, domain verification, and template patterns. Use when sending emails from a Vercel-deployed application.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -3303,6 +3931,17 @@
    "title": "Design Engineering"
   },
   {
+   "copies": 1,
+   "desc": "Submit compact ENCODE REST API requests for object lookups, portal-style search, and metadata retrieval. Use when a user wants concise ENCODE summaries",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "encode-skill",
+   "path": "skills/encode-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "encode-skill"
+  },
+  {
    "copies": 24,
    "desc": "Codified expertise for electricity and gas procurement, tariff optimization, demand charge management, renewable PPA evaluation, and multi-facility energy cost management. Informed by energy procurement managers with 15+ years experience at large commercial and industrial consumers. Includes market structure analysis, hedging strategies, load profiling, and sustainability reporting frameworks. Use when procuring energy, optimizing tariffs, managing demand charges, evaluating PPAs, or developing energy strategies.",
    "desc_source": "yaml",
@@ -3312,6 +3951,17 @@
    "rescued_from_tmp": false,
    "source": "ecc",
    "title": "Energy Procurement"
+  },
+  {
+   "copies": 1,
+   "desc": "Submit compact Ensembl REST API requests for lookup, overlap, cross-reference, and variation endpoints. Use when a user wants concise Ensembl summaries",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "ensembl-skill",
+   "path": "skills/ensembl-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "ensembl-skill"
   },
   {
    "copies": 24,
@@ -3347,6 +3997,28 @@
    "title": "End-of-Day Wrap-Up & Action Extractor"
   },
   {
+   "copies": 1,
+   "desc": "Submit compact EpiGraphDB API requests for ontology, literature, MR, gene-drug, and support-path evidence. Use when a user wants concise EpiGraphDB summaries",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "epigraphdb-skill",
+   "path": "skills/epigraphdb-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "epigraphdb-skill"
+  },
+  {
+   "copies": 1,
+   "desc": "Submit compact eQTL Catalogue API requests for association retrieval and documented metadata endpoints. Use when a user wants concise public eQTL Catalogue summaries",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "eqtl-catalogue-skill",
+   "path": "skills/eqtl-catalogue-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "eqtl-catalogue-skill"
+  },
+  {
    "copies": 18,
    "desc": "Patterns for robust error handling across TypeScript, Python, and Go. Covers typed errors, error boundaries, retries, circuit breakers, and user-facing error messages.",
    "desc_source": "yaml",
@@ -3356,6 +4028,17 @@
    "rescued_from_tmp": false,
    "source": "ecc",
    "title": "Error Handling Patterns"
+  },
+  {
+   "copies": 1,
+   "desc": "Submit compact EVA REST requests for species metadata and archived variant lookups. Use when a user wants concise European Variation Archive summaries",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "eva-skill",
+   "path": "skills/eva-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "eva-skill"
   },
   {
    "copies": 67,
@@ -3589,6 +4272,138 @@
    "title": "FastAPI Patterns"
   },
   {
+   "copies": 1,
+   "desc": "Creates and maintains Figma Code Connect template files that map Figma components to code snippets. Use when the user mentions Code Connect, Figma component mapping, design-to-code translation, or asks to create/update .figma.ts or .figma.js files.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "figma-code-connect",
+   "path": "skills/figma-code-connect/",
+   "rescued_from_tmp": true,
+   "source": "plugin:figma",
+   "title": "Code Connect"
+  },
+  {
+   "copies": 1,
+   "desc": "**MANDATORY prerequisite** — you MUST invoke this skill BEFORE every `create_new_file` tool call. NEVER call `create_new_file` directly without loading this skill first. Trigger whenever the user wants a new blank Figma file — a new design, FigJam, or Slides file — or when you need a fresh file before calling `use_figma`. Usage — /figma-create-new-file [editorType] [fileName] (e.g. /figma-create-new-file figjam My Whiteboard, /figma-create-new-file slides Q3 Review)",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "figma-create-new-file",
+   "path": "skills/figma-create-new-file/",
+   "rescued_from_tmp": true,
+   "source": "plugin:figma",
+   "title": "create_new_file — Create a New Figma File"
+  },
+  {
+   "copies": 1,
+   "desc": "Use this skill when implementing a Figma design as code (design → code) — the read-FROM-Figma direction. Triggers: 'implement this Figma design', 'build this screen from Figma', 'turn this Figma into code', 'code this up from Figma', 'design to code', or a figma.com design URL provided alongside a codebase. Encodes the workflow for reading a node out of Figma with get_design_context and adapting its reference output to the target project — reusing existing components, tokens, and conventions, and honoring Code Connect mappings, component docs, design annotations, and design tokens by priority. Complements figma-code-connect (component mapping) and figma-generate-design / figma-use (the reverse, code → design direction).",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "figma-design-to-code",
+   "path": "skills/figma-design-to-code/",
+   "rescued_from_tmp": true,
+   "source": "plugin:figma",
+   "title": "Implement a Figma Design as Code (Design → Code)"
+  },
+  {
+   "copies": 1,
+   "desc": "Use this skill alongside figma-use when the task involves translating an application page, view, or multi-section layout into Figma. Triggers: 'write to Figma', 'create in Figma from code', 'push page to Figma', 'take this app/page and build it in Figma', 'create a screen', 'build a landing page in Figma', 'update the Figma screen to match code', 'convert this modal/dialog/drawer/panel to Figma'. This is the preferred workflow skill whenever the user wants to build or update a full page, modal, dialog, drawer, sidebar, panel, or any composed multi-section view in Figma from code or a description. Discovers design system components, variables, and styles from Code Connect files, existing screens, and library search, then imports them and assembles views incrementally section-by-section using design system tokens instead of hardcoded values.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "figma-generate-design",
+   "path": "skills/figma-generate-design/",
+   "rescued_from_tmp": true,
+   "source": "plugin:figma",
+   "title": "Build / Update Screens and Views from Design System"
+  },
+  {
+   "copies": 1,
+   "desc": "MANDATORY prerequisite — load this skill BEFORE every `generate_diagram` tool call. NEVER call `generate_diagram` directly without loading this skill first. Trigger whenever the user asks to create, generate, draw, render, sketch, or build a diagram — flowchart, architecture diagram, sequence diagram, ERD or entity-relationship diagram, state diagram or state machine, gantt chart, or timeline. Also trigger when the user mentions Mermaid syntax or wants a system architecture, decision tree, dependency graph, API call flow, auth handshake, schema, or pipeline visualized in FigJam. Routes to type-specific guidance, sets universal Mermaid constraints, and tells you when to use a different diagram type or skip the tool entirely (mindmaps, pie charts, class diagrams, etc.).",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "figma-generate-diagram",
+   "path": "skills/figma-generate-diagram/",
+   "rescued_from_tmp": true,
+   "source": "plugin:figma",
+   "title": "generate-diagram"
+  },
+  {
+   "copies": 1,
+   "desc": "Build or update a professional-grade design system in Figma from a codebase. Use when the user wants to create variables/tokens, build component libraries, create individual components with proper variant sets and variable bindings, set up theming (light/dark modes), document foundations, or reconcile gaps between code and Figma. Also use when the user asks to create or generate any component in Figma — even a single one — since components require proper variable foundations, variant states, and design token bindings to be production-quality. This skill teaches WHAT to build and in WHAT ORDER — it complements the `figma-use` skill which teaches HOW to call the Plugin API. Both skills should be loaded together.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "figma-generate-library",
+   "path": "skills/figma-generate-library/",
+   "rescued_from_tmp": true,
+   "source": "plugin:figma",
+   "title": "Design System Builder — Figma MCP Skill"
+  },
+  {
+   "copies": 1,
+   "desc": "Translates Figma motion and animations into production-ready application code. Use when implementing animation/motion from a Figma design — user mentions \"implement this motion\", \"add animation from Figma\", \"animate this component\", provides a Figma URL whose node is animated, or when `get_design_context` returns motion data or instructs you to call `get_motion_context`.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "figma-implement-motion",
+   "path": "skills/figma-implement-motion/",
+   "rescued_from_tmp": true,
+   "source": "plugin:figma",
+   "title": "Implement Motion"
+  },
+  {
+   "copies": 1,
+   "desc": "SwiftUI ↔ Figma translation. Use whenever the user mentions Swift, SwiftUI, iOS, iPhone, or iPad — in EITHER direction — translating a Figma design into SwiftUI (design → code), or pushing SwiftUI views / screens / tokens back into a Figma file (code → design). Triggers on phrases like 'implement this Figma design in SwiftUI', 'build this screen in Swift', 'push this SwiftUI view to Figma', 'mirror my Swift code in a Figma file', or whenever a Figma URL appears alongside `.swift` files / an `.xcodeproj`. Routes to a direction-specific reference doc; loads alongside `figma-use` for the code → design path.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "figma-swiftui",
+   "path": "skills/figma-swiftui/",
+   "rescued_from_tmp": true,
+   "source": "plugin:figma",
+   "title": "Figma ↔ SwiftUI"
+  },
+  {
+   "copies": 1,
+   "desc": "**MANDATORY prerequisite** — you MUST invoke this skill BEFORE every `use_figma` tool call. NEVER call `use_figma` directly without loading this skill first. Skipping it causes common, hard-to-debug failures. Trigger whenever the user wants to perform a write action or a unique read action that requires JavaScript execution in the Figma file context — e.g. create/edit/delete nodes, set up variables or tokens, build components and variants, modify auto-layout or fills, bind variables to properties, or inspect file structure programmatically.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "figma-use",
+   "path": "skills/figma-use/",
+   "rescued_from_tmp": true,
+   "source": "plugin:figma",
+   "title": "use_figma — Figma Plugin API Skill"
+  },
+  {
+   "copies": 1,
+   "desc": "This skill helps agents use Figma's use_figma MCP tool in the FigJam context. Can be used alongside figma-use which has foundational context for using the use_figma tool.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "figma-use-figjam",
+   "path": "skills/figma-use-figjam/",
+   "rescued_from_tmp": true,
+   "source": "plugin:figma",
+   "title": "use_figma — Figma Plugin API Skill for FigJam"
+  },
+  {
+   "copies": 1,
+   "desc": "Motion / animation context for the `use_figma` MCP tool — animating Figma nodes via manual keyframes, animation styles, easing, and timeline duration. Load alongside figma-use whenever a task involves adding, editing, or inspecting animation on a node.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "figma-use-motion",
+   "path": "skills/figma-use-motion/",
+   "rescued_from_tmp": true,
+   "source": "plugin:figma",
+   "title": "use_figma — Figma Plugin API Skill for Motion"
+  },
+  {
+   "copies": 1,
+   "desc": "This skill helps agents use Figma's use_figma MCP tool in the Slides context. Can be used alongside figma-use which has foundational context for using the use_figma tool.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "figma-use-slides",
+   "path": "skills/figma-use-slides/",
+   "rescued_from_tmp": true,
+   "source": "plugin:figma",
+   "title": "use_figma — Figma Plugin API Skill for Slides"
+  },
+  {
    "copies": 24,
    "desc": "Evidence-first revenue, pricing, refunds, team-billing, and billing-model truth workflow for ECC. Use when the user wants a sales snapshot, pricing comparison, duplicate-charge diagnosis, or code-backed billing reality instead of generic payments advice.",
    "desc_source": "yaml",
@@ -3601,6 +4416,17 @@
   },
   {
    "copies": 1,
+   "desc": "Use when Codex is already in the finding-discovery phase of a security scan or the user explicitly asks to discover candidate security findings in a repository or code change. Do not use as the primary trigger for full PR, commit, branch, patch, or repository scans.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "finding-discovery",
+   "path": "skills/finding-discovery/",
+   "rescued_from_tmp": true,
+   "source": "plugin:codex-security",
+   "title": "Security Finding Discovery"
+  },
+  {
+   "copies": 1,
    "desc": "Use when implementation is complete, all tests pass, and you need to decide how to integrate the work - guides completion of development work by presenting structured options for merge, PR, or cleanup",
    "desc_source": "yaml",
    "locale_only": false,
@@ -3609,6 +4435,28 @@
    "rescued_from_tmp": true,
    "source": "plugin:superpowers",
    "title": "Finishing a Development Branch"
+  },
+  {
+   "copies": 1,
+   "desc": "Fetch compact FinnGen PheWAS summaries for single variants by accepting rsID, GRCh37, or GRCh38 input and resolving to the required GRCh38 query. Use when a user wants concise FinnGen association results for one variant",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "finngen-phewas-skill",
+   "path": "skills/finngen-phewas-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "finngen-phewas-skill"
+  },
+  {
+   "copies": 1,
+   "desc": "Use when the user explicitly asks to fix and verify a validated or plausible security finding. Do not use as the primary trigger for full PR, commit, branch, patch, or repository scans.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "fix-finding",
+   "path": "skills/fix-finding/",
+   "rescued_from_tmp": true,
+   "source": "plugin:codex-security",
+   "title": "Fix Finding"
   },
   {
    "copies": 16,
@@ -3865,6 +4713,17 @@
   },
   {
    "copies": 1,
+   "desc": "Submit compact Genebass gene burden requests for one Ensembl gene ID and one burden set. Use when a user wants concise Genebass PheWAS summaries",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "genebass-gene-burden-skill",
+   "path": "skills/genebass-gene-burden-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "genebass-gene-burden-skill"
+  },
+  {
+   "copies": 1,
    "desc": "Generate a codebase health snapshot for technical debt tracking and planning. Analyzes git history, code complexity, debt markers, and dependencies to identify hotspots and refactoring priorities.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -3895,6 +4754,17 @@
    "rescued_from_tmp": false,
    "source": "ecc",
    "title": "Generating Python Installer (Commercial-Grade)"
+  },
+  {
+   "copies": 1,
+   "desc": "How to render rich interactive HTML widgets inline in the chat or as standalone artifacts. Use this skill when you want to show the user diagrams, data visualizations, interactive controls, educational walkthroughs, or any rich visual content beyond plain text and markdown.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "generative_ui",
+   "path": "skills/generative_ui/",
+   "rescued_from_tmp": false,
+   "source": "gemini-antigravity",
+   "title": "Generative UI"
   },
   {
    "copies": 1,
@@ -3994,6 +4864,17 @@
    "rescued_from_tmp": true,
    "source": "plugin:gmail",
    "title": "Gmail Inbox Triage"
+  },
+  {
+   "copies": 1,
+   "desc": "Submit compact gnomAD GraphQL requests for frequency, gene constraint, and variant context queries. Use when a user wants concise gnomAD summaries",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "gnomad-graphql-skill",
+   "path": "skills/gnomad-graphql-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "gnomad-graphql-skill"
   },
   {
    "copies": 64,
@@ -4162,6 +5043,17 @@
   },
   {
    "copies": 1,
+   "desc": "Fetch GTEx single-tissue eQTL associations from one variant input by accepting rsID, GRCh37, or GRCh38 input and resolving to the required GRCh38 query for the GTEx v2 API. Use when a user wants eQTL associations returned as JSON.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "gtex-eqtl-skill",
+   "path": "skills/gtex-eqtl-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "Operating rules"
+  },
+  {
+   "copies": 1,
    "desc": "Track management guidance accuracy over time for a given company",
    "desc_source": "yaml",
    "locale_only": false,
@@ -4170,6 +5062,17 @@
    "rescued_from_tmp": true,
    "source": "plugin:daloopa",
    "title": "guidance-tracker"
+  },
+  {
+   "copies": 1,
+   "desc": "Submit compact GWAS Catalog REST API v2 requests for studies, associations, SNPs, EFO traits, genes, publications, loci, and metadata. Use when a user wants concise GWAS Catalog summaries",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "gwas-catalog-skill",
+   "path": "skills/gwas-catalog-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "gwas-catalog-skill"
   },
   {
    "copies": 24,
@@ -4227,6 +5130,17 @@
    "title": "Hermes Imports"
   },
   {
+   "copies": 1,
+   "desc": "Search Hex projects and ask Hex Threads questions. Use when the user explicitly references Hex, Hex projects, Hex dashboards, Hex data apps, Hex Threads, or asks to search an existing Hex workspace asset.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "hex",
+   "path": "skills/hex/",
+   "rescued_from_tmp": true,
+   "source": "plugin:hex",
+   "title": "Hex"
+  },
+  {
    "copies": 24,
    "desc": "Design, implement, and refactor Ports & Adapters systems with clear domain boundaries, dependency inversion, and testable use-case orchestration across TypeScript, Java, Kotlin, and Go services.",
    "desc_source": "yaml",
@@ -4280,6 +5194,17 @@
    "rescued_from_tmp": false,
    "source": "ecc",
    "title": "HIPAA Compliance"
+  },
+  {
+   "copies": 1,
+   "desc": "Submit compact HMDB search requests for metabolites, proteins, diseases, and pathways. Use when a user wants concise HMDB summaries",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "hmdb-skill",
+   "path": "skills/hmdb-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "hmdb-skill"
   },
   {
    "copies": 16,
@@ -4500,6 +5425,17 @@
    "rescued_from_tmp": true,
    "source": "plugin:hugging-face",
    "title": "Vision Model Training on Hugging Face Jobs"
+  },
+  {
+   "copies": 1,
+   "desc": "Submit compact Human Protein Atlas requests for gene JSON, search downloads, and page-level tissue or cell-line lookups. Use when a user wants concise Human Protein Atlas summaries; save raw JSON or HTML only on request.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "human-protein-atlas-skill",
+   "path": "skills/human-protein-atlas-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "human-protein-atlas-skill"
   },
   {
    "copies": 2,
@@ -4753,6 +5689,17 @@
    "rescued_from_tmp": true,
    "source": "plugin:build-ios-apps",
    "title": "iOS Simulator Browser"
+  },
+  {
+   "copies": 1,
+   "desc": "Submit compact IPD REST requests for HLA allele and cell-level metadata using the public IPD query API. Use when a user wants concise IPD summaries; save raw JSON or text only on request.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "ipd-skill",
+   "path": "skills/ipd-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "ipd-skill"
   },
   {
    "copies": 1,
@@ -5118,6 +6065,17 @@
    "title": "LLM Trading Agent Security"
   },
   {
+   "copies": 1,
+   "desc": "Map GWAS loci to ranked candidate genes using a deterministic multi-skill chain (EFO -> GWAS -> coordinates -> Open Targets L2G/coloc -> eQTL -> burden/coding context), with reproducible tables and optional figures. Use when a user provides a trait/EFO term and/or lead variants and needs locus-to-gene prioritization for downstream biology decisions.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "locus-to-gene-mapper-skill",
+   "path": "skills/locus-to-gene-mapper-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "locus-to-gene-mapper-skill"
+  },
+  {
    "copies": 24,
    "desc": "Codified expertise for handling freight exceptions, shipment delays, damages, losses, and carrier disputes. Informed by logistics professionals with 15+ years operational experience. Includes escalation protocols, carrier-specific behaviors, claims procedures, and judgment frameworks. Use when handling shipping exceptions, freight claims, delivery issues, or carrier disputes.",
    "desc_source": "yaml",
@@ -5138,6 +6096,17 @@
    "rescued_from_tmp": false,
    "source": "marketplace:claude-plugins-official",
    "title": "M5Stack Onboarding"
+  },
+  {
+   "copies": 1,
+   "desc": "Use when the user mentions MagicPath, designs, UI components, themes, canvas selections, or repo-to-canvas UI work; run magicpath-ai to search, inspect, install, or author components.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "magicpath",
+   "path": "skills/magicpath/",
+   "rescued_from_tmp": true,
+   "source": "plugin:magicpath",
+   "title": "MagicPath"
   },
   {
    "copies": 16,
@@ -5251,6 +6220,17 @@
   },
   {
    "copies": 1,
+   "desc": "Submit compact MetaboLights requests for study discovery and study-level metabolomics metadata. Use when a user wants concise MetaboLights summaries",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "metabolights-skill",
+   "path": "skills/metabolights-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "metabolights-skill"
+  },
+  {
+   "copies": 1,
    "desc": "Design custom metric packs for plugin-eval so teams can add local evaluation rubrics that emit schema-compatible checks and metrics. Use when the user wants their own evaluation criteria or visualizations.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -5262,6 +6242,17 @@
   },
   {
    "copies": 1,
+   "desc": "Submit compact MGnify API requests for microbiome studies, samples, and biome metadata. Use when a user wants concise MGnify summaries",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "mgnify-skill",
+   "path": "skills/mgnify-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "mgnify-skill"
+  },
+  {
+   "copies": 1,
    "desc": "Expert guidance for micro — asynchronous HTTP microservices framework by Vercel. Use when building lightweight HTTP servers, API endpoints, or microservices using the micro library.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -5270,6 +6261,17 @@
    "rescued_from_tmp": true,
    "source": "plugin:vercel",
    "title": "micro — Asynchronous HTTP Microservices"
+  },
+  {
+   "copies": 1,
+   "desc": "Automatically migrate legacy workflows to modern skills across global and workspace configurations. Scans for existing workflows, creates target SKILL.md files, and safely archives old workflow files.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "migrate-workflows",
+   "path": "skills/migrate-workflows/",
+   "rescued_from_tmp": false,
+   "source": "gemini-antigravity",
+   "title": "Migrate Workflows to Skills"
   },
   {
    "copies": 1,
@@ -5501,6 +6503,61 @@
    "rescued_from_tmp": true,
    "source": "plugin:expo",
    "title": "Expo Networking"
+  },
+  {
+   "copies": 1,
+   "desc": "Submit, poll, and summarize NCBI BLAST Common URL API jobs (Blast.cgi) for nucleotide or protein sequences. Use when a user wants RID status, BLAST results, or compact top-hit summaries; fetch raw Text/JSON2 only on request.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "ncbi-blast-skill",
+   "path": "skills/ncbi-blast-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "ncbi-blast-skill"
+  },
+  {
+   "copies": 1,
+   "desc": "Submit compact Clinical Tables NCBI Gene requests for human gene lookup, pagination, and field selection. Use when a user wants concise autocomplete-style human gene search results",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "ncbi-clinicaltables-skill",
+   "path": "skills/ncbi-clinicaltables-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "ncbi-clinicaltables-skill"
+  },
+  {
+   "copies": 1,
+   "desc": "Submit compact NCBI Datasets v2 requests for assembly, genome, taxonomy, and related metadata endpoints. Use when a user wants concise NCBI Datasets summaries; save raw JSON or text only on request.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "ncbi-datasets-skill",
+   "path": "skills/ncbi-datasets-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "ncbi-datasets-skill"
+  },
+  {
+   "copies": 1,
+   "desc": "Submit compact NCBI Entrez E-Utilities requests for PubMed, Gene, Protein, Nucleotide, PMC metadata, and GEO metadata workflows. Use when a user wants concise Entrez search, fetch, summary, or link results; save raw JSON or XML only on request.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "ncbi-entrez-skill",
+   "path": "skills/ncbi-entrez-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "ncbi-entrez-skill"
+  },
+  {
+   "copies": 1,
+   "desc": "Submit compact NCBI PMC Open Access requests for article/file availability metadata. Use when a user wants concise PMC Open Access summaries; save raw XML only on request.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "ncbi-pmc-skill",
+   "path": "skills/ncbi-pmc-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "ncbi-pmc-skill"
   },
   {
    "copies": 1,
@@ -6087,6 +7144,28 @@
   },
   {
    "copies": 1,
+   "desc": "Guide Codex through instrumenting or extending repositories with OpenAI Ads Measurement Pixel and optional Conversions API (CAPI). Use when adding Ads conversion tracking, browser pixel events, server-side conversion events, event_id deduplication, CAPI secret placeholders, incremental conversion coverage, or validating Ads conversion setup. Applies to local repositories and PR review contexts; prioritize safe, reviewable diffs and never place API keys or secrets in source code or client bundles.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "openai-ads-conversions-setup",
+   "path": "skills/openai-ads-conversions-setup/",
+   "rescued_from_tmp": true,
+   "source": "plugin:openai-ads-conversions",
+   "title": "OpenAI Ads Conversions Setup"
+  },
+  {
+   "copies": 1,
+   "desc": "Use when an OpenAI API request fails and Codex needs to classify the likely cause, explain the next step, and route to the right follow-up. Covers common runtime failures such as blocked outbound network access, invalid credentials, exhausted API quota or credits, rate limits, and model, project, or organization access issues; delegate key provisioning to openai-platform-api-key and current documentation lookups to openai-docs.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "openai-api-troubleshooting",
+   "path": "skills/openai-api-troubleshooting/",
+   "rescued_from_tmp": true,
+   "source": "plugin:openai-developers",
+   "title": "OpenAI API Troubleshooting"
+  },
+  {
+   "copies": 1,
    "desc": "Use for Codex models/pricing, scheduled tasks, skills, settings, setup, troubleshooting, customization, automations, and self-knowledge—including 'you,' 'your,' 'this app,' or 'this coding agent' when they refer to Codex—and for OpenAI APIs/products and ChatGPT Work. Also use for model choice/migration, prompting, SDKs, Responses, Realtime, agents, evals, and Chat/Work/Codex comparisons. Do not use for generic app/software tasks that merely mention Codex.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -6095,6 +7174,17 @@
    "rescued_from_tmp": false,
    "source": "codex-system",
    "title": "OpenAI Docs"
+  },
+  {
+   "copies": 1,
+   "desc": "Use when Codex is asked to build, run, test, debug, or configure an OpenAI-backed or provider-unspecified AI app, UI, script, CLI, generator, or tool, especially requests phrased only as \"using AI\" or generators driven by forms/user input; also use for OPENAI_API_KEY or sk-proj setup. Treat this as the credential gate: inspect safely, ask reuse-vs-new before API work, and never expose plaintext.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "openai-platform-api-key",
+   "path": "skills/openai-platform-api-key/",
+   "rescued_from_tmp": true,
+   "source": "plugin:openai-developers",
+   "title": "OpenAI API Key"
   },
   {
    "copies": 16,
@@ -6117,6 +7207,17 @@
    "rescued_from_tmp": false,
    "source": "ecc",
    "title": "Open-Source Pipeline Skill"
+  },
+  {
+   "copies": 1,
+   "desc": "Submit compact Open Targets Platform GraphQL requests for target, disease, drug, variant, study, and search data, including associated-disease datasource heatmap matrices. Use when a user wants concise Open Targets summaries or per-datasource evidence context",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "opentargets-skill",
+   "path": "skills/opentargets-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "opentargets-skill"
   },
   {
    "copies": 9,
@@ -6384,6 +7485,28 @@
   },
   {
    "copies": 1,
+   "desc": "Guidelines for interacting with GitHub and request permissions from the user when commands fail due to restrictions in the agent environment.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "permissioned-github",
+   "path": "skills/permissioned-github/",
+   "rescued_from_tmp": false,
+   "source": "gemini-antigravity",
+   "title": "GitHub Skill"
+  },
+  {
+   "copies": 1,
+   "desc": "Submit compact PharmGKB API requests for genes, variants, clinical annotations, dosing guidelines, and search. Use when a user wants concise PharmGKB summaries",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "pharmgkb-skill",
+   "path": "skills/pharmgkb-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "pharmgkb-skill"
+  },
+  {
+   "copies": 1,
    "desc": "Implement 2D browser games with Phaser. Use when the user wants a Phaser, TypeScript, and Vite stack for scenes, gameplay systems, cameras, sprite animation, and DOM-overlay HUD patterns.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -6472,6 +7595,28 @@
   },
   {
    "copies": 1,
+   "desc": "How to manage and create plugins — namespaced bundles of skills, agents, rules, MCP servers and hooks that install, enable and disable as a single unit. Use this skill when the user wants to enable, disable, install or uninstall a plugin, when they want to create a new plugin, or when a new customization should be packaged into a plugin rather than left loose. Also triggered by the /plugin slash command. Don't use for the underlying customization system itself — discovery roots, loading priority, or authoring a standalone skill, agent, rule, hook or MCP server outside a plugin; see the customizations guide skill for those.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "plugin",
+   "path": "skills/plugin/",
+   "rescued_from_tmp": false,
+   "source": "gemini-antigravity",
+   "title": "Plugins"
+  },
+  {
+   "copies": 2,
+   "desc": "Create and scaffold plugin directories for Codex with a required `.codex-plugin/plugin.json`, optional plugin folders/files, valid manifest defaults, and personal-marketplace entries by default. Use when Codex needs to create a new personal plugin, add optional plugin structure, generate or update marketplace entries for plugin ordering and availability metadata, or update an existing local plugin during development with the CLI-driven cachebuster and reinstall flow.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "plugin-creator",
+   "path": "skills/plugin-creator/",
+   "rescued_from_tmp": false,
+   "source": "codex-system",
+   "title": "Plugin Creator"
+  },
+  {
+   "copies": 1,
    "desc": "Help engineers evaluate a local skill or plugin, explain why it scored that way, show what to fix first, measure real token usage, benchmark starter scenarios, or decide what to run next. Use when the user says things like \"evaluate this skill\", \"give me an analysis of the game dev skill\", \"why did this score that way\", \"what should I fix first\", \"measure the real token usage of this skill\", or \"what should I run next?\".",
    "desc_source": "yaml",
    "locale_only": false,
@@ -6480,6 +7625,17 @@
    "rescued_from_tmp": true,
    "source": "plugin:plugin-eval",
    "title": "Plugin Eval"
+  },
+  {
+   "copies": 1,
+   "desc": "Discover and suggest relevant plugins, inspect app permissions and dependencies, and manage plugin connections or removal. Use when the user asks about plugins or when a task would materially benefit from an external app, account, service, or data source that available tools cannot access.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "plugin-management",
+   "path": "skills/plugin-management/",
+   "rescued_from_tmp": false,
+   "source": "codex-cache:0.1.0",
+   "title": "Plugin Management"
   },
   {
    "copies": 1,
@@ -6623,6 +7779,17 @@
    "rescued_from_tmp": false,
    "source": "ecc",
    "title": "Prediction Market Risk Review"
+  },
+  {
+   "copies": 1,
+   "desc": "Submit compact PRIDE Archive API requests for proteomics project discovery and project-level metadata. Use when a user wants concise PRIDE summaries",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "pride-skill",
+   "path": "skills/pride-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "pride-skill"
   },
   {
    "copies": 3,
@@ -6834,6 +8001,50 @@
    "title": "Prompt Optimizer"
   },
   {
+   "copies": 1,
+   "desc": "Develop evidence-backed structural and architectural security hardening proposals from vulnerability disclosures, supplied findings, incident or assessment documents, source code, or a completed Codex Security scan. Use when a user asks for systemic improvements, alternatives beyond per-finding patches, before-and-after security architecture views, engineering tradeoff analysis, or an implementation-ready plan for a selected hardening option. Also use automatically after a Codex Security scan with reportable findings when the top-level scan workflow requests final-report hardening guidance.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "propose-security-hardening",
+   "path": "skills/propose-security-hardening/",
+   "rescued_from_tmp": true,
+   "source": "plugin:codex-security",
+   "title": "Propose Security Hardening"
+  },
+  {
+   "copies": 1,
+   "desc": "Submit compact ProteomeXchange PROXI requests for datasets, libraries, peptidoforms, proteins, PSMs, spectra, and USI examples. Use when a user wants concise PROXI summaries",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "proteomexchange-skill",
+   "path": "skills/proteomexchange-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "proteomexchange-skill"
+  },
+  {
+   "copies": 1,
+   "desc": "Use when the user wants to spin up / create / launch / provision a DigitalOcean droplet (or \"a remote dev box on DO\") and connect to it from Codex as a remote SSH workspace.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "provision-droplet",
+   "path": "skills/provision-droplet/",
+   "rescued_from_tmp": true,
+   "source": "plugin:digitalocean",
+   "title": "Provision a DigitalOcean droplet as a Codex remote workspace"
+  },
+  {
+   "copies": 1,
+   "desc": "Submit compact PubChem PUG REST requests for compound properties, descriptions, assay summaries, and substance metadata. Use when a user wants concise PubChem summaries",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "pubchem-pug-skill",
+   "path": "skills/pubchem-pug-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "pubchem-pug-skill"
+  },
+  {
    "copies": 16,
    "desc": "Direct PubMed and NCBI E-utilities search workflows for biomedical literature, MeSH queries, PMID lookup, citation retrieval, and API-backed literature monitoring.",
    "desc_source": "yaml",
@@ -6843,6 +8054,50 @@
    "rescued_from_tmp": false,
    "source": "ecc",
    "title": "PubMed Database"
+  },
+  {
+   "copies": 1,
+   "desc": "Use when the user explicitly asks for the Pylance docs skill, or when an answer depends on current official Pylance documentation for settings, diagnostics, configuration, troubleshooting, feature behavior, or supported workflows.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "pylance-docs",
+   "path": "skills/pylance-docs/",
+   "rescued_from_tmp": false,
+   "source": "vscode-extension",
+   "title": "Pylance Docs"
+  },
+  {
+   "copies": 1,
+   "desc": "Use when the user wants to profile Python code with Pylance: capture CPU time (Tachyon), trace calls (sys.monitoring), or memory (Memray); profile a whole run or a specific region between two source locations; add sub-region markers; and explore the resulting profile (hot functions, call trees, time slices). Also use for the 3.15+ interpreter requirement and related error guidance.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "pylance-python-profiling",
+   "path": "skills/pylance-python-profiling/",
+   "rescued_from_tmp": false,
+   "source": "vscode-extension",
+   "title": "Pylance Python Profiling"
+  },
+  {
+   "copies": 1,
+   "desc": "Use when the user explicitly asks for the Pylance refactoring skill, or when they want named automated Python refactorings applied to one file, many files, a workspace, a folder subset, or a composed cleanup workflow such as workspace-wide unused-import cleanup, wildcard-import conversion followed by unused-import cleanup, inferred type annotations, or Pylance fix-all.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "pylance-refactoring",
+   "path": "skills/pylance-refactoring/",
+   "rescued_from_tmp": false,
+   "source": "vscode-extension",
+   "title": "Pylance Refactoring"
+  },
+  {
+   "copies": 1,
+   "desc": "Use when the user explicitly asks for the Python fact-grounded coding skill, or when a Python coding, debugging, explanation, or bug-fix task should be grounded in verified Pylance facts, runtime values, diagnostics, selected interpreter state, tests, or debugger evidence before changing code or reporting a conclusion.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "python-fact-grounded-coding",
+   "path": "skills/python-fact-grounded-coding/",
+   "rescued_from_tmp": false,
+   "source": "vscode-extension",
+   "title": "Python Fact-Grounded Coding"
   },
   {
    "copies": 1,
@@ -6944,6 +8199,17 @@
    "title": "Quarkus Verification Loop"
   },
   {
+   "copies": 1,
+   "desc": "Submit compact QuickGO requests for GO terms, annotations, and ontology traversal. Use when a user wants concise QuickGO summaries",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "quickgo-skill",
+   "path": "skills/quickgo-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "quickgo-skill"
+  },
+  {
    "copies": 24,
    "desc": "RFC-driven multi-agent DAG execution pattern with quality gates, merge queues, and work unit orchestration.",
    "desc_source": "yaml",
@@ -6953,6 +8219,17 @@
    "rescued_from_tmp": false,
    "source": "ecc",
    "title": "Ralphinho RFC Pipeline"
+  },
+  {
+   "copies": 1,
+   "desc": "Submit compact RCSB PDB requests for core metadata, Search API queries, and FASTA downloads. Use when a user wants concise RCSB summaries; save raw JSON or FASTA only on request.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "rcsb-pdb-skill",
+   "path": "skills/rcsb-pdb-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "rcsb-pdb-skill"
   },
   {
    "copies": 1,
@@ -7019,6 +8296,17 @@
    "rescued_from_tmp": true,
    "source": "plugin:game-studio",
    "title": "React Three Fiber Game"
+  },
+  {
+   "copies": 1,
+   "desc": "Submit compact Reactome ContentService requests for pathway, event, participant, search, and diagram-related data. Use when a user wants concise Reactome summaries",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "reactome-skill",
+   "path": "skills/reactome-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "reactome-skill"
   },
   {
    "copies": 1,
@@ -7428,6 +8716,17 @@
    "title": "Research Partner"
   },
   {
+   "copies": 1,
+   "desc": "Route broad or ambiguous life-sciences research requests to the right skills, normalize core entities, optionally parallelize independent evidence gathering with subagents when available, and synthesize a concise evidence-backed answer. Use when a user asks a general life-sciences question that could span multiple sources or analysis types.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "research-router-skill",
+   "path": "skills/research-router-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "research-router-skill"
+  },
+  {
    "copies": 24,
    "desc": "Codified expertise for returns authorization, receipt and inspection, disposition decisions, refund processing, fraud detection, and warranty claims management. Informed by returns operations managers with 15+ years experience. Includes grading frameworks, disposition economics, fraud pattern recognition, and vendor recovery processes. Use when handling product returns, reverse logistics, refund decisions, return fraud detection, or warranty claims.",
    "desc_source": "yaml",
@@ -7437,6 +8736,28 @@
    "rescued_from_tmp": false,
    "source": "ecc",
    "title": "Returns & Reverse Logistics"
+  },
+  {
+   "copies": 1,
+   "desc": "Perform a read-only, defect-first review of a specified code change and return every actionable finding. Use when another agent delegates review of uncommitted changes, a base-branch diff, a commit, or custom review instructions.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "review-agent",
+   "path": "skills/review-agent/",
+   "rescued_from_tmp": false,
+   "source": "codex-system",
+   "title": "Review Agent"
+  },
+  {
+   "copies": 1,
+   "desc": "Submit compact Rhea reaction search requests for biochemical reactions and reaction IDs. Use when a user wants concise Rhea summaries",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "rhea-skill",
+   "path": "skills/rhea-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "rhea-skill"
   },
   {
    "copies": 1,
@@ -7459,6 +8780,17 @@
    "rescued_from_tmp": true,
    "source": "plugin:zoom",
    "title": "Zoom Rivet SDK"
+  },
+  {
+   "copies": 1,
+   "desc": "Submit compact RNAcentral API requests for RNA entry browsing, single-entry lookup, and cross-reference retrieval. Use when a user wants concise RNAcentral summaries",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "rnacentral-skill",
+   "path": "skills/rnacentral-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "rnacentral-skill"
   },
   {
    "copies": 1,
@@ -7525,6 +8857,17 @@
    "rescued_from_tmp": false,
    "source": "vscode-extension",
    "title": "By test name (grep pattern)"
+  },
+  {
+   "copies": 1,
+   "desc": "How to write and run a dynamic workflow script with the `run_workflow` tool: a Python script that orchestrates many agents with `agent`, `parallel`, `pipeline`, and `phase`. Use when a task splits into many independent or staged pieces of agent work (fan out over files, modules, bugs, or review angles, then aggregate), or when the user asks for a workflow. Don't use for a single delegated task (use a subagent) or for legacy workflow files (see migrate-workflows).",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "run-workflow",
+   "path": "skills/run-workflow/",
+   "rescued_from_tmp": false,
+   "source": "gemini-antigravity",
+   "title": "Dynamic workflows with `run_workflow`"
   },
   {
    "copies": 1,
@@ -7679,6 +9022,17 @@
    "rescued_from_tmp": false,
    "source": "ecc",
    "title": "Security Bounty Hunter"
+  },
+  {
+   "copies": 1,
+   "desc": "Use when the user asks for a security review of a pull request, commit, branch diff, working-tree patch, or other Git-backed change set.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "security-diff-scan",
+   "path": "skills/security-diff-scan/",
+   "rescued_from_tmp": true,
+   "source": "plugin:codex-security",
+   "title": "Security Diff Scan"
   },
   {
    "copies": 75,
@@ -8396,6 +9750,17 @@
    "title": "Strategic Compact Skill"
   },
   {
+   "copies": 1,
+   "desc": "Submit compact STRING API requests for network, interaction partner, and enrichment endpoints. Use when a user wants concise STRING summaries",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "string-skill",
+   "path": "skills/string-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "string-skill"
+  },
+  {
    "copies": 2,
    "desc": "Guides Stripe integration decisions — API selection (Checkout Sessions vs PaymentIntents), Connect platform setup (Accounts v2, controller properties), billing/subscriptions, Treasury financial accounts, integration surfaces (Checkout, Payment Element), and migrating from deprecated Stripe APIs. Use when building, modifying, or reviewing any Stripe integration — including accepting payments, building marketplaces, integrating Stripe, processing payments, setting up subscriptions, or creating connected accounts.",
    "desc_source": "yaml",
@@ -8793,6 +10158,17 @@
   },
   {
    "copies": 1,
+   "desc": "Use when Codex is already in the threat-modeling phase of a security scan, the user explicitly invokes $threat-model, or the user explicitly asks to create, update, or persist a repository threat model. Do not use as the primary trigger for full PR, commit, branch, patch, or repository scans.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "threat-model",
+   "path": "skills/threat-model/",
+   "rescued_from_tmp": true,
+   "source": "plugin:codex-security",
+   "title": "Security Threat Model"
+  },
+  {
+   "copies": 1,
    "desc": "Implement browser-game runtimes with plain Three.js. Use when the user wants imperative scene control in TypeScript or Vite with GLB assets, loaders, physics, and low-level WebGL debugging.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -8837,6 +10213,28 @@
   },
   {
    "copies": 1,
+   "desc": "Fetch compact TPMI PheWAS summaries for single variants by accepting rsID, GRCh37, or GRCh38 input and resolving to the required GRCh38 query. Use when a user wants concise TPMI association results for one variant",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "tpmi-phewas-skill",
+   "path": "skills/tpmi-phewas-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "tpmi-phewas-skill"
+  },
+  {
+   "copies": 1,
+   "desc": "Track validated Codex Security findings in Linear, Jira, GitHub issues, or draft GitHub security advisories. Use it for one finding or an explicitly selected batch of up to 25 findings tracked as Linear, Jira, or GitHub issues. Includes duplicate checks, exact previews, approval-gated writes, and readback. Do not use it for scans or fixes.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "track-findings",
+   "path": "skills/track-findings/",
+   "rescued_from_tmp": true,
+   "source": "plugin:codex-security",
+   "title": "Track Findings"
+  },
+  {
+   "copies": 1,
    "desc": "Use Transformers.js to run state-of-the-art machine learning models directly in JavaScript/TypeScript. Supports NLP (text classification, translation, summarization), computer vision (image classification, object detection), audio (speech recognition, audio classification), and multimodal tasks. Works in Node.js and browsers (with WebGPU/WASM) using pre-trained models from Hugging Face Hub.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -8845,6 +10243,17 @@
    "rescued_from_tmp": true,
    "source": "plugin:hugging-face",
    "title": "Transformers.js - Machine Learning for JavaScript"
+  },
+  {
+   "copies": 1,
+   "desc": "Use when the user supplies or imports existing security findings, vulnerability reports, or security/vulnerability Jira/Linear tickets from scanners, advisories, GitHub, Atlassian Rovo, Linear, or similar backlog sources and wants static repo-impact triage. Do not use for discovery, duplicate-bug triage, validation, or fixes.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "triage-finding",
+   "path": "skills/triage-finding/",
+   "rescued_from_tmp": true,
+   "source": "plugin:codex-security",
+   "title": "Triage Finding"
   },
   {
    "copies": 1,
@@ -9518,6 +10927,17 @@
    "title": "UI Demo Video Recorder"
   },
   {
+   "copies": 1,
+   "desc": "Discover UI plugin panels relevant to the current task and surface a one-click pill in chat to open (toggle) them in the side pane. Use when a running UI plugin's panel would help with what the user is doing, or right after the user enables a new UI plugin pane and a shortcut to open it is handy.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "ui-plugin-navigation",
+   "path": "skills/ui-plugin-navigation/",
+   "rescued_from_tmp": false,
+   "source": "gemini-antigravity",
+   "title": "UI Plugin Navigation"
+  },
+  {
    "copies": 16,
    "desc": "Use when the user has UI screenshots or design exports that need batch conversion into Vue 3 components, especially with Vant, Element Plus, or Ant Design Vue.",
    "desc_source": "yaml",
@@ -9538,6 +10958,17 @@
    "rescued_from_tmp": true,
    "source": "plugin:zoom",
    "title": "Zoom Video SDK UI Toolkit"
+  },
+  {
+   "copies": 1,
+   "desc": "Fetch compact UKB-TOPMed PheWAS summaries for single variants by accepting rsID, GRCh37, or GRCh38 input and resolving to the required GRCh38 query. Use when a user wants concise UKB-TOPMed association results for one variant",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "ukb-topmed-phewas-skill",
+   "path": "skills/ukb-topmed-phewas-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "ukb-topmed-phewas-skill"
   },
   {
    "copies": 1,
@@ -9571,6 +11002,17 @@
    "rescued_from_tmp": false,
    "source": "ecc",
    "title": "Unified Notifications Ops"
+  },
+  {
+   "copies": 1,
+   "desc": "Submit compact UniProt REST API requests for UniProtKB, UniRef, UniParc, and FASTA stream endpoints. Use when a user wants concise UniProt summaries; save raw JSON or FASTA only on request.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "uniprot-skill",
+   "path": "skills/uniprot-skill/",
+   "rescued_from_tmp": true,
+   "source": "plugin:life-science-research",
+   "title": "uniprot-skill"
   },
   {
    "copies": 1,
@@ -9659,6 +11101,17 @@
    "rescued_from_tmp": true,
    "source": "plugin:vercel",
    "title": "v0 by Vercel"
+  },
+  {
+   "copies": 1,
+   "desc": "Use when Codex is already in the validation phase of a security scan or the user explicitly asks to determine whether one or more candidate security findings are valid. Do not use as the primary trigger for full PR, commit, branch, patch, or repository scans.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "validation",
+   "path": "skills/validation/",
+   "rescued_from_tmp": true,
+   "source": "plugin:codex-security",
+   "title": "Security Validation"
   },
   {
    "copies": 1,
@@ -9890,6 +11343,17 @@
    "rescued_from_tmp": false,
    "source": "ecc",
    "title": "Vue.js Patterns and Best Practices"
+  },
+  {
+   "copies": 1,
+   "desc": "Write up vulnerabilities from disclosure documents, rough notes, supplied findings, PoCs, source code, or Codex Security scan output into polished, self-contained, source-backed reports. Use for one vulnerability or a disclosure campaign; a Codex Security scan is optional.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "vulnerability-writeup",
+   "path": "skills/vulnerability-writeup/",
+   "rescued_from_tmp": true,
+   "source": "plugin:codex-security",
+   "title": "Vulnerability Writeup"
   },
   {
    "copies": 1,

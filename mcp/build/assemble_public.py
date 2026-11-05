@@ -107,6 +107,14 @@ mcp/dist/
 # rebuilt rather than tracked.
 mcp/data/index.json
 
+# The rendered documents. Their source is the template in
+# `mcp/docs/templates/`; the number in them is read from the index, so
+# a committed copy would be a number that drifts out of date silently.
+mcp/README.md
+mcp/docs/ARCHITECTURE.md
+mcp/docs/REGISTERING.md
+mcp/docs/TOOL_REFERENCE.md
+
 # Per-step build logs and their snapshots.
 logs/
 """
@@ -115,6 +123,77 @@ logs/
 def ignore_for(directory, entries):
     """A shutil ignore callback: skip the build artefacts everywhere."""
     return {e for e in entries if e in SKIP_DIRS or e in SCRATCH_FILES}
+
+
+# The documents that carry a count, and the template each is rendered
+# from.
+#
+# The library and the published tree hold different numbers of entries:
+# the tree leaves the private files and the test fixtures out. A number
+# written out by hand is therefore wrong in one of them, and it is wrong
+# *silently* -- the document still reads fine, it just describes a
+# library that is not the one in the directory.
+#
+# So each of these documents is *rendered* from a template in
+# `mcp/docs/templates/`, and the count is filled in from the index. The
+# template is the source of truth; the rendered document is a build
+# artefact, and is not tracked.
+DOC_COUNT_FILES = [
+    ('mcp/README.md', 'mcp/docs/templates/README.md.tpl'),
+    ('mcp/docs/ARCHITECTURE.md', 'mcp/docs/templates/ARCHITECTURE.md.tpl'),
+    ('mcp/docs/REGISTERING.md', 'mcp/docs/templates/REGISTERING.md.tpl'),
+    ('mcp/docs/TOOL_REFERENCE.md', 'mcp/docs/templates/TOOL_REFERENCE.md.tpl'),
+]
+
+
+def doc_counts(root):
+    """The counts the documentation states, read from the index."""
+    index_path = os.path.join(root, 'mcp', 'data', 'index.json')
+    if not os.path.isfile(index_path):
+        return None
+    with open(index_path, encoding='utf-8') as fh:
+        index = json.load(fh)
+
+    n_skills = len(index.get('skills') or [])
+    n_agents = len(index.get('agents') or [])
+    n_total = n_skills + n_agents
+    by_tier = (index.get('counts') or {}).get('by_tier') or {}
+    n_tier1 = by_tier.get('1', by_tier.get(1, 0))
+
+    return {
+        '{n_skills}': str(n_skills),
+        '{n_agents}': str(n_agents),
+        '{n_total}': '{:,}'.format(n_total),
+        '{n_tier1}': str(n_tier1),
+    }
+
+
+def fill_doc_counts(root):
+    """Render the documentation from its templates, with the counts.
+
+    Called for the public tree with the tree's own counts, and for the
+    local library with the local counts -- so neither document ever
+    describes a library other than the one it sits in.
+    """
+    subs = doc_counts(root)
+    if subs is None:
+        return
+
+    changed = 0
+    for rel, tpl_rel in DOC_COUNT_FILES:
+        tpl = os.path.join(root, tpl_rel)
+        if not os.path.isfile(tpl):
+            continue
+        with open(tpl, encoding='utf-8') as fh:
+            text = fh.read()
+        for token, value in subs.items():
+            text = text.replace(token, value)
+        out = os.path.join(root, rel)
+        os.makedirs(os.path.dirname(out), exist_ok=True)
+        with open(out, 'w', encoding='utf-8') as fh:
+            fh.write(text)
+        changed += 1
+    print('rendered %d document(s) with the counts' % changed)
 
 
 def copy_tree(src_rel, dst_rel, skip_extra=()):
@@ -238,9 +317,10 @@ def write_public_data(provenance, drop):
       `mcp/data/provenance.json` and in `CREDITS.md`.
     """
     published = {e['path'].rstrip('/') for e in provenance
-                 if e['verdict'] == 'redistributable'}
+                 if e['verdict'] in ('redistributable', 'included-with-terms')}
     container_of = {e['path'].rstrip('/'): e['container']
-                    for e in provenance if e['verdict'] == 'redistributable'}
+                    for e in provenance
+                    if e['verdict'] in ('redistributable', 'included-with-terms')}
 
     with open(os.path.join(SRC, '.library_data.json'), encoding='utf-8') as fh:
         local = json.load(fh)
@@ -316,7 +396,8 @@ def write_held_aside_readme(provenance):
 
     local_rows = read_held_aside_readme()
     published = [e for e in provenance
-                 if e.get('held_aside') and e['verdict'] == 'redistributable']
+                 if e.get('held_aside')
+                 and e['verdict'] in ('redistributable', 'included-with-terms')]
     if not published:
         return
 
@@ -392,11 +473,24 @@ def regenerate_golden():
 
 def main():
     provenance = resolve()
-    keep = [e for e in provenance if e['verdict'] == 'redistributable']
-    drop = [e for e in provenance if e['verdict'] != 'redistributable']
+    # Two verdicts publish. `redistributable` is published on the
+    # strength of its own licence. `included-with-terms` is published
+    # because the repository's owner instructed it, and its upstream
+    # terms do not grant redistribution -- the NOTICE says so, and
+    # quotes the terms, so the position is on the record rather than
+    # implied.
+    keep = [e for e in provenance
+            if e['verdict'] in ('redistributable', 'included-with-terms')]
+    drop = [e for e in provenance
+            if e['verdict'] not in ('redistributable', 'included-with-terms')]
+
+    n_plain = sum(1 for e in keep if e['verdict'] == 'redistributable')
+    n_terms = sum(1 for e in keep if e['verdict'] == 'included-with-terms')
 
     print('provenance: %d entries' % len(provenance))
-    print('  publishing %d' % len(keep))
+    print('  publishing %d (licence permits redistribution)' % n_plain)
+    print('  publishing %d (owner\'s instruction; terms do not grant it)'
+          % n_terms)
     print('  excluding %d (licence or personal)' % len(drop))
 
     if os.path.exists(DST):
@@ -484,11 +578,11 @@ def main():
     #     De-pathed: the `source` becomes the container label, so the
     #     table records where the content came from without recording
     #     whose machine it was found on.
-    prov = public_provenance(provenance)
+    pub_prov = public_provenance(provenance)
     prov_dst = os.path.join(DST, 'mcp', 'data', 'provenance.json')
     os.makedirs(os.path.dirname(prov_dst), exist_ok=True)
     with open(prov_dst, 'w', encoding='utf-8') as fh:
-        json.dump(prov, fh, indent=2, sort_keys=True, ensure_ascii=False)
+        json.dump(pub_prov, fh, indent=2, sort_keys=True, ensure_ascii=False)
         fh.write('\n')
 
     print()
@@ -507,6 +601,24 @@ def main():
         fh.write('\n')
     print('  excluded list -> %s' % os.path.relpath(ex, DST))
 
+    # --- the NOTICE, before the gate. The gate below checks that every
+    #     entry published under terms that do not grant redistribution
+    #     is *named* in the NOTICE -- so the NOTICE has to exist by the
+    #     time the gate runs. It is written here from the same
+    #     provenance table that decided what shipped, so it cannot
+    #     describe a different set of entries than the tree holds.
+    #
+    #     All three are written here, from the same provenance table that
+    #     decided what shipped, so they cannot describe a different set of
+    #     entries than the tree holds. `LICENSE` and `CREDITS.md` are
+    #     written too -- the NOTICE names them, and a NOTICE that points
+    #     at a file the tree does not carry is a broken promise.
+    from write_credits import write_credits, write_license, write_notice
+    write_license(os.path.join(DST, 'LICENSE'))
+    write_notice(os.path.join(DST, 'NOTICE'), pub_prov)
+    write_credits(os.path.join(DST, 'CREDITS.md'), pub_prov)
+    print('  wrote LICENSE, NOTICE, CREDITS.md')
+
     # --- the index, then the golden file, which describes this tree's
     #     own results. The order matters: the golden file is produced
     #     by running the search over the index.
@@ -520,6 +632,15 @@ def main():
     else:
         print(r.stdout.strip())
     regenerate_golden()
+
+    # --- the documentation, rendered from its templates with this
+    #     tree's own counts. It happens here, after the index build,
+    #     because the index is what the counts are read from. The
+    #     library and the published tree hold different numbers of
+    #     entries -- the tree leaves the private files and the test
+    #     fixtures out -- so a number written out by hand is wrong in
+    #     one of them, silently.
+    fill_doc_counts(DST)
 
     # --- the licence gate. The whole point of this tree is that an
     #     entry is published only if its licence permits redistribution,
@@ -610,6 +731,58 @@ def verify_licence_filter(keep, drop):
     print('LICENCE GATE: PASS')
     print('  %d published entries are present' % len(published))
     print('  %d excluded entries are absent' % len(excluded))
+
+    # The entries published under terms that do not grant redistribution
+    # have to be *named* in the NOTICE, or the tree would ship material
+    # whose terms forbid it without saying so. This asserts the record
+    # exists, entry by entry.
+    terms = [e for e in keep if e['verdict'] == 'included-with-terms']
+    if terms:
+        notice = os.path.join(DST, 'NOTICE')
+        if not os.path.isfile(notice):
+            print('LICENCE GATE: FAILED')
+            print('  NOTICE is missing, so the terms are not on the record')
+            sys.exit(1)
+        with open(notice, encoding='utf-8') as fh:
+            notice_text = fh.read()
+        unnamed = sorted(e['name'] for e in terms
+                          if ('`%s`' % e['name']) not in notice_text)
+        if unnamed:
+            print('LICENCE GATE: FAILED')
+            print('  %d entries published under terms are not named in the '
+                  'NOTICE:' % len(unnamed))
+            for n in unnamed[:20]:
+                print('    %s' % n)
+            sys.exit(1)
+        print('  %d entries published under terms are named in the NOTICE'
+              % len(terms))
+
+    # The NOTICE points at `LICENSE` and `CREDITS.md`. If either is
+    # absent, the tree ships content whose terms it has not recorded --
+    # and the NOTICE's own promise to name the file is broken.
+    for required in ('LICENSE', 'NOTICE', 'CREDITS.md'):
+        if not os.path.isfile(os.path.join(DST, required)):
+            print('LICENCE GATE: FAILED')
+            print('  %s is missing from the tree' % required)
+            sys.exit(1)
+
+    # The credits are the attribution. Every published entry has to be
+    # in there, or the tree ships work without saying who wrote it --
+    # which is the whole thing the user asked for when they instructed
+    # that the terms-restricted entries be included.
+    credits = os.path.join(DST, 'CREDITS.md')
+    with open(credits, encoding='utf-8') as fh:
+        credits_text = fh.read()
+    uncredited = sorted(e['name'] for e in keep
+                        if ('`%s`' % e['name']) not in credits_text)
+    if uncredited:
+        print('LICENCE GATE: FAILED')
+        print('  %d published entries are not credited in CREDITS.md:'
+              % len(uncredited))
+        for n in uncredited[:20]:
+            print('    %s' % n)
+        sys.exit(1)
+    print('  all %d published entries are credited in CREDITS.md' % len(keep))
 
 
 if __name__ == '__main__':

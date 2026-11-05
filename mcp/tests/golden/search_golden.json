@@ -10,15 +10,15 @@
    "skill:writing-skills"
   ],
   "scores": [
-   62.2539,
-   33.0965,
-   27.232,
-   24.5965,
-   24.0965,
-   20.6355,
-   19.0362
+   61.5998,
+   32.2108,
+   26.3827,
+   23.7108,
+   23.2108,
+   20.6718,
+   18.7041
   ],
-  "total": 23
+  "total": 26
  },
  "add authentication to an api": {
   "ids": [
@@ -34,16 +34,16 @@
    "skill:laravel-security"
   ],
   "scores": [
-   12.9827,
-   10.0981,
-   9.1556,
-   7.5201,
-   7.5201,
-   6.8347,
-   6.8347,
-   6.2701,
-   6.2701,
-   6.2701
+   12.6722,
+   9.8086,
+   9.2073,
+   7.5355,
+   7.5355,
+   6.995,
+   6.995,
+   6.2855,
+   6.2855,
+   6.2855
   ],
   "total": 15
  },
@@ -53,16 +53,18 @@
    "skill:api-connector-builder",
    "agent:database-reviewer",
    "skill:mcp-server-patterns",
-   "skill:x-api"
+   "skill:x-api",
+   "skill:jira-integration"
   ],
   "scores": [
-   44.984,
-   28.1679,
-   20.1751,
-   18.5709,
-   12.1679
+   44.3436,
+   27.8537,
+   20.1236,
+   18.4623,
+   11.8537,
+   11.2261
   ],
-  "total": 21
+  "total": 22
  },
  "api-design": {
   "ids": [
@@ -72,12 +74,12 @@
    "skill:mcp-server-patterns"
   ],
   "scores": [
-   50.984,
-   25.2835,
-   20.1751,
-   18.5709
+   50.3436,
+   24.849,
+   20.1236,
+   18.4623
   ],
-  "total": 10
+  "total": 11
  },
  "architecture and design patterns": {
   "ids": [
@@ -93,18 +95,18 @@
    "skill:django-patterns"
   ],
   "scores": [
-   33.9752,
-   33.6503,
-   32.7005,
-   31.4752,
-   29.1669,
-   25.641,
+   34.1711,
+   33.7947,
+   32.4945,
+   31.6711,
+   29.1807,
+   25.7467,
    22.25,
    22.0,
-   14.642,
-   14.2309
+   14.8517,
+   14.6675
   ],
-  "total": 39
+  "total": 40
  },
  "authentication oauth jwt": {
   "ids": [],
@@ -112,13 +114,9 @@
   "total": 0
  },
  "aws lambda cold start": {
-  "ids": [
-   "skill:catalyst-by-zoho"
-  ],
-  "scores": [
-   13.7066
-  ],
-  "total": 1
+  "ids": [],
+  "scores": [],
+  "total": 0
  },
  "backend api framework": {
   "ids": [
@@ -129,34 +127,40 @@
    "agent:database-reviewer"
   ],
   "scores": [
-   34.2835,
-   25.2835,
-   18.7066,
-   18.5709,
+   33.849,
+   24.849,
+   19.0976,
+   18.4623,
    17.5
   ],
   "total": 20
  },
  "build a document from a template": {
   "ids": [
-   "skill:article-writing",
+   "skill:document-builder",
+   "skill:artifact-template-design-report",
+   "skill:artifact-template-system-design",
+   "skill:artifact-template-legal-memorandum",
+   "skill:artifact-template-minimal-letterhead",
+   "skill:artifact-template-experiment-analysis",
+   "skill:artifact-template-strategy-memorandum",
+   "skill:artifact-template-investment-committee-memo",
    "skill:twilio-content-template-builder",
-   "skill:template",
-   "skill:competitive-report-structure",
-   "agent:cpp-build-resolver",
-   "skill:latex-doctor",
-   "skill:citations"
+   "skill:artifact-template-three-statement-forecast"
   ],
   "scores": [
-   25.0,
-   21.0011,
-   17.5198,
-   16.0,
-   14.1634,
-   9.2574,
-   8.2574
+   43.0817,
+   17.6901,
+   17.6901,
+   17.6901,
+   17.6901,
+   17.6901,
+   17.6901,
+   17.6901,
+   17.5793,
+   16.4034
   ],
-  "total": 14
+  "total": 20
  },
  "build failed with no error message": {
   "ids": [
@@ -172,7 +176,7 @@
    "skill:caveman-mode"
   ],
   "scores": [
-   50.0529
+   50.5669
   ],
   "total": 1
  },
@@ -187,38 +191,40 @@
    "skill:deployment-patterns"
   ],
   "scores": [
-   48.3479,
-   47.311,
-   36.0991,
-   36.0237,
-   13.1113,
-   13.1113,
-   12.5237
+   49.0435,
+   47.9381,
+   36.3851,
+   36.2479,
+   13.4306,
+   13.4306,
+   12.7479
   ],
   "total": 10
  },
  "code refactoring large codebase": {
   "ids": [
+   "skill:security-review",
    "agent:security-reviewer",
-   "skill:generate-snapshot",
    "skill:security-scan",
-   "agent:architect",
-   "agent:type-design-analyzer",
    "agent:security-auditor",
    "skill:supply-chain",
-   "skill:security-review"
+   "skill:threat-model",
+   "skill:deep-security-scan",
+   "skill:attack-path-analysis",
+   "agent:architect"
   ],
   "scores": [
-   11.6001,
-   10.4199,
-   10.3501,
-   10.3244,
-   9.8198,
-   9.5,
-   8.25,
-   8.25
+   25.25,
+   19.611,
+   18.361,
+   17.5,
+   16.25,
+   16.25,
+   16.25,
+   16.25,
+   10.5116
   ],
-  "total": 8
+  "total": 9
  },
  "code review and quality": {
   "ids": [
@@ -231,21 +237,21 @@
    "skill:requesting-code-review",
    "skill:document-quality-check",
    "skill:prediction-market-risk-review",
-   "agent:skill-reviewer"
+   "skill:review-agent"
   ],
   "scores": [
-   41.5005,
-   38.3667,
-   28.8006,
-   25.4946,
-   25.4946,
-   21.6245,
-   20.6209,
-   15.9979,
-   14.4004,
-   11.74
+   41.5309,
+   38.4779,
+   28.864,
+   25.4619,
+   25.4619,
+   22.0525,
+   20.5964,
+   16.3628,
+   14.4199,
+   13.1288
   ],
-  "total": 48
+  "total": 52
  },
  "code-review": {
   "ids": [
@@ -253,33 +259,33 @@
    "skill:receiving-code-review",
    "skill:flutter-dart-code-review",
    "skill:requesting-code-review",
+   "skill:review-agent",
    "skill:ponytail-review",
    "agent:code-reviewer",
    "agent:java-reviewer",
    "skill:orch-refine-code",
-   "skill:codehealth-mcp",
-   "agent:reviewer"
+   "skill:codehealth-mcp"
   ],
   "scores": [
-   25.4946,
-   25.4946,
-   25.4946,
-   20.6209,
-   13.1944,
-   13.0606,
-   10.534,
-   9.0738,
-   8.2737,
-   7.7604
+   25.4619,
+   25.4619,
+   25.4619,
+   20.5964,
+   13.1288,
+   13.1288,
+   13.0758,
+   10.4971,
+   9.0875,
+   8.282
   ],
-  "total": 36
+  "total": 39
  },
  "competition math olympiad proof": {
   "ids": [
    "skill:math-olympiad"
   ],
   "scores": [
-   69.0505
+   70.317
   ],
   "total": 1
  },
@@ -294,6 +300,7 @@
    "skill:skill-creator",
    "skill:skill-development",
    "agent:skill-reviewer",
+   "skill:figma-create-new-file",
    "agent:agent-creator",
    "skill:writing-skills",
    "skill:skill-scout",
@@ -301,17 +308,18 @@
    "skill:example-skill"
   ],
   "scores": [
-   38.7633,
-   35.7633,
-   35.7633,
-   33.6885,
-   29.1668,
-   28.1282,
-   13.7633,
-   11.1885,
-   10.6712
+   37.7079,
+   34.7079,
+   34.7079,
+   32.8234,
+   29.7911,
+   28.9971,
+   27.8167,
+   12.7079,
+   10.3234,
+   9.5953
   ],
-  "total": 41
+  "total": 49
  },
  "data database pipeline": {
   "ids": [
@@ -320,23 +328,23 @@
    "skill:data-visualization",
    "skill:data-scraper-agent",
    "skill:recsys-pipeline-architect",
-   "skill:postgres-patterns",
    "skill:data-throughput-accelerator",
+   "skill:postgres-patterns",
    "skill:d3-data-visualization",
    "skill:threejs-data-visualization",
    "skill:canvas2d-data-visualization"
   ],
   "scores": [
-   36.0131,
-   34.2431,
-   34.0798,
-   34.0798,
-   33.0977,
-   31.1045,
-   31.0798,
-   25.0798,
-   25.0798,
-   25.0798
+   36.4916,
+   34.6713,
+   34.2815,
+   34.2815,
+   33.018,
+   31.2815,
+   31.2431,
+   25.2815,
+   25.2815,
+   25.2815
   ],
   "total": 28
  },
@@ -354,16 +362,16 @@
    "skill:react-and-nextjs-data-visualization"
   ],
   "scores": [
-   56.4655,
-   52.2467,
-   47.4655,
-   47.4655,
-   37.1669,
-   36.2467,
-   35.3404,
-   33.0705,
-   31.4655,
-   27.3691
+   57.1669,
+   52.5931,
+   48.1669,
+   48.1669,
+   37.3116,
+   36.5931,
+   35.4106,
+   33.0903,
+   32.1669,
+   27.9455
   ],
   "total": 12
  },
@@ -380,24 +388,24 @@
    "skill:neon-postgres-egress-optimizer"
   ],
   "scores": [
-   38.5473,
-   36.5437,
-   30.3382,
-   27.5437,
-   23.9591,
-   23.9591,
-   20.4099,
+   38.8174,
+   36.5493,
+   30.6907,
+   27.5493,
+   23.8767,
+   23.8767,
+   20.204,
    16.25,
-   11.5437
+   11.5493
   ],
-  "total": 17
+  "total": 13
  },
  "debug a failing test": {
   "ids": [
    "skill:debug-failing-test"
   ],
   "scores": [
-   62.5898
+   63.3167
   ],
   "total": 3
  },
@@ -410,13 +418,13 @@
    "skill:vercel-agent"
   ],
   "scores": [
-   28.254,
-   20.754,
+   28.3268,
+   20.8268,
    16.25,
    16.25,
-   10.3684
+   9.8934
   ],
-  "total": 5
+  "total": 6
  },
  "devops and cloud deployment": {
   "ids": [],
@@ -429,58 +437,50 @@
    "skill:docker-patterns"
   ],
   "scores": [
-   26.4284,
-   26.4284
+   27.0597,
+   27.0597
   ],
   "total": 2
  },
  "document-builder": {
   "ids": [
+   "skill:document-builder",
    "skill:article-writing",
-   "skill:competitive-report-structure",
-   "skill:dashboard-builder",
-   "skill:frontend-app-builder",
-   "skill:api-connector-builder",
-   "skill:team-builder",
-   "skill:twilio-content-template-builder",
-   "skill:sharepoint-spreadsheet-formula-builder"
+   "skill:competitive-report-structure"
   ],
   "scores": [
-   25.0,
+   59.6115,
    16.0,
-   13.9935,
-   13.9935,
-   13.9935,
-   13.9935,
-   13.9935,
-   13.9935
+   16.0
   ],
-  "total": 11
+  "total": 12
  },
  "explore the codebase agent": {
   "ids": [
    "skill:agent-development",
    "agent:agent-creator",
    "agent:agent-evaluator",
-   "skill:hook-development",
-   "skill:command-development",
-   "agent:code-explorer",
+   "skill:security-review",
+   "skill:moody-s-explore-mcp",
+   "agent:Explore",
    "skill:security-scan",
    "agent:security-auditor",
-   "agent:security-reviewer"
+   "agent:security-reviewer",
+   "skill:supply-chain"
   ],
   "scores": [
-   34.7329,
-   26.2329,
-   26.2329,
-   16.0,
-   16.0,
-   14.9017,
-   10.6832,
-   9.5,
-   9.5
+   34.852,
+   26.352,
+   26.352,
+   25.25,
+   22.3863,
+   21.2916,
+   18.713,
+   17.5,
+   17.5,
+   16.25
   ],
-  "total": 11
+  "total": 18
  },
  "fix a failing build": {
   "ids": [
@@ -496,31 +496,33 @@
    "skill:circleci-builds"
   ],
   "scores": [
-   35.368,
-   31.7835,
-   31.7835,
-   31.2835,
+   35.5127,
+   31.9072,
+   31.9072,
+   31.4072,
    25.25,
    22.25,
-   20.2672,
-   19.405,
-   19.405,
-   14.4535
+   20.7718,
+   19.6149,
+   19.6149,
+   14.6779
   ],
   "total": 13
  },
  "fix my latex document errors": {
   "ids": [
    "skill:latex-doctor",
+   "skill:document-builder",
    "skill:article-writing",
    "skill:competitive-report-structure"
   ],
   "scores": [
-   42.0043,
-   25.0,
+   42.4158,
+   39.554,
+   16.0,
    16.0
   ],
-  "total": 5
+  "total": 6
  },
  "frontend ui accessibility": {
   "ids": [
@@ -531,11 +533,11 @@
    "skill:impeccable"
   ],
   "scores": [
-   27.5839,
-   24.3857,
-   24.3857,
-   16.4003,
-   11.1282
+   27.9112,
+   24.8854,
+   24.8854,
+   16.5563,
+   11.3413
   ],
   "total": 5
  },
@@ -545,8 +547,8 @@
    "skill:token-budget-advisor"
   ],
   "scores": [
-   20.3682,
-   9.408
+   20.1569,
+   9.5957
   ],
   "total": 2
  },
@@ -565,7 +567,7 @@
    "skill:humanizer"
   ],
   "scores": [
-   63.4683
+   64.0686
   ],
   "total": 1
  },
@@ -577,10 +579,10 @@
    "skill:frontend-a11y"
   ],
   "scores": [
-   47.5469,
-   38.3857,
-   33.7576,
-   26.3464
+   48.1732,
+   38.8854,
+   34.0092,
+   26.4713
   ],
   "total": 5
  },
@@ -590,16 +592,18 @@
    "agent:performance-optimizer",
    "skill:swiftui-performance-audit",
    "skill:android-performance",
-   "skill:web-perf"
+   "skill:web-perf",
+   "skill:pylance-python-profiling"
   ],
   "scores": [
-   37.6321,
-   34.3801,
-   33.8801,
-   28.6321,
-   19.158
+   38.0288,
+   34.9032,
+   34.4032,
+   29.0288,
+   19.2572,
+   16.0
   ],
-  "total": 6
+  "total": 7
  },
  "it crashes when i open it": {
   "ids": [
@@ -607,8 +611,8 @@
    "skill:test-triage"
   ],
   "scores": [
-   7.6612,
-   6.4112
+   7.7879,
+   6.5379
   ],
   "total": 2
  },
@@ -626,14 +630,12 @@
   "ids": [
    "skill:kubernetes-patterns",
    "skill:physical-ai-infrastructure-setup-and-resilient-scaling",
-   "agent:architect",
-   "skill:deployments-cicd"
+   "agent:architect"
   ],
   "scores": [
-   32.6448,
-   10.5411,
-   9.5,
-   8.25
+   33.1514,
+   10.7141,
+   9.5
   ],
   "total": 4
  },
@@ -641,18 +643,18 @@
   "ids": [
    "agent:mle-reviewer",
    "skill:mle-workflow",
-   "skill:ml-adoption-playbook",
    "skill:pytorch-patterns",
+   "skill:ml-adoption-playbook",
    "skill:huggingface-llm-trainer",
    "skill:transformers-js"
   ],
   "scores": [
-   18.9405,
-   17.4405,
-   12.6593,
-   12.5268,
-   12.5268,
-   9.3796
+   19.1855,
+   17.6855,
+   12.7784,
+   12.7784,
+   12.7784,
+   9.4986
   ],
   "total": 6
  },
@@ -661,7 +663,7 @@
    "skill:math-olympiad"
   ],
   "scores": [
-   56.4404
+   57.4536
   ],
   "total": 1
  },
@@ -672,43 +674,45 @@
    "skill:building-mcp-server-on-cloudflare"
   ],
   "scores": [
-   64.9283,
-   52.7344,
-   52.7344
+   65.2684,
+   52.7855,
+   52.7855
   ],
-  "total": 25
+  "total": 28
  },
  "migrate to a new framework": {
   "ids": [
    "skill:render-migrate-from-heroku",
+   "skill:migrate-workflows",
    "agent:uplift-migrator",
    "skill:prisma-cli",
    "skill:prisma-patterns",
    "skill:render-cron-jobs",
    "skill:database-migrations",
    "skill:use-dom",
-   "skill:google-workspace-ops",
-   "skill:shopify-onboarding-merchant"
+   "skill:run-workflow",
+   "skill:google-workspace-ops"
   ],
   "scores": [
-   18.6579,
-   6.1645,
-   4.9145,
-   4.9145,
-   4.9145,
-   4.9145,
-   4.6645,
-   4.6645,
-   4.6645
+   18.3658,
+   18.3658,
+   6.0914,
+   4.8414,
+   4.8414,
+   4.8414,
+   4.8414,
+   4.5914,
+   4.5914,
+   4.5914
   ],
-  "total": 9
+  "total": 11
  },
  "my changes were not saved": {
   "ids": [
    "skill:moody-s-rating-analysis"
   ],
   "scores": [
-   6.8533
+   6.9801
   ],
   "total": 1
  },
@@ -737,8 +741,8 @@
    "agent:harness-optimizer"
   ],
   "scores": [
-   45.8401,
-   23.7004
+   46.7187,
+   24.0789
   ],
   "total": 8
  },
@@ -747,7 +751,7 @@
    "skill:python-testing"
   ],
   "scores": [
-   39.765
+   40.1907
   ],
   "total": 2
  },
@@ -770,16 +774,16 @@
    "skill:vue-patterns"
   ],
   "scores": [
-   25.8649,
-   20.4941,
-   17.8009,
-   17.8009,
-   17.3009,
-   15.7011,
-   15.7011,
-   15.7011,
-   12.3048,
-   12.3048
+   26.7466,
+   20.5922,
+   18.2597,
+   18.2597,
+   17.7597,
+   16.2983,
+   16.2983,
+   16.2983,
+   12.695,
+   12.695
   ],
   "total": 19
  },
@@ -799,8 +803,8 @@
    "skill:literature-review"
   ],
   "scores": [
-   42.8011,
-   38.975
+   42.586,
+   38.5152
   ],
   "total": 2
  },
@@ -812,9 +816,9 @@
    "agent:database-reviewer"
   ],
   "scores": [
-   38.6634,
-   25.2835,
-   18.5709,
+   37.8509,
+   24.849,
+   18.4623,
    17.5
   ],
   "total": 4
@@ -833,56 +837,62 @@
    "skill:receiving-code-review"
   ],
   "scores": [
-   44.4946,
-   35.0606,
-   28.8002,
-   28.8002,
-   27.5002,
-   27.1236,
+   44.4619,
+   35.0758,
+   28.8331,
+   28.8331,
+   27.5276,
+   27.1155,
    25.25,
-   24.1001,
+   24.111,
    23.5,
-   22.1565
+   22.1426
   ],
   "total": 17
  },
  "security review vulnerability": {
   "ids": [
    "skill:security-review",
-   "agent:security-reviewer"
+   "skill:vulnerability-writeup",
+   "agent:security-reviewer",
+   "skill:propose-security-hardening",
+   "skill:triage-finding"
   ],
   "scores": [
-   26.6051,
-   23.798
+   26.02,
+   25.3254,
+   21.9849,
+   17.3532,
+   8.7857
   ],
-  "total": 2
+  "total": 5
  },
  "security-review": {
   "ids": [
    "skill:security-review",
    "agent:security-reviewer",
+   "skill:security-diff-scan",
    "skill:code-review",
    "skill:flutter-dart-code-review",
    "agent:java-reviewer",
    "agent:php-reviewer",
    "agent:vue-reviewer",
    "agent:code-reviewer",
-   "agent:react-reviewer",
-   "agent:csharp-reviewer"
+   "agent:react-reviewer"
   ],
   "scores": [
-   26.6051,
-   16.9447,
-   14.1654,
-   14.1654,
-   11.505,
-   8.7315,
-   8.7315,
-   8.7315,
-   8.7315,
-   8.7315
+   26.02,
+   16.3883,
+   14.5111,
+   13.9569,
+   13.9569,
+   11.3253,
+   8.5708,
+   8.5708,
+   8.5708,
+   8.5708
   ],
-  "total": 20
+  "total": 22
  },
  "set up continuous integration": {
   "ids": [
@@ -892,10 +902,10 @@
    "skill:autonomous-agent-harness"
   ],
   "scores": [
-   21.8807,
-   21.8807,
-   16.4105,
-   5.4702
+   22.3863,
+   22.3863,
+   16.7897,
+   5.5966
   ],
   "total": 4
  },
@@ -912,10 +922,10 @@
    "agent:agent-evaluator"
   ],
   "scores": [
-   84.4901,
-   34.7329,
-   26.2329,
-   26.2329
+   86.0377,
+   34.852,
+   26.352,
+   26.352
   ],
   "total": 6
  },
@@ -927,18 +937,20 @@
    "agent:tdd-guide",
    "skill:laravel-tdd",
    "skill:quarkus-tdd",
-   "skill:springboot-tdd"
+   "skill:springboot-tdd",
+   "agent:ecc-coordinator"
   ],
   "scores": [
-   28.416,
-   20.3682,
-   17.5198,
-   13.6398,
-   13.1398,
-   13.1398,
-   13.1398
+   28.3963,
+   20.1569,
+   17.7049,
+   13.7787,
+   13.2787,
+   13.2787,
+   13.2787,
+   8.9654
   ],
-  "total": 13
+  "total": 14
  },
  "terraform module state locking": {
   "ids": [],
@@ -951,8 +963,8 @@
    "skill:game-playtest"
   ],
   "scores": [
-   20.4564,
-   8.4168
+   21.0235,
+   8.6107
   ],
   "total": 2
  },
@@ -961,7 +973,7 @@
    "skill:investigation-mode"
   ],
   "scores": [
-   12.0797
+   12.204
   ],
   "total": 1
  },
@@ -973,10 +985,10 @@
    "skill:temporal-developer"
   ],
   "scores": [
-   14.0068,
-   11.9807,
-   6.0068,
-   5.7568
+   14.1333,
+   12.0019,
+   6.1333,
+   5.8833
   ],
   "total": 4
  },
@@ -991,30 +1003,12 @@
  },
  "typescript type safety": {
   "ids": [
-   "agent:typescript-reviewer",
-   "skill:typescript-data-visualization-engineering",
-   "agent:reviewer",
-   "agent:fsharp-reviewer",
-   "agent:maintainer",
-   "agent:build-error-resolver",
-   "agent:agent-sdk-verifier-ts",
-   "skill:error-handling",
-   "skill:nestjs-patterns",
-   "skill:prisma-patterns"
+   "agent:typescript-reviewer"
   ],
   "scores": [
-   28.6665,
-   24.1858,
-   8.8707,
-   8.8707,
-   8.8177,
-   8.8177,
-   8.8177,
-   7.5677,
-   7.5677,
-   7.5677
+   29.3196
   ],
-  "total": 21
+  "total": 1
  },
  "useEffect react hook dependency array": {
   "ids": [],
@@ -1045,18 +1039,18 @@
    "skill:orch-change-feature"
   ],
   "scores": [
-   27.3297,
-   27.3297,
+   27.3648,
+   27.3648,
    25.25,
    25.0,
    22.25,
    22.0,
    22.0,
    22.0,
-   18.4108,
-   18.4108
+   18.572,
+   18.572
   ],
-  "total": 20
+  "total": 21
  },
  "writing technical documentation": {
   "ids": [
@@ -1066,10 +1060,10 @@
    "skill:search-company-knowledge"
   ],
   "scores": [
-   20.4798,
-   13.6599,
-   10.2201,
-   8.7201
+   20.4849,
+   13.6616,
+   10.3475,
+   8.8475
   ],
   "total": 4
  },
