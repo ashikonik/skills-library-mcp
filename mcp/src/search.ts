@@ -50,7 +50,7 @@
  *                     so the row does not fire and the authentication
  *                     skill keeps the top slot.
  *
- * Results are limited three ways, so a query never returns 976 rows:
+ * Results are limited three ways, so a query never returns every row:
  *
  *   1. score threshold -- only `score > 0`; a pure-stopword query returns 0
  *   2. hard cap -- `limit`, default 10, max 50
@@ -89,7 +89,7 @@ export const RELEVANCE_FLOOR = 0.25;
  * in its description and nothing else. The subject of the query was
  * the one token that carried no information.
  *
- * 1.8% of 1078 entries is 19 documents. A token in 20 or more is
+ * 1.8% of the corpus is about 19 documents. A token in 20 or more is
  * common enough that requiring it is a filter on luck rather than on
  * relevance. The ratio was chosen by measuring, over a labelled query
  * set, how many entries each threshold let through and where the
@@ -221,6 +221,42 @@ export function round4(x: number): number {
 
   const res = Number(q) / 10000;
   return negative ? -res : res;
+}
+
+/**
+ * Scores are compared with a tolerance, not with raw float equality.
+ *
+ * Two entries that match the same query tokens score the *same* sum, but
+ * the terms arrive in a different order, so the floating-point addition
+ * lands on a different last bit. The difference is around 1e-15 -- far
+ * below anything a reader could call a different score -- but the sort
+ * compared the raw doubles, so the noise decided the order and the
+ * documented tie-break (tier, kind, shorter name, name) never ran.
+ *
+ * "machine learning model training" is the case that showed it:
+ * `pytorch-patterns`, `ml-adoption-playbook` and `huggingface-llm-trainer`
+ * all score 12.7920798526549..., differing by 2e-15, and their order
+ * changed every time the corpus grew by one entry.
+ *
+ * The quantum is 1e-6: a millionth of a point. A real score difference --
+ * the smallest the weights can produce is an idf step, which is several
+ * hundredths -- is far above it, so this only groups together scores that
+ * are the same score.
+ *
+ * The scale is an integer so that both engines compute the same key:
+ * IEEE 754 multiplication is exactly specified, so `score * SCORE_SCALE`
+ * is bit-identical in Python and JavaScript, and `trunc` is exact.
+ */
+export const SCORE_SCALE = 1000000;
+
+/**
+ * The score as an integer, for comparison with a tolerance.
+ *
+ * `Math.trunc` and Python's `math.trunc` agree: both truncate toward
+ * zero, and both are exact for a value this small.
+ */
+export function scoreKey(score: number): number {
+  return Math.trunc(score * SCORE_SCALE);
 }
 
 /**
@@ -462,8 +498,8 @@ export class SearchIndex {
    *
    * A token that appears in more than `GENERIC_TOKEN_DF_RATIO` of the
    * corpus carries almost no information about which entry a query
-   * wants. "write" appears in 37 of 1078 entries; requiring an entry
-   * to contain it is a filter on luck, not on relevance.
+   * wants. "write" appears in a few dozen entries; requiring an
+   * entry to contain it is a filter on luck, not on relevance.
    */
   isGeneric(t: string): boolean {
     const df = this.df.get(t) ?? 0;
@@ -676,8 +712,14 @@ export class SearchIndex {
 
     // The fixed tie-break order. The Python server must produce the
     // identical ordering, or the agreement test fails.
+    //
+    // The score is compared through `scoreKey`, so that scores which
+    // differ only in the last floating-point bit are treated as equal
+    // and the tie-break below decides their order.
     scored.sort((a, b) => {
-      if (a[0] !== b[0]) return b[0] - a[0];
+      const aScore = scoreKey(a[0]);
+      const bScore = scoreKey(b[0]);
+      if (aScore !== bScore) return bScore - aScore;
       const at = a[1].tier ?? 3;
       const bt = b[1].tier ?? 3;
       if (at !== bt) return at - bt;

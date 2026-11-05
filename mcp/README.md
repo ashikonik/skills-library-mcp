@@ -1,6 +1,6 @@
 # skills-library — an MCP server for the Skills & Agents library
 
-This library holds **976 skills** and **102 agents** — markdown
+This library holds **977 skills** and **102 agents** — markdown
 instruction files with YAML frontmatter, gathered from every harness
 config on this machine. Until now it was an archive: nothing activated
 it.

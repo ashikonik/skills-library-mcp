@@ -74,8 +74,13 @@ def _excludes():
     if not IN_PLACE:
         # The library's own generated output is excluded, because the
         # scan is looking for *upstream* copies to compare against.
-        for sub in ('skills', 'agents', 'document-builder', 'skill-creator-plus',
-                    'research-partner', 'humanizer', 'latex-doctor', 'caveman-mode'):
+        #
+        # The pack names come from the manifest rather than from a
+        # literal here, so a new pack is excluded by adding one line to
+        # `mcp/build/packs.json` rather than by remembering this list.
+        sys.path.insert(0, os.path.join(LIB, 'mcp', 'build'))
+        from packs import names as pack_names
+        for sub in ('skills', 'agents') + tuple(pack_names()):
             ex += ['-not', '-path', os.path.join(LIB, sub, '*')]
     for p in _published_trees():
         ex += ['-not', '-path', os.path.join(p, '*')]

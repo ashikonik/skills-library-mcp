@@ -2,8 +2,8 @@
  * The tool surface — 8 tools, transport-independent.
  *
  * The shape follows the library's own `skills/build-mcp-server/SKILL.md`
- * §Phase 3 Pattern B: a *search + execute* pair rather than 976
- * one-per-skill tools. Read tools and write tools are separate, per the
+ * §Phase 3 Pattern B: a *search + execute* pair rather than one
+ * one-per-skill tool. Read tools and write tools are separate, per the
  * Anthropic Directory rule, so a client can allow `search_library` and
  * `get_skill` without also allowing `install_skills`.
  *
@@ -87,11 +87,28 @@ export function createServer(deps: Deps): McpServer {
   const search = new SearchIndex(index);
   const root = libraryRoot();
 
+  // The library's size, as the index reports it.
+  //
+  // The instructions and the tool descriptions say how big the library
+  // is, and the library grows -- that is what it is for. A literal count
+  // goes stale the first time somebody adds a skill, and a stale count
+  // in a tool description is not cosmetic: it is a claim the server
+  // makes to the model about its own coverage, and the agreement gate
+  // compares it byte for byte against the Python fallback. So the count
+  // is read from the index, in both implementations, and the two cannot
+  // drift apart.
+  const nSkills = String(index.skills.length);
+  const nAgents = String(index.agents.length);
+  // The pack count, read from the index for the same reason: the pack
+  // list grows, and a literal "six" in a tool description would go
+  // stale the first time somebody registers an eighth pack.
+  const nPacks = String(index.packs.length);
+
   const server = new McpServer(
     { name: 'skills-library', version: '1.0.0' },
     {
       instructions:
-        'Searches a local library of 976 skills and 102 agents, and installs them into ' +
+        `Searches a local library of ${nSkills} skills and ${nAgents} agents, and installs them into ` +
         'coding harnesses. Start with search_library to find candidates, then get_skill ' +
         'or get_agent to read one. install_skills and install_agents make a skill ' +
         'auto-activate in the target harness; both are dry runs unless apply is true.',
@@ -105,7 +122,7 @@ export function createServer(deps: Deps): McpServer {
       title: 'Search library',
       description:
         'Rank skills and agents by relevance to a query. Returns scored candidates with ' +
-        'the terms each matched on. Covers all 976 skills and 102 agents. ' +
+        `the terms each matched on. Covers all ${nSkills} skills and ${nAgents} agents. ` +
         'Not covered by get_skill, which returns one document in full.',
       inputSchema: {
         query: z.string().min(1).max(500),
@@ -340,7 +357,7 @@ export function createServer(deps: Deps): McpServer {
     {
       title: 'List library',
       description:
-        "Lists the library's structure: its domains, tiers, the six hand-authored " +
+        `Lists the library's structure: its domains, tiers, the ${nPacks} hand-authored ` +
         'packs, the task-type index, or overall statistics. ' +
         'Not covered by search_library, which ranks entries by relevance to a query.',
       inputSchema: {
@@ -379,7 +396,7 @@ export function createServer(deps: Deps): McpServer {
           return asText({
             packs: index.packs,
             note:
-              'The six hand-authored packs are the highest-quality material in the ' +
+              `The ${nPacks} hand-authored packs are the highest-quality material in the ` +
               'library and the first thing to reach for.',
           });
         case 'tasks':

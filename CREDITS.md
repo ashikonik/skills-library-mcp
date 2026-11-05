@@ -12,7 +12,7 @@ away from what actually shipped.
 
 | | |
 |---|---:|
-| Published entries | 951 |
+| Published entries | 952 |
 | Distinct authors and organisations | 51 |
 
 ## By author
@@ -42,9 +42,9 @@ away from what actually shipped.
 | HeyGen | 7 | Apache-2.0, MIT | — |
 | Dietrich Gebert | 6 | MIT | [ponytail](https://github.com/dietrichgebert/ponytail) |
 | Superhuman | 6 | MIT | [mcp-mail](https://github.com/superhuman/mcp-mail) |
+| This library (hand-authored) | 6 | Apache-2.0, MIT | — |
 | Atlassian | 5 | MIT | [plugins](https://github.com/openai/plugins) |
 | Deepnote | 5 | Apache-2.0 | [deepnote](https://github.com/openai/plugins/tree/main/plugins/deepnote) |
-| This library (hand-authored) | 5 | Apache-2.0, MIT | — |
 | CircleCI | 4 | MIT | [skills](https://github.com/circleci-public/skills) |
 | HubSpot | 4 | MIT | [plugins](https://github.com/openai/plugins) |
 | Midpage | 4 | MIT | [plugins](https://github.com/openai/plugins) |
@@ -228,6 +228,12 @@ pdf and frontend-design skills so it works standalone. Those bundled
 copies are Anthropic's, under Anthropic's own terms, and each one
 carries its `LICENSE.txt`.
 
+Because those terms forbid redistribution, `document-builder` itself is
+**not** in this repository — it is in the working library, where the
+bundled copies came from, and it is left out of the published tree
+whole rather than shipped with its vendored content stripped out. It
+is counted among the excluded entries in `NOTICE`.
+
 - Author: Anthropic, PBC
 - Upstream: <https://github.com/anthropics/skills>
 - Terms: source-available, not open source — see each
@@ -238,18 +244,17 @@ carries its `LICENSE.txt`.
 These are the repository's own work, and they are covered by this
 repository's MIT licence:
 
-- `caveman-mode` — blunt, stripped-down caveman speech for the whole
-  conversation.
-- `humanizer` — rewrites text so it reads as genuinely human. Draws on
-  Wikipedia's *Signs of AI Writing* and community-compiled pattern
-  lists.
-- `latex-doctor` — diagnoses, fixes and writes LaTeX for any IDE or
-  engine.
-- `research-partner` — rigorous academic research support, with a
-  mandatory intake interview and an evidence discipline.
-- `skill-creator-plus` — skill authoring with an evaluation harness.
-  Derived from Anthropic's `skill-creator` (Apache-2.0), with
-  additional references, scripts and an eval-review viewer.
+- `caveman-mode` — Forces all reasoning and replies into blunt caveman speech for the whole conversation.
+- `humanizer` — Rewrites text so it reads as human, not AI. Built on Wikipedia Signs of AI Writing.
+- `latex-doctor` — Diagnoses, fixes and writes LaTeX for any IDE or engine.
+- `research-partner` — Academic research support with a mandatory scope interview and strict evidence discipline.
+- `skill-creator-plus` — Skill authoring with a real evaluation harness -- 3 sub-agents, a blind A/B comparator, an HTML review viewer, and an improvement loop.
+- `skill-library-adder` — Adds a new skill or agent to this library and the MCP server that serves it. Covers where a file goes, what the scanner will accept, and the licence and publish rules.
+
+`skill-creator-plus` is derived from Anthropic's `skill-creator`
+(Apache-2.0), with additional references, scripts and an eval-review
+viewer. Its upstream terms are noted here because they apply to the
+part it derives from.
 
 ## The server
 

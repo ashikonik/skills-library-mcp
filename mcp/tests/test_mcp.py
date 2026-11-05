@@ -74,7 +74,15 @@ def test_index(idx):
     check('index: the tier-1 skills are exactly the published packs',
           tier1_skills == sorted(d['packs']), str(tier1_skills))
     check('index: 38 domains', len(d['domains']) == 38, str(len(d['domains'])))
-    check('index: 73 task rows', len(d['tasks']) == 73, str(len(d['tasks'])))
+    # The task table's row count is not written down here. A literal goes
+    # stale the moment a row is added, and a stale literal is a failed
+    # build that says nothing about the index. What matters is that the
+    # index holds exactly the rows the table holds -- the same rows the
+    # routing guide prints.
+    from tasks import TASKS
+    check('index: the task rows match the task table',
+          len(d['tasks']) == len(TASKS),
+          'index %d, table %d' % (len(d['tasks']), len(TASKS)))
 
 
 # --------------------------------------------------- 2. the frontmatter fix

@@ -25,6 +25,29 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 BASE = os.path.dirname(os.path.dirname(HERE))
 sys.path.insert(0, HERE)
 
+from packs import (                    # noqa: E402
+    by_name as pack_by_name,
+    publishable as pack_publishable,
+)
+
+
+def own_pack_names():
+    """The library's own packs, in manifest order.
+
+    Read from the manifest rather than written out here, so that adding a
+    pack credits it without editing this file -- and so that the credits
+    can never list a pack the library does not have.
+    """
+    return list(pack_publishable())
+
+
+def pack_summary(name):
+    """One line about a pack, for the credits list."""
+    rec = pack_by_name(name)
+    if rec is None:
+        return name
+    return rec.get('summary', '')
+
 # The repository itself. The server, the index builder, the installers and
 # the test suite are this repository's own work.
 REPO_HOLDER = 'Md. Ashik-Uz-Zaman'
@@ -162,8 +185,8 @@ def write_notice(path, provenance):
     w('- the index builder and the library tooling — `mcp/build/**`,')
     w('  `.build_library.py`, `.build_guide.py`, `.gen_report.py`;')
     w('- the installers, the test suite and the documentation;')
-    w('- the skills written for this library: `caveman-mode`, `humanizer`,')
-    w('  `latex-doctor`, `research-partner`, and `skill-creator-plus`.')
+    w('- the skills written for this library: %s.'
+      % ', '.join('`%s`' % n for n in own_pack_names()))
     w('')
     w('`skill-creator-plus` is derived from Anthropic\'s `skill-creator`')
     w('(Apache-2.0), with additional references, scripts and an eval-review')
@@ -337,6 +360,12 @@ def write_credits(path, provenance):
     w('copies are Anthropic\'s, under Anthropic\'s own terms, and each one')
     w('carries its `LICENSE.txt`.')
     w('')
+    w('Because those terms forbid redistribution, `document-builder` itself is')
+    w('**not** in this repository — it is in the working library, where the')
+    w('bundled copies came from, and it is left out of the published tree')
+    w('whole rather than shipped with its vendored content stripped out. It')
+    w('is counted among the excluded entries in `NOTICE`.')
+    w('')
     w('- Author: Anthropic, PBC')
     w('- Upstream: <https://github.com/anthropics/skills>')
     w('- Terms: source-available, not open source — see each')
@@ -347,18 +376,13 @@ def write_credits(path, provenance):
     w('These are the repository\'s own work, and they are covered by this')
     w('repository\'s MIT licence:')
     w('')
-    w('- `caveman-mode` — blunt, stripped-down caveman speech for the whole')
-    w('  conversation.')
-    w('- `humanizer` — rewrites text so it reads as genuinely human. Draws on')
-    w('  Wikipedia\'s *Signs of AI Writing* and community-compiled pattern')
-    w('  lists.')
-    w('- `latex-doctor` — diagnoses, fixes and writes LaTeX for any IDE or')
-    w('  engine.')
-    w('- `research-partner` — rigorous academic research support, with a')
-    w('  mandatory intake interview and an evidence discipline.')
-    w('- `skill-creator-plus` — skill authoring with an evaluation harness.')
-    w('  Derived from Anthropic\'s `skill-creator` (Apache-2.0), with')
-    w('  additional references, scripts and an eval-review viewer.')
+    for name in own_pack_names():
+        w('- `%s` — %s' % (name, pack_summary(name)))
+    w('')
+    w('`skill-creator-plus` is derived from Anthropic\'s `skill-creator`')
+    w('(Apache-2.0), with additional references, scripts and an eval-review')
+    w('viewer. Its upstream terms are noted here because they apply to the')
+    w('part it derives from.')
     w('')
     w('## The server')
     w('')

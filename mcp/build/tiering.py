@@ -5,7 +5,7 @@ Tiers are a **ranking bias, never a filter**. Every skill and every agent
 stays searchable and reachable; the tier only nudges the ordering when
 several entries score similarly.
 
-    tier 1  the 6 hand-authored packs + all 102 agents
+    tier 1  the hand-authored packs + all the agents
     tier 2  skills whose first matching domain is one of the 10 core domains
     tier 3  everything else
 
@@ -26,16 +26,15 @@ tier 2.
 import sys
 
 from domains import assign
+from packs import names as pack_names
 
 # The packs: hand-authored, self-contained, and the first thing to reach for.
-PACKS = (
-    'caveman-mode',
-    'document-builder',
-    'humanizer',
-    'latex-doctor',
-    'research-partner',
-    'skill-creator-plus',
-)
+#
+# The list comes from the manifest rather than from a literal here, so that
+# adding a pack is a one-file edit. A literal in this module meant that a
+# new pack was tier 3 unless someone remembered this file -- and a pack
+# that is not tier 1 is not the first thing to reach for.
+PACKS = tuple(pack_names())
 
 # The 10 domains whose skills are tier 2. Order matches the guide.
 CORE_DOMAINS = (

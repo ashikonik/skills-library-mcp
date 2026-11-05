@@ -7,13 +7,13 @@ worse than no fallback.
 
 Four comparisons, all of which must agree exactly:
 
-  1. **Search results.** The same 60 golden queries through both
+  1. **Search results.** The same golden queries through both
      implementations must produce the identical ordered id list.
   2. **The tokenizer.** Every token in the corpus vocabulary must
      tokenize the same way in both.
   3. **Frontmatter.** The Python hand-rolled reader and the TypeScript
      `yaml` reader must agree on `name`, `description`, `allowed-tools`,
-     `tools` and `model` for all 976 skills and 102 agents.
+     `tools` and `model` for every skill and agent.
   4. **The tool surface.** Both servers must expose the same 8 tools
      with the same annotations.
 
@@ -262,13 +262,23 @@ def check_frontmatter(idx):
 
 # ---------------------------------------------------------- 4. tool surface
 def check_tools():
-    """Both servers must expose the same 8 tools with the same annotations."""
+    """Both servers must expose the same 8 tools with the same annotations.
+
+    The comparison is against what a *client* receives, not against the
+    module-level constant. The descriptions carry the library's size,
+    and that number is filled in from the index when the server starts
+    -- so the constant holds a placeholder and the served list holds the
+    real count. Comparing the constant would compare a placeholder with
+    a number and report a difference that no client would ever see.
+    """
     script = os.path.join(HERE, '_ts_tools.mjs')
     if not os.path.isfile(TS_ENTRY):
         sys.stderr.write('SKIP: the TypeScript build is missing.\n')
         return
 
-    from server import TOOLS as PY_TOOLS
+    from server import Server
+
+    py_tools = Server().tools
 
     proc = subprocess.run(
         ['node', script],
@@ -279,7 +289,7 @@ def check_tools():
         return
     ts_tools = json.loads(proc.stdout)
 
-    py_names = [t['name'] for t in PY_TOOLS]
+    py_names = [t['name'] for t in py_tools]
     ts_names = [t['name'] for t in ts_tools]
     if py_names != ts_names:
         fail('the tool lists differ:\n  python: %s\n  ts    : %s'
@@ -288,7 +298,7 @@ def check_tools():
     ok('tool surface: the same %d tools in the same order' % len(py_names))
 
     by_name = {t['name']: t for t in ts_tools}
-    for t in PY_TOOLS:
+    for t in py_tools:
         ts = by_name[t['name']]
         for field in ('title', 'description'):
             if t[field] != ts.get(field):
@@ -303,7 +313,7 @@ def check_tools():
                 'uninstall_skills'}
     if set(py_names) != expected:
         fail('the tool set is not the expected 8: %s' % sorted(py_names))
-    for t in PY_TOOLS:
+    for t in py_tools:
         if len(t['name']) > 17:
             fail('tool name %r is longer than 17 characters' % t['name'])
     ok('tool surface: titles, descriptions and annotations agree')

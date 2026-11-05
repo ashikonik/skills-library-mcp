@@ -249,7 +249,7 @@ read as a document, not parsed as a skill.
 
 | Tier | Contents | Count |
 |---|---|---|
-| 1 | the six hand-authored packs | 6 |
+| 1 | the seven hand-authored packs | 7 |
 | 2 | the ten core domains | 269 |
 | 3 | everything else | 701 |
 

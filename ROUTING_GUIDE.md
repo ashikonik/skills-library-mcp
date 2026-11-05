@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| Skills | **976** — instructions, playbooks and reference material the model follows |
+| Skills | **977** — instructions, playbooks and reference material the model follows |
 | Agents | **102** — specialised sub-agents invoked for one bounded role |
 | Held aside | 14 pipeline-internal agents (see `agents/_agent-specific/`) |
 | Inventory | `SKILLS_AND_AGENTS_REPORT.md` — full census with sources |
@@ -124,6 +124,7 @@ Find your task type. Read across for the recommended skill and agent.
 | **Create a skill** | `skill-creator`, `writing-skills`, `skill-development` | `agent-creator`, `skill-reviewer` | Prefer the hand-authored `skill-creator-plus` pack (§7) — it has an eval harness. |
 | **Create an agent** | `agent-development`, `command-development`, `hook-development` | `agent-creator`, `agent-evaluator` |  |
 | **Create a plugin** | `plugin-structure`, `plugin-creator` | `plugin-validator` |  |
+| **Add a skill or agent to this library** | `skill-library-adder` | `skill-reviewer` | The `skill-library-adder` pack (§7) — where the file goes, what the scanner accepts, and the licence and publish rules. |
 | **Migrate a legacy codebase** | `codebase-onboarding`, `repo-scan`, `upgrade-stripe` | `legacy-analyst`, `business-rules-extractor`, `test-engineer`, `uplift-migrator`, `version-delta-analyst` | The modernisation pipeline: analyse -> extract rules -> pin tests -> migrate. |
 | **Write an MCP tool / connector** | `api-connector-builder`, `mcp-server-patterns` | — |  |
 | **Plan a launch / campaign** | `marketing-campaign`, `investor-materials` | `marketing-agent` | The 18 `artifact-template-*` skills are ready-made document templates. |
@@ -173,7 +174,7 @@ every change, not on request.
 
 ## 4. Skill Catalogue by Domain
 
-All 976 skills, grouped. The **use when** column is condensed from each skill's own
+All 977 skills, grouped. The **use when** column is condensed from each skill's own
 frontmatter description — read that file for the full text.
 
 ### 4.1 Core engineering practice — 16 skills
@@ -988,7 +989,7 @@ frontmatter description — read that file for the full text.
 | `video-editing` | AI-assisted video editing workflows for cutting, structuring, and augmenting real footage. Covers the full pipeline from raw... |
 | `web-game-foundations` | Set browser-game architecture before implementation. Use when the user needs engine choice, simulation and render boundaries, input... |
 
-### 4.22 Skill & agent authoring — 32 skills
+### 4.22 Skill & agent authoring — 33 skills
 
 | Skill | Use when |
 |---|---|
@@ -1019,6 +1020,7 @@ frontmatter description — read that file for the full text.
 | `skill-creator-plus` | Create new skills, modify and improve existing skills, and measure skill performance. Use this whenever a user wants to build a... |
 | `skill-development` | This skill should be used when the user wants to "create a skill", "add a skill to plugin", "write a new skill", "improve skill... |
 | `skill-installer` | Install Codex skills into $CODEX_HOME/skills from a curated list or a GitHub repo path. Use when a user asks to list installable... |
+| `skill-library-adder` | Adds a new skill or a new agent to this library and to the MCP server that serves it. Use this whenever the user wants to add an... |
 | `skill-scout` | Search existing local, marketplace, GitHub, and web skill sources before creating a new skill. Use when the user wants to create,... |
 | `skill-stocktake` | Use when auditing Claude skills and commands for quality. Supports Quick Scan (changed skills only) and Full Stocktake modes with... |
 | `string-skill` | Submit compact STRING API requests for network, interaction partner, and enrichment endpoints. Use when a user wants concise STRING... |
@@ -1617,18 +1619,19 @@ skill-reviewer / plugin-validator -> check structure
 
 ## 7. The Standalone Packs
 
-Six hand-authored packs live at the top level of this folder. They are **not** generated
+7 hand-authored packs live at the top level of this folder. They are **not** generated
 marketplace content — each has reference files and an enforced workflow, and they are the
 highest-quality material in the library.
 
 | Pack | Path | What it does | Why it is better than the marketplace equivalent |
 |---|---|---|---|
-| `caveman-mode` | `caveman-mode/` | Forces all reasoning and replies into blunt caveman speech for the whole conversation. | No equivalent exists. Style override, not a workflow. |
-| `document-builder` | `document-builder/` | Three layers — SPECIFY (interview, lock a spec) -> BUILD (draft against it) -> VERIFY (sanity check before delivery). Produces `.docx`/`.pptx`/`.xlsx`/PDF/markdown. | The marketplace `artifact-template-*` skills give you a template; this gives you a *process* with a mandatory verification pass. |
-| `humanizer` | `humanizer/` | Rewrites text so it reads as human, not AI. Built on Wikipedia *Signs of AI Writing*. | No equivalent. Ships `banned-words.md` + `pattern-details.md`. |
-| `latex-doctor` | `latex-doctor/` | Diagnoses, fixes and writes LaTeX for any IDE or engine. | The only LaTeX skill in the library, and it is comprehensive. |
-| `research-partner` | `research-partner/` | Academic research support with a mandatory scope interview and strict evidence discipline. | The marketplace `deep-research` skill has no intake contract and no provenance labelling. |
-| `skill-creator-plus` | `skill-creator-plus/` | Skill authoring with a real evaluation harness — 3 sub-agents, a blind A/B comparator, an HTML review viewer, and an improvement loop. | `skill-creator` in the library is a barebones generator with no eval loop. |
+| `caveman-mode` | `caveman-mode/` | Forces all thinking and replies into blunt, stripped-down caveman speech for the entire conversation. Short words, broken grammar, no filler or hedging -- while keeping technical accuracy, code, numbers and file paths 100% exact. | No equivalent exists. Style override, not a workflow. |
+| `document-builder` | `document-builder/` | Three-layer pipeline (SPECIFY -> BUILD -> VERIFY) for producing finished `.docx` / `.pptx` / `.xlsx` / PDF / markdown deliverables with diagrams and charts. Mandatory spec interview, strict source fidelity (no invented facts), drift control across long documents, sanity-check pass before delivery. Bundles its own vendored docx/pptx/xlsx/pdf/frontend-design skills under `vendor/` so it works standalone. | The marketplace `artifact-template-*` skills give you a template; this gives you a *process* with a mandatory verification pass. |
+| `humanizer` | `humanizer/` | Rewrites text so it reads as genuinely human rather than AI. Built on Wikipedia *Signs of AI Writing* plus community-compiled word-frequency and structural pattern lists. Ships `references/banned-words.md` (exhaustive word/phrase ban list) and `references/pattern-details.md` (structural, grammatical and tonal patterns with severity ratings). | No equivalent. Ships `banned-words.md` + `pattern-details.md`. |
+| `latex-doctor` | `latex-doctor/` | Diagnoses, fixes and writes LaTeX for any IDE or engine (Overleaf, TeXstudio, VS Code + LaTeX Workshop, Vim/Emacs, pdflatex/xelatex/lualatex). Covers compilation errors, missing packages, font issues, BibTeX/BibLaTeX, cross-references, overfull/underfull hbox, float placement, table formatting, math typesetting, and any document class (article, report, book, memoir, thesis). Reference files: `errors.md`, `packages.md`, `bibliography.md`, `math-and-symbols.md`. | The only LaTeX skill in the library, and it is comprehensive. |
+| `research-partner` | `research-partner/` | Rigorous academic research support: a mandatory intake interview before any deliverable, a written scope contract requiring explicit approval, structured literature reviews, taxonomy construction, constructive critique of papers, multi-stance deep dives, and comparison tables. Enforces evidence discipline -- never states an unverified finding, labels provenance (`[from the uploaded PDF]`, `[recalled -- worth verifying]`, `[my inference]`), never invents a citation. | The marketplace `deep-research` skill has no intake contract and no provenance labelling. |
+| `skill-creator-plus` | `skill-creator-plus/` | Skill authoring with a built-in evaluation harness. Ships 3 sub-agents (`analyzer.md`, `comparator.md`, `grader.md`), an HTML eval-review viewer under `assets/eval_review.html`, and scripts for the improvement loop (`run_loop.py`), description optimisation (`improve_description.py`) and packaging (`package_skill.py`). Reference files: `schemas.md`, `environments.md`, `authoring-checklist.md`, `description-optimization.md`. | `skill-creator` in the library is a barebones generator with no eval loop. |
+| `skill-library-adder` | `skill-library-adder/` | The end-to-end procedure for adding an entry to this library: where a skill directory or an agent file must live so the scanner picks it up, the frontmatter each kind needs, the agent-detection rules (the >= 200-character rule, the `AGENT_SUFFIX` list and the marker keys), how to register an own pack so it is credited as this repository's work, how to route the new entry through the task table and the domain table so search finds it, and the publish sequence -- provenance, licence gate, credits, leak gate. Ships `scripts/add_entry.py`, which performs the mechanical part: it scaffolds the directory, writes a valid `SKILL.md` or agent frontmatter, and reports what still has to be done by hand. | The library has ~1000 skills and ~100 agents, and every one of them had to be placed by hand against a scanner with several non-obvious rules. This is the procedure that made each addition a one-step task instead of a rebuild-and-guess cycle. |
 
 > `humanizer` and `skill-creator-plus` also appear under `skills/` as part of the uniform
 > library. The top-level copies are the curated originals — prefer them.

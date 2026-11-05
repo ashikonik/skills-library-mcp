@@ -242,6 +242,10 @@ TASKS = TASKS = [
     ('Create a plugin', ['plugin-structure', 'plugin-creator'],
      ['plugin-validator'],
      ''),
+    ('Add a skill or agent to this library', ['skill-library-adder'],
+     ['skill-reviewer'],
+     'The `skill-library-adder` pack (§7) — where the file goes, what the '
+     'scanner accepts, and the licence and publish rules.'),
     ('Migrate a legacy codebase', ['codebase-onboarding', 'repo-scan', 'upgrade-stripe'],
      ['legacy-analyst', 'business-rules-extractor', 'test-engineer', 'uplift-migrator',
       'version-delta-analyst'],

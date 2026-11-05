@@ -23,6 +23,9 @@ OUT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(OUT, 'mcp', 'build'))
 from domains import DOMAINS, assign as assign_domains
 from tasks import TASKS
+from packs import packs as pack_records
+
+PACKS = pack_records()
 data = json.load(open(os.path.join(OUT, '.library_data.json'), encoding='utf-8'))
 
 SKILLS = data['skills']
@@ -414,18 +417,17 @@ w('')
 # ------------------------------------------------------ 7. standalone packs
 w('## 7. The Standalone Packs')
 w('')
-w('Six hand-authored packs live at the top level of this folder. They are **not** generated')
+w('%d hand-authored packs live at the top level of this folder. They are **not** generated'
+  % len(PACKS))
 w('marketplace content — each has reference files and an enforced workflow, and they are the')
 w('highest-quality material in the library.')
 w('')
 w('| Pack | Path | What it does | Why it is better than the marketplace equivalent |')
 w('|---|---|---|---|')
-w('| `caveman-mode` | `caveman-mode/` | Forces all reasoning and replies into blunt caveman speech for the whole conversation. | No equivalent exists. Style override, not a workflow. |')
-w('| `document-builder` | `document-builder/` | Three layers — SPECIFY (interview, lock a spec) -> BUILD (draft against it) -> VERIFY (sanity check before delivery). Produces `.docx`/`.pptx`/`.xlsx`/PDF/markdown. | The marketplace `artifact-template-*` skills give you a template; this gives you a *process* with a mandatory verification pass. |')
-w('| `humanizer` | `humanizer/` | Rewrites text so it reads as human, not AI. Built on Wikipedia *Signs of AI Writing*. | No equivalent. Ships `banned-words.md` + `pattern-details.md`. |')
-w('| `latex-doctor` | `latex-doctor/` | Diagnoses, fixes and writes LaTeX for any IDE or engine. | The only LaTeX skill in the library, and it is comprehensive. |')
-w('| `research-partner` | `research-partner/` | Academic research support with a mandatory scope interview and strict evidence discipline. | The marketplace `deep-research` skill has no intake contract and no provenance labelling. |')
-w('| `skill-creator-plus` | `skill-creator-plus/` | Skill authoring with a real evaluation harness — 3 sub-agents, a blind A/B comparator, an HTML review viewer, and an improvement loop. | `skill-creator` in the library is a barebones generator with no eval loop. |')
+for _p in PACKS:
+    w('| `%s` | `%s/` | %s | %s |'
+      % (_p['name'], _p['name'], _p.get('detail', _p.get('summary', '')),
+         _p.get('why', '—')))
 w('')
 w('> `humanizer` and `skill-creator-plus` also appear under `skills/` as part of the uniform')
 w('> library. The top-level copies are the curated originals — prefer them.')

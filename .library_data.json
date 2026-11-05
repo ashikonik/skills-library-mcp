@@ -8165,6 +8165,17 @@
    "title": "Skill Installer"
   },
   {
+   "copies": 1,
+   "desc": "Adds a new skill or a new agent to this library and to the MCP server that serves it. Use this whenever the user wants to add an entry to the Skills & Agents library, put a new skill or agent into the catalogue, register a hand-authored pack, make a new agent installable through the MCP server, or asks \"how do I add X to the library\". Trigger it for phrases like \"add this skill to the library\", \"publish this agent\", \"make my new skill searchable\", \"register a pack\", \"why isn't my skill in the search results\", or \"how do I get this into the MCP server\". It covers where a file must live so the scanner picks it up, the frontmatter each kind needs, the rules that decide whether a markdown file is treated as an agent, how to route the new entry through the task table and the domain table so search finds it, and the licence and credit rules that govern whether it can be published at all.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "skill-library-adder",
+   "path": "skills/skill-library-adder/",
+   "rescued_from_tmp": false,
+   "source": "this-library",
+   "title": "Adding an entry to the library"
+  },
+  {
    "copies": 17,
    "desc": "Search existing local, marketplace, GitHub, and web skill sources before creating a new skill. Use when the user wants to create, build, fork, or find a skill for a workflow.",
    "desc_source": "yaml",

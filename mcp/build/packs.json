@@ -1,0 +1,94 @@
+{
+  "_comment": [
+    "The library's own packs. One file, so that adding a pack is a one-file",
+    "edit rather than a hunt through five scripts that each hardcoded six.",
+    "",
+    "Every consumer of this file:",
+    "",
+    "  mcp/build/tiering.py     the packs are tier 1",
+    "  mcp/build/provenance.py  an own pack is MIT, credited to this repository",
+    "  .verify_packs.py         each pack exists, is mirrored under skills/, and",
+    "                          holds at least min_files files",
+    "  .build_guide.py          the guide's \"Standalone Packs\" table",
+    "  .gen_report.py           the report's \"Curated standalone packs\" table",
+    "",
+    "Fields:",
+    "",
+    "  name         the directory name at the library root",
+    "  license      the licence the pack's content is redistributed under",
+    "  min_files    the pack must hold at least this many files -- a pack that",
+    "                has lost its reference files is broken, and this is what",
+    "                catches it",
+    "  summary      one line, for the tables",
+    "  detail       the longer \"what it does\" cell",
+    "  why          the \"why it is better than the marketplace equivalent\"",
+    "                cell -- empty when the pack has no equivalent",
+    "",
+    "A pack's own LICENSE file wins over the `license` field here: the file",
+    "is the author's own statement of terms, and a manifest that disagreed",
+    "with it would be the manifest lying. `skill-creator-plus` is the case --",
+    "it declares Apache-2.0 in its LICENSE.txt, and that is what it ships",
+    "under."
+  ],
+
+  "packs": [
+    {
+      "name": "caveman-mode",
+      "license": "MIT",
+      "min_files": 1,
+      "summary": "Forces all reasoning and replies into blunt caveman speech for the whole conversation.",
+      "detail": "Forces all thinking and replies into blunt, stripped-down caveman speech for the entire conversation. Short words, broken grammar, no filler or hedging -- while keeping technical accuracy, code, numbers and file paths 100% exact.",
+      "why": "No equivalent exists. Style override, not a workflow."
+    },
+    {
+      "name": "document-builder",
+      "license": "MIT",
+      "min_files": 100,
+      "summary": "Three layers -- SPECIFY -> BUILD -> VERIFY. Produces .docx/.pptx/.xlsx/PDF/markdown.",
+      "detail": "Three-layer pipeline (SPECIFY -> BUILD -> VERIFY) for producing finished `.docx` / `.pptx` / `.xlsx` / PDF / markdown deliverables with diagrams and charts. Mandatory spec interview, strict source fidelity (no invented facts), drift control across long documents, sanity-check pass before delivery. Bundles its own vendored docx/pptx/xlsx/pdf/frontend-design skills under `vendor/` so it works standalone.",
+      "why": "The marketplace `artifact-template-*` skills give you a template; this gives you a *process* with a mandatory verification pass.",
+      "restricted": true,
+      "restricted_reason": "It bundles Anthropic's docx, pptx, xlsx and pdf skills under `vendor/`, and their terms forbid redistribution. The pack is the maintainer's own work, but the vendored copies inside it are not, so the pack as a whole cannot be published."
+    },
+    {
+      "name": "humanizer",
+      "license": "MIT",
+      "min_files": 1,
+      "summary": "Rewrites text so it reads as human, not AI. Built on Wikipedia Signs of AI Writing.",
+      "detail": "Rewrites text so it reads as genuinely human rather than AI. Built on Wikipedia *Signs of AI Writing* plus community-compiled word-frequency and structural pattern lists. Ships `references/banned-words.md` (exhaustive word/phrase ban list) and `references/pattern-details.md` (structural, grammatical and tonal patterns with severity ratings).",
+      "why": "No equivalent. Ships `banned-words.md` + `pattern-details.md`."
+    },
+    {
+      "name": "latex-doctor",
+      "license": "MIT",
+      "min_files": 1,
+      "summary": "Diagnoses, fixes and writes LaTeX for any IDE or engine.",
+      "detail": "Diagnoses, fixes and writes LaTeX for any IDE or engine (Overleaf, TeXstudio, VS Code + LaTeX Workshop, Vim/Emacs, pdflatex/xelatex/lualatex). Covers compilation errors, missing packages, font issues, BibTeX/BibLaTeX, cross-references, overfull/underfull hbox, float placement, table formatting, math typesetting, and any document class (article, report, book, memoir, thesis). Reference files: `errors.md`, `packages.md`, `bibliography.md`, `math-and-symbols.md`.",
+      "why": "The only LaTeX skill in the library, and it is comprehensive."
+    },
+    {
+      "name": "research-partner",
+      "license": "MIT",
+      "min_files": 1,
+      "summary": "Academic research support with a mandatory scope interview and strict evidence discipline.",
+      "detail": "Rigorous academic research support: a mandatory intake interview before any deliverable, a written scope contract requiring explicit approval, structured literature reviews, taxonomy construction, constructive critique of papers, multi-stance deep dives, and comparison tables. Enforces evidence discipline -- never states an unverified finding, labels provenance (`[from the uploaded PDF]`, `[recalled -- worth verifying]`, `[my inference]`), never invents a citation.",
+      "why": "The marketplace `deep-research` skill has no intake contract and no provenance labelling."
+    },
+    {
+      "name": "skill-creator-plus",
+      "license": "Apache-2.0",
+      "min_files": 5,
+      "summary": "Skill authoring with a real evaluation harness -- 3 sub-agents, a blind A/B comparator, an HTML review viewer, and an improvement loop.",
+      "detail": "Skill authoring with a built-in evaluation harness. Ships 3 sub-agents (`analyzer.md`, `comparator.md`, `grader.md`), an HTML eval-review viewer under `assets/eval_review.html`, and scripts for the improvement loop (`run_loop.py`), description optimisation (`improve_description.py`) and packaging (`package_skill.py`). Reference files: `schemas.md`, `environments.md`, `authoring-checklist.md`, `description-optimization.md`.",
+      "why": "`skill-creator` in the library is a barebones generator with no eval loop."
+    },
+    {
+      "name": "skill-library-adder",
+      "license": "MIT",
+      "min_files": 4,
+      "summary": "Adds a new skill or agent to this library and the MCP server that serves it. Covers where a file goes, what the scanner will accept, and the licence and publish rules.",
+      "detail": "The end-to-end procedure for adding an entry to this library: where a skill directory or an agent file must live so the scanner picks it up, the frontmatter each kind needs, the agent-detection rules (the >= 200-character rule, the `AGENT_SUFFIX` list and the marker keys), how to register an own pack so it is credited as this repository's work, how to route the new entry through the task table and the domain table so search finds it, and the publish sequence -- provenance, licence gate, credits, leak gate. Ships `scripts/add_entry.py`, which performs the mechanical part: it scaffolds the directory, writes a valid `SKILL.md` or agent frontmatter, and reports what still has to be done by hand.",
+      "why": "The library has ~1000 skills and ~100 agents, and every one of them had to be placed by hand against a scanner with several non-obvious rules. This is the procedure that made each addition a one-step task instead of a rebuild-and-guess cycle."
+    }
+  ]
+}

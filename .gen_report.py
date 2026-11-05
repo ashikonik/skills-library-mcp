@@ -11,6 +11,7 @@ describes the tree that ships rather than the machine that published it.
 """
 import os
 import re
+import sys
 import json
 import hashlib
 import collections
@@ -18,6 +19,15 @@ import datetime
 
 OUT = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.environ.get('SKILLS_LIBRARY_SCAN_ROOT') or os.path.expanduser('~')
+
+# The library's own packs, from the shared manifest. The report's packs
+# table used to be a literal here, so a new pack had to be added in two
+# places to appear in both documents -- and this one was the one that got
+# forgotten.
+sys.path.insert(0, os.path.join(OUT, 'mcp', 'build'))
+from packs import packs as pack_records  # noqa: E402
+
+PACKS = pack_records()
 # When the scan root is this tree, the report describes this tree -- so the
 # machine-specific sections (which are about the *other* directories on the
 # machine) are not written.
@@ -710,18 +720,15 @@ w('')
 
 w('### 6.1 Curated standalone packs in this folder')
 w('')
-w('`%s` holds 6 hand-authored packs. Unlike the plugin-marketplace' % OUT)
+w('`%s` holds %d hand-authored packs. Unlike the plugin-marketplace'
+  % (OUT, len(PACKS)))
 w('material, each is written to a spec — with explicit reference files and a stated workflow')
 w('discipline — and these are the highest-quality originals in the collection.')
 w('')
 w('| Skill | Purpose |')
 w('|---|---|')
-w('| `caveman-mode` | Forces all thinking and replies into blunt, stripped-down caveman speech for the entire conversation. Short words, broken grammar, no filler or hedging — while keeping technical accuracy, code, numbers and file paths 100% exact. |')
-w('| `document-builder` | Three-layer pipeline (SPECIFY → BUILD → VERIFY) for producing finished `.docx` / `.pptx` / `.xlsx` / PDF / markdown deliverables with diagrams and charts. Mandatory spec interview, strict source fidelity (no invented facts), drift control across long documents, sanity-check pass before delivery. Bundles its own vendored docx/pptx/xlsx/pdf/frontend-design skills under `vendor/` so it works standalone. |')
-w('| `humanizer` | Rewrites text so it reads as genuinely human rather than AI. Built on Wikipedia *Signs of AI Writing* plus community-compiled word-frequency and structural pattern lists. Ships `references/banned-words.md` (exhaustive word/phrase ban list) and `references/pattern-details.md` (structural, grammatical and tonal patterns with severity ratings). |')
-w('| `latex-doctor` | Diagnoses, fixes and writes LaTeX for any IDE or engine (Overleaf, TeXstudio, VS Code + LaTeX Workshop, Vim/Emacs, pdflatex/xelatex/lualatex). Covers compilation errors, missing packages, font issues, BibTeX/BibLaTeX, cross-references, overfull/underfull hbox, float placement, table formatting, math typesetting, and any document class (article, report, book, memoir, thesis). Reference files: `errors.md`, `packages.md`, `bibliography.md`, `math-and-symbols.md`. |')
-w('| `research-partner` | Rigorous academic research support: a mandatory intake interview before any deliverable, a written scope contract requiring explicit approval, structured literature reviews, taxonomy construction, constructive critique of papers, multi-stance deep dives, and comparison tables. Enforces evidence discipline — never states an unverified finding, labels provenance (`[from the uploaded PDF]`, `[recalled — worth verifying]`, `[my inference]`), never invents a citation. |')
-w('| `skill-creator-plus` | Skill authoring with a built-in evaluation harness. Ships 3 sub-agents (`analyzer.md`, `comparator.md`, `grader.md`), an HTML eval-review viewer under `assets/eval_review.html`, and scripts for the improvement loop (`run_loop.py`), description optimisation (`improve_description.py`) and packaging (`package_skill.py`). Reference files: `schemas.md`, `environments.md`, `authoring-checklist.md`, `description-optimization.md`. |')
+for _p in PACKS:
+    w('| `%s` | %s |' % (_p['name'], _p.get('detail', _p.get('summary', ''))))
 w('')
 
 w('### 6.2 Research & Life Sciences')
@@ -932,7 +939,8 @@ else:
     w('| `%s/Projects/CSE412/MediCare/.agents/` | 10 Prisma skills, mirrored into `.claude/` and `.windsurf/`. |' % ROOT)
     w('| `%s/agents/ctf-flag-finder.md` | Standalone CTF challenge solver agent. |' % ROOT)
     w('| `%s/.vscode/extensions/…` | Editor-bundled skills from the Python, Pylance and Java extensions (16 total) — `pylance-refactoring`, `python-manager-discovery`, `java-lsp-tools`, `cross-platform-paths`, `run-e2e-tests`. |' % ROOT)
-    w('| `%s/` | **This folder** — 6 curated standalone packs (see §6.1). |' % OUT)
+    w('| `%s/` | **This folder** — %d curated standalone packs (see §6.1). |'
+      % (OUT, len(PACKS)))
     w('| `%s/ponytail/` | **Ponytail** (upstream clone, MIT) — 6 skills in `skills/` plus generated adapter copies under `.openclaw/skills/`. A "lazy senior dev" mode: the 7-rung ladder (does it need to exist → already here → stdlib → native → dependency → one line → minimum that works). `AGENTS.md` is the compact always-on ruleset. |' % OUT)
     w('')
 

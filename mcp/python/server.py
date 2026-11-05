@@ -44,15 +44,32 @@ PROTOCOL_VERSIONS = ('2025-11-25', '2025-06-18', '2025-03-26',
 DEFAULT_BUNDLE_BYTES = 200_000
 MAX_BUNDLE_BYTES = 2_000_000
 
+# The tool list, with the library's size left as a placeholder.
+#
+# The description says how big the library is, and the library grows --
+# that is what it is for. A literal count goes stale the first time
+# somebody adds a skill, and a stale count in a tool description is not
+# a cosmetic problem: it is a claim the server makes to the model about
+# its own coverage, and it is compared byte for byte against the
+# TypeScript server by the agreement gate. So the count is filled in
+# from the index at request time, in both implementations, and the two
+# therefore cannot drift apart.
+SKILLS_TOKEN = '__SKILLS_COUNT__'
+AGENTS_TOKEN = '__AGENTS_COUNT__'
+# The pack count, for the same reason: the pack list grows, and a
+# literal "six" in a tool description would go stale the first time
+# somebody registers an eighth pack.
+PACKS_TOKEN = '__PACKS_COUNT__'
+
 TOOLS = [
     {
         'name': 'search_library',
         'title': 'Search library',
         'description': (
             'Rank skills and agents by relevance to a query. Returns scored '
-            'candidates with the terms each matched on. Covers all 976 skills '
-            'and 102 agents. Not covered by get_skill, which returns one '
-            'document in full.'),
+            'candidates with the terms each matched on. Covers all '
+            + SKILLS_TOKEN + ' skills and ' + AGENTS_TOKEN + ' agents. '
+            'Not covered by get_skill, which returns one document in full.'),
         'inputSchema': {
             'type': 'object',
             'properties': {
@@ -135,8 +152,9 @@ TOOLS = [
         'name': 'list_library',
         'title': 'List library',
         'description': (
-            "Lists the library's structure: its domains, tiers, the six "
-            'hand-authored packs, the task-type index, or overall statistics. '
+            "Lists the library's structure: its domains, tiers, the "
+            + PACKS_TOKEN + ' hand-authored packs, the task-type index, or '
+            'overall statistics. '
             'Not covered by search_library, which ranks entries by relevance '
             'to a query.'),
         'inputSchema': {
@@ -284,6 +302,22 @@ class Server:
         self.by_id = {e['id']: e for e in self.entries}
         self.by_name = {e['name']: e for e in self.entries}
         self.root = os.environ.get('SKILLS_LIBRARY_ROOT') or BASE
+
+        # The library's size, as the index reports it. The tool
+        # descriptions say how big the library is, and that number has to
+        # be true -- so it is read from the data rather than written
+        # down. The TypeScript server does the same, from the same
+        # index, so the two descriptions agree by construction.
+        self.n_skills = str(len(self.index['skills']))
+        self.n_agents = str(len(self.index['agents']))
+        self.n_packs = str(len(self.index['packs']))
+        self.tools = [
+            dict(t, description=(t.get('description') or '')
+                 .replace(SKILLS_TOKEN, self.n_skills)
+                 .replace(AGENTS_TOKEN, self.n_agents)
+                 .replace(PACKS_TOKEN, self.n_packs))
+            for t in TOOLS
+        ]
 
     # ------------------------------------------------------------ helpers
     def resolve(self, id_):
@@ -461,9 +495,9 @@ class Server:
         if section == 'packs':
             return {
                 'packs': idx['packs'],
-                'note': ('The six hand-authored packs are the highest-quality '
-                         'material in the library and the first thing to reach '
-                         'for.'),
+                'note': ('The ' + self.n_packs + ' hand-authored packs are '
+                         'the highest-quality material in the library and the '
+                         'first thing to reach for.'),
             }
         if section == 'tasks':
             return [{'task': t['task'], 'skills': t['skills'],
@@ -621,11 +655,12 @@ class Server:
                     'capabilities': {'tools': {'listChanged': False}},
                     'serverInfo': {'name': 'skills-library', 'version': '1.0.0'},
                     'instructions': (
-                        'Searches a local library of 976 skills and 102 agents, '
-                        'and installs them into coding harnesses. Start with '
-                        'search_library to find candidates, then get_skill or '
-                        'get_agent to read one. install_skills and '
-                        'install_agents make a skill auto-activate in the '
+                        'Searches a local library of ' + self.n_skills +
+                        ' skills and ' + self.n_agents +
+                        ' agents, and installs them into coding harnesses. '
+                        'Start with search_library to find candidates, then '
+                        'get_skill or get_agent to read one. install_skills '
+                        'and install_agents make a skill auto-activate in the '
                         'target harness; both are dry runs unless apply is '
                         'true.'),
                 },
@@ -638,7 +673,7 @@ class Server:
             return {'jsonrpc': '2.0', 'id': msg_id, 'result': {}}
 
         if method == 'tools/list':
-            return {'jsonrpc': '2.0', 'id': msg_id, 'result': {'tools': TOOLS}}
+            return {'jsonrpc': '2.0', 'id': msg_id, 'result': {'tools': self.tools}}
 
         if method == 'tools/call':
             name = params.get('name')

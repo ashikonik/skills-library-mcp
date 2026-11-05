@@ -40,6 +40,12 @@ HOME = os.path.expanduser('~')
 
 sys.path.insert(0, HERE)
 from build_index import yaml_frontmatter  # noqa: E402
+from packs import (                    # noqa: E402
+    names as pack_names,
+    licence_of as pack_licence,
+    publishable as pack_publishable,
+    packs as pack_records,
+)
 
 PLUG = os.path.join(HOME, '.codex/.tmp/plugins/plugins')
 CACHE = os.path.join(HOME, '.codex/plugins/cache')
@@ -108,10 +114,26 @@ PONYTAIL = {
 # nothing and calls them "restricted". They are the maintainer's own
 # work, and this repository is MIT, so they are MIT.
 #
-# `document-builder` is NOT in this list: it bundles Anthropic's docx,
-# pptx, xlsx and pdf skills, whose terms forbid redistribution. It cannot
-# be published, and saying so is more honest than shipping half of it.
-OWN_PACKS = ('caveman-mode', 'humanizer', 'latex-doctor', 'research-partner')
+# The list lives in `packs.json`, so that adding a pack is a one-file edit
+# rather than a hunt through this resolver.
+#
+# A pack is excluded from publication when the manifest marks it
+# `restricted`: `document-builder` is the maintainer's own work, but it
+# vendors Anthropic's docx/pptx/xlsx/pdf skills whose terms forbid
+# redistribution, so the pack as a whole cannot be published. Saying so
+# is more honest than shipping half of it.
+OWN_PACKS = tuple(pack_names())
+
+# The packs that may be published. A pack outside this set is not
+# published, whatever its licence says.
+PUBLISHABLE_PACKS = set(pack_publishable())
+
+# The packs the manifest marks as restricted, with the reason.
+RESTRICTED_PACKS = {
+    p['name']: p.get('restricted_reason', 'its licence does not permit '
+                     'redistribution')
+    for p in pack_records() if p.get('restricted')
+}
 
 # Test fixtures, not content. The `plugin-eval` plugin ships example
 # plugins under `fixtures/`, and the scanner picks their skills up like
@@ -446,6 +468,12 @@ def verdict_for(name, src, lic):
     # is never published, whatever its licence says.
     if TEST_FIXTURE_PATH in src and name in TEST_FIXTURE_NAMES:
         return 'fixture'
+    # An own pack whose own licence permits redistribution is
+    # publishable -- unless the manifest marks it restricted, because
+    # something it *vendors* does not permit redistribution. The pack is
+    # then the maintainer's own work that cannot be shipped whole.
+    if name in RESTRICTED_PACKS:
+        return 'restricted'
     if lic is None:
         return 'restricted'
     if any(lic.startswith(p) for p in PERMISSIVE):
@@ -488,9 +516,12 @@ def resolve(library_data=None):
                 repo = PONYTAIL['repository']
                 container = 'ponytail-clone'
             elif name in OWN_PACKS:
-                # The maintainer's own pack: MIT, like the repository.
-                lic = 'MIT'
-                lic_src = 'own work'
+                # The maintainer's own pack. The licence comes from the
+                # pack's own LICENSE file when it has one -- the file is
+                # the author's own statement of terms -- and from the
+                # manifest otherwise.
+                lic = pack_licence(name) or 'MIT'
+                lic_src = ('own work (%s)' % lic) if lic != 'MIT' else 'own work'
                 owner = 'This library (hand-authored)'
             out.append({
                 'kind': 'agent' if kind == 'held_aside' else kind,

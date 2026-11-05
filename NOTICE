@@ -15,8 +15,7 @@ The MIT licence in `LICENSE` covers the work in this repository:
 - the index builder and the library tooling — `mcp/build/**`,
   `.build_library.py`, `.build_guide.py`, `.gen_report.py`;
 - the installers, the test suite and the documentation;
-- the skills written for this library: `caveman-mode`, `humanizer`,
-  `latex-doctor`, `research-partner`, and `skill-creator-plus`.
+- the skills written for this library: `caveman-mode`, `humanizer`, `latex-doctor`, `research-partner`, `skill-creator-plus`, `skill-library-adder`.
 
 `skill-creator-plus` is derived from Anthropic's `skill-creator`
 (Apache-2.0), with additional references, scripts and an eval-review
@@ -39,7 +38,7 @@ author did not grant, so those entries are **not** in this repository.
 
 | Reason | Count |
 |---|---:|
-| Published | 951 |
+| Published | 952 |
 | Excluded — the licence does not permit redistribution | 136 |
 | Excluded — the maintainer's own private project files | 2 |
 | Excluded — test fixtures, not published content | 3 |

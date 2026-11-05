@@ -56,7 +56,7 @@ Two rules filter the scored entries:
                     authentication, so the row does not fire and the
                     authentication skill keeps the top slot.
 
-Results are limited three ways, so a query never returns 976 rows:
+Results are limited three ways, so a query never returns every row:
 
   1. score threshold -- only `score > 0`; a pure-stopword query returns 0
   2. hard cap -- `limit`, default 10, max 50
@@ -160,12 +160,41 @@ AGENT_BIAS = 0.5
 # the only survivor was `mixpanelyst`, which mentions both words in its
 # description and nothing else.
 #
-# 1.8% of 1078 entries is 19 documents. A token in 20 or more is
+# 1.8% of the corpus is about 19 documents. A token in 20 or more is
 # common enough that requiring it is a filter on luck rather than on
 # relevance. The ratio was chosen by measuring, over a labelled query
 # set, how many entries each threshold let through and where the
 # wanted skill ended up -- see `mcp/scripts/eval_unified.py`.
 GENERIC_TOKEN_DF_RATIO = 0.018
+
+# Scores are compared with a tolerance, not with raw float equality.
+#
+# Two entries that match the same query tokens score the *same* sum, but
+# the terms arrive in a different order, so the floating-point addition
+# lands on a different last bit. The difference is around 1e-15 -- far
+# below anything a reader could call a different score -- but the sort
+# compared the raw doubles, so the noise decided the order and the
+# documented tie-break (tier, kind, shorter name, name) never ran.
+#
+# "machine learning model training" is the case that showed it:
+# `pytorch-patterns`, `ml-adoption-playbook` and `huggingface-llm-trainer`
+# all score 12.7920798526549..., differing by 2e-15, and their order
+# changed every time the corpus grew by one entry.
+#
+# The quantum is 1e-6: a millionth of a point. A real score difference --
+# the smallest the weights can produce is an idf step, which is several
+# hundredths -- is far above it, so this only groups together scores that
+# are the same score.
+#
+# The scale is an integer so that both engines compute the same key:
+# IEEE 754 multiplication is exactly specified, so `score * SCORE_SCALE`
+# is bit-identical in Python and JavaScript, and `trunc` is exact.
+SCORE_SCALE = 1000000
+
+
+def score_key(score):
+    """The score as an integer, for comparison with a tolerance."""
+    return int(math.trunc(score * SCORE_SCALE))
 
 
 def _phrase_tokens_match(phrase, q_tokens):
@@ -266,8 +295,8 @@ class SearchIndex:
 
         A token that appears in more than `GENERIC_TOKEN_DF_RATIO` of the
         corpus carries almost no information about which entry a query
-        wants. "write" appears in 37 of 1078 entries; requiring an entry
-        to contain it is a filter on luck, not on relevance.
+        wants. "write" appears in a few dozen entries; requiring an
+        entry to contain it is a filter on luck, not on relevance.
         """
         df = self.df.get(t, 0)
         return df > self.n * GENERIC_TOKEN_DF_RATIO
@@ -563,8 +592,12 @@ class SearchIndex:
 
         # The fixed tie-break order. The TypeScript server must produce the
         # identical ordering, or the agreement test fails.
+        #
+        # The score is compared through `score_key`, so that scores which
+        # differ only in the last floating-point bit are treated as equal
+        # and the tie-break below decides their order.
         scored.sort(key=lambda t: (
-            -t[0],
+            -score_key(t[0]),
             t[1].get('tier', 3),
             0 if t[1]['kind'] == 'skill' else 1,
             len(t[1]['name']),

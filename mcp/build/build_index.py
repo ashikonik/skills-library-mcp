@@ -3,7 +3,7 @@
 
 Why an index at all
 -------------------
-The library holds 976 skills and 102 agents: 8.4 MB of SKILL.md text and
+The library holds ~1000 skills and ~100 agents: 8.4 MB of SKILL.md text and
 66 MB of supporting files. Neither server may load that into memory, and no
 model may be handed it. So the index carries *descriptions, tokens and
 bundle manifests only* — roughly 2 MB — and the actual documents are read

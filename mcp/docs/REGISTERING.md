@@ -210,7 +210,7 @@ node <library>/mcp/dist/index.js
 It should print two lines to **stderr**:
 
 ```
-[skills-library] loaded 976 skills + 102 agents from .../mcp/data/index.json
+[skills-library] loaded 977 skills + 102 agents from .../mcp/data/index.json
 [skills-library] ready
 ```
 

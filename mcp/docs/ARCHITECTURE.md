@@ -85,7 +85,7 @@ it.
 
 ## The two rules that filter the results
 
-Scoring alone is not enough: with 1078 entries, almost any query
+Scoring alone is not enough: with a corpus this size, almost any query
 matches *something*. Two rules cut the noise. Both were tuned against
 a labelled query set, not by feel — `mcp/scripts/eval_search.py` is
 that set, and it is a verification step.
@@ -101,7 +101,7 @@ tokens, and at least two when the query has two or more.
 *Distinctive* means: appearing in fewer than 1.8 % of the corpus. A
 common word carries no information about which entry the query wants,
 and requiring it filters on luck rather than relevance. "write" appears
-in 37 of 1078 entries.
+in a few dozen entries.
 
 This rule is what stops "bake sourdough bread at home" from reaching
 `shopify-polaris-app-home` on the word "home", and "quantum
@@ -362,7 +362,7 @@ numbers are computed.
 
 | Tier | What | Count |
 |---|---|---|
-| 1 | the six hand-authored packs + all 102 agents | 108 |
+| 1 | the seven hand-authored packs + all 102 agents | 109 |
 | 2 | skills whose *first* matching domain is one of the ten core domains | 269 |
 | 3 | everything else | 701 |
 

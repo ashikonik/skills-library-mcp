@@ -233,7 +233,7 @@ for name, needles in NAMED.items():
 
 # ---------------------------------------------------------------- counts
 # The counts are read from the tree, not asserted. The working library
-# holds 976 skills and 102 agents; a *published* tree holds fewer,
+# holds ~1000 skills and ~100 agents; a *published* tree holds fewer,
 # because the licence filter removes the entries whose licence does not
 # permit redistribution. What must hold in both is that the number of
 # descriptions equals the number of entries on disk -- a tree whose data

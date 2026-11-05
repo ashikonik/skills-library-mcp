@@ -2,7 +2,7 @@
   "name": "skills-library-mcp",
   "version": "1.0.0",
   "private": true,
-  "description": "MCP server over the local 976-skill, 102-agent library",
+  "description": "MCP server over the local skills-and-agents library",
   "type": "module",
   "bin": {
     "skills-library-mcp": "dist/index.js"

@@ -28,7 +28,7 @@ LIBRARY_ROOT="$(cd "$MCP_ROOT/.." && pwd)"
 ENTRY="$MCP_ROOT/dist/index.js"
 
 SERVER_NAME="skills-library"
-DESCRIPTION="Search the local 976-skill, 102-agent library and pull the best match for a task."
+DESCRIPTION="Search the local skills-and-agents library and pull the best match for a task."
 
 usage() {
   sed -n '2,20p' "$0" | sed 's/^# \{0,1\}//'

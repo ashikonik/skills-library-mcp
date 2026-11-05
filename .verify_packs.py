@@ -1,8 +1,15 @@
 #!/usr/bin/env python3
-"""Verify the 6 top-level packs + humanizer.zip are intact and untouched.
+"""Verify the top-level packs + humanizer.zip are intact and untouched.
 
 Self-contained: does not depend on a prior snapshot. Checks structure,
 content sanity, and that each pack is still mirrored under skills/.
+
+The pack list comes from `mcp/build/packs.json` -- the manifest that
+names the library's own packs. It used to be a literal in this file, so
+adding a pack meant editing the manifest, this file, the tiering module,
+the provenance resolver, the guide builder and the report builder. Six
+places, one of which was easy to forget, and a pack that no verifier
+knew about was a pack nobody would notice breaking.
 """
 import os
 import json
@@ -14,20 +21,8 @@ BASE = os.environ.get('SKILLS_LIBRARY_ROOT') or \
     os.path.dirname(os.path.abspath(__file__))
 os.chdir(BASE)
 
-PACKS = {
-    'caveman-mode': ('Forces all reasoning and replies into blunt caveman speech '
-                     'for the whole conversation.', 1),
-    'document-builder': ('Three layers — SPECIFY -> BUILD -> VERIFY. Produces '
-                         '.docx/.pptx/.xlsx/PDF/markdown.', 100),
-    'humanizer': ('Rewrites text so it reads as human, not AI. Built on '
-                  'Wikipedia Signs of AI Writing.', 1),
-    'latex-doctor': ('Diagnoses, fixes and writes LaTeX for any IDE or engine.', 1),
-    'research-partner': ('Academic research support with a mandatory scope '
-                         'interview and strict evidence discipline.', 1),
-    'skill-creator-plus': ('Skill authoring with a real evaluation harness — '
-                           '3 sub-agents, a blind A/B comparator, an HTML '
-                           'review viewer, and an improvement loop.', 5),
-}
+sys.path.insert(0, os.path.join(BASE, 'mcp', 'build'))
+from packs import packs as pack_records, licence_of  # noqa: E402
 
 problems = []
 
@@ -36,7 +31,9 @@ def sha(p):
     return hashlib.sha256(open(p, 'rb').read()).hexdigest()
 
 
-for name, (desc, min_files) in PACKS.items():
+for rec in pack_records():
+    name = rec['name']
+    min_files = rec.get('min_files', 1)
     if not os.path.isdir(name):
         problems.append('PACK MISSING: %s' % name)
         continue
@@ -63,9 +60,9 @@ for name, (desc, min_files) in PACKS.items():
         if len(mfiles) != len(files):
             problems.append('PACK %s mirror differs: %d vs %d files'
                             % (name, len(mfiles), len(files)))
-    print('PACK %-18s %4d files  SKILL.md:%s  mirrored:%s'
+    print('PACK %-18s %4d files  SKILL.md:%s  mirrored:%s  licence:%s'
           % (name, len(files), 'yes' if has_skill else 'NO',
-             'yes' if os.path.isdir(mirror) else 'NO'))
+             'yes' if os.path.isdir(mirror) else 'NO', licence_of(name)))
 
 # --- humanizer.zip -----------------------------------------------------
 if not os.path.isfile('humanizer.zip'):

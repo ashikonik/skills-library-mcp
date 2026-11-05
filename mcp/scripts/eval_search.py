@@ -63,6 +63,8 @@ POSITIVE = [
     ('research a topic', 'deep-research', []),
     ('update documentation', 'doc-updater', []),
     ('create a skill', 'skill-creator-plus', []),
+    ('add a skill to the library', 'skill-library-adder', []),
+    ('add an agent to the library', 'skill-library-adder', []),
     ('write SQL queries', 'postgres-patterns', []),
     ('debug a runtime bug', 'systematic-debugging', []),
     ('remove dead code', 'codehealth-mcp', []),

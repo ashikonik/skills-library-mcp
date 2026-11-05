@@ -4,7 +4,7 @@
 60 queries covering the parts of the library that are easiest to get
 wrong:
 
-  * the six hand-authored packs
+  * the hand-authored packs
   * the ten tier-2 domains
   * the two agents whose frontmatter is not valid YAML
   * the 17 skills the YAML fix changed
@@ -22,7 +22,7 @@ This list is shared by `test_agreement.py` (Python vs TypeScript) and
 because the Python file is the one both can read without a build step.
 """
 
-# The six hand-authored packs.
+# The hand-authored packs.
 PACK_QUERIES = [
     'caveman mode lazy senior developer',
     'build a document from a template',
@@ -30,6 +30,7 @@ PACK_QUERIES = [
     'fix my latex document errors',
     'research partner literature review',
     'create a new skill',
+    'add a skill to the library',
 ]
 
 # The ten core domains.

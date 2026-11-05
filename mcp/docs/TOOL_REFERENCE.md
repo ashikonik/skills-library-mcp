@@ -27,7 +27,7 @@ instructions.
 ## 1. `search_library`
 
 Rank skills and agents by relevance to a query. Returns scored
-candidates with the terms each matched on. Covers all 976 skills and
+candidates with the terms each matched on. Covers all 977 skills and
 102 agents. Not covered by `get_skill`, which returns one document in
 full.
 
@@ -94,7 +94,8 @@ Purely lexical — no embeddings, no network, no model. The score is:
 | tier 1 / tier 2 / tier 3 bias | `+1.0` / `+0.25` / `0` |
 | is an agent | `+0.5` |
 
-`idf(t) = ln(1 + N / df(t))`, over N = 1078 entries.
+`idf(t) = ln(1 + N / df(t))`, over N = the number of entries in the
+index.
 
 **Tiers bias ranking; they never filter.** Every skill and agent stays
 searchable at every tier. The tier bias is multiplied by
@@ -149,11 +150,22 @@ equal footing there.
 Results are filtered by a **relevance floor** (drop anything below
 `0.25 × topScore`), a **score threshold** (`score > 0`), and a **hard
 cap** (`limit`, default 10, max 50). A query with no library match
-returns an empty result set, not all 1078.
+returns an empty result set, not the whole library.
 
 Ties break deterministically: score desc → tier asc → skill before
 agent → shorter name → lexicographic name. Two independent
 implementations produce byte-identical result lists.
+
+Scores are compared with a tolerance of 1e-6 rather than for exact
+equality. Two entries that match the same query tokens score the same
+sum, but the terms arrive in a different order and the floating-point
+addition lands on a different last bit — a difference of about 1e-15.
+Comparing the raw doubles let that noise decide the order and the
+tie-break above never ran, so the ranking of genuinely tied entries
+changed every time the corpus grew by one entry. The smallest real
+score difference the weights can produce is an idf step, several
+hundredths, so the tolerance only groups together scores that are the
+same score.
 
 ---
 
@@ -217,7 +229,7 @@ for specific files, not the whole bundle.
 
 ## 5. `list_library`
 
-Lists the library's structure: its domains, tiers, the six hand-authored
+Lists the library's structure: its domains, tiers, the seven hand-authored
 packs, the task-type index, or overall statistics. Not covered by
 `search_library`, which ranks entries by relevance to a query.
 
@@ -229,9 +241,9 @@ packs, the task-type index, or overall statistics. Not covered by
 |---|---|
 | `stats` | counts, tier distribution, domain and task counts, index metadata |
 | `domains` | all 38 domains with their skill lists and tier |
-| `tiers` | tier-1 skills (the 6 packs), tier-1 agents, the tier distribution |
-| `packs` | the six hand-authored packs |
-| `tasks` | the 73-row task-type index |
+| `tiers` | tier-1 skills (the 7 packs), tier-1 agents, the tier distribution |
+| `packs` | the seven hand-authored packs |
+| `tasks` | the 74-row task-type index |
 
 ---
 

@@ -1,6 +1,6 @@
 # Skills & Agents Library — with a local MCP server
 
-**852 skills** and **93 agents** in one library, plus a local
+**853 skills** and **93 agents** in one library, plus a local
 MCP server that lets any coding agent find them.
 
 The library is the content: markdown instruction files with YAML frontmatter —
@@ -26,7 +26,7 @@ Then, in a fresh session:
 
 | Path | What it is |
 |---|---|
-| `skills/<name>/` | 852 skills — `SKILL.md` plus every supporting file |
+| `skills/<name>/` | 853 skills — `SKILL.md` plus every supporting file |
 | `agents/<name>.md` | 93 standalone agent definitions |
 | `agents/_agent-specific/` | 6 pipeline-internal agents, with a README explaining each |
 | `mcp/` | **The MCP server** — two implementations, one specification |
