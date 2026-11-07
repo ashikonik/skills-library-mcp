@@ -1,6 +1,17 @@
 ---
 name: web-3d-asset-pipeline
-description: Prepare and optimize browser-game 3D assets. Use when the user asks for GLB or glTF shipping work, including Blender cleanup and export, collision or LOD setup, compression, texture packaging, and runtime validation.
+description: Prepare and optimize browser-game 3D assets. Use when the user asks for
+  GLB or glTF shipping work, including Blender cleanup and export, collision or LOD
+  setup, compression, texture packaging, and runtime validation.
+metadata:
+  promptSignals:
+    phrases:
+    - export a glb for the web
+    - blender cleanup for a game asset
+    - lod and collision setup
+    - compress 3d assets
+    - validate a runtime 3d asset
+    - gltf shipping work
 ---
 
 # Web 3D Asset Pipeline
@@ -76,3 +87,9 @@ This guidance is engine-agnostic and can serve Three.js, React Three Fiber, Baby
 - Rapier starter: `../../references/rapier-integration-starter.md`
 - 3D asset pipeline reference: `../../references/web-3d-asset-pipeline.md`
 - Alternative engines: `../../references/alternative-3d-engines.md`
+
+## Reference tools
+
+Other open-source 3d tools worth knowing, each over 1,000
+GitHub stars — see `references/3d-reference-tools.md`.
+

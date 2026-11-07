@@ -1,6 +1,19 @@
 ---
 name: hyperframes-registry
-description: Install and wire registry blocks and components into HyperFrames compositions. Use when running hyperframes add, installing a block or component, wiring an installed item into index.html, or working with hyperframes.json. Covers the add command, install locations, block sub-composition wiring, component snippet merging, and registry discovery.
+description: Install and wire registry blocks and components into HyperFrames compositions.
+  Use when running hyperframes add, installing a block or component, wiring an installed
+  item into index.html, or working with hyperframes.json. Covers the add command,
+  install locations, block sub-composition wiring, component snippet merging, and
+  registry discovery.
+metadata:
+  promptSignals:
+    phrases:
+    - install a hyperframes block
+    - add a registry component
+    - wire an installed item into index.html
+    - hyperframes add command
+    - block sub-composition wiring
+    - hyperframes.json registry
 ---
 
 # HyperFrames Registry

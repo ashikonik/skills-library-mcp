@@ -1,9 +1,19 @@
 ---
 name: draft-long-form-memo
-description: "Writes a formal objective legal research memo (Questions Presented, Brief Answers, Facts, IRAC Discussion, Conclusion) as a .docx. Use to \"draft a research memo on whether…\" Predicts, never advocates."
+description: Writes a formal objective legal research memo (Questions Presented, Brief
+  Answers, Facts, IRAC Discussion, Conclusion) as a .docx. Use to "draft a research
+  memo on whether…" Predicts, never advocates.
 metadata:
   version: 0.2.0
   author: midpage
+  promptSignals:
+    phrases:
+    - draft a research memo
+    - write a legal research memo
+    - questions presented and brief answers
+    - objective legal analysis
+    - draft an irac memo
+    - memo on whether
 ---
 
 # Draft Long-Form Memo

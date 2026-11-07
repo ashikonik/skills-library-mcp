@@ -1,57 +1,65 @@
 ---
 name: voiceover
-description: Adding AI-generated voiceover to Remotion compositions using TTS
+description: Adding AI-generated voiceover to Remotion compositions using local TTS
 metadata:
-  tags: voiceover, audio, elevenlabs, tts, speech, calculateMetadata, dynamic duration
+  tags: voiceover, audio, tts, speech, piper, calculateMetadata, dynamic duration
 ---
 
 # Adding AI voiceover to a Remotion composition
 
-Use ElevenLabs TTS to generate speech audio per scene, then use [`calculateMetadata`](./calculate-metadata) to dynamically size the composition to match the audio.
+Generate speech audio per scene with a local TTS engine, then use [`calculateMetadata`](./calculate-metadata) to dynamically size the composition to match the audio.
 
 ## Prerequisites
 
-By default this guide uses **ElevenLabs** as the TTS provider (`ELEVENLABS_API_KEY` environment variable). Users may substitute any TTS service that can produce an audio file.
+This guide uses a **local, open-source TTS engine** so nothing depends on a paid hosted API. Piper is the default; Coqui, Kokoro, and Bark work the same way.
 
-If the user has not specified a TTS provider, recommend ElevenLabs and ask for their API key.
+If the user has not specified a TTS engine, recommend Piper — it is fast, runs on CPU, and its ONNX voices are easy to install. See the `local-tts-engines` skill for the full comparison, and `voice-cloning-rvc` if the voice must be cloned from a specific person.
 
-Ensure the environment variable is available when running the generation script:
+Ensure the engine is installed before running the generation script:
 
 ```bash
-node --strip-types generate-voiceover.ts
+# Piper
+pip install piper-tts
+# Kokoro (better quality, still local)
+pip install kokoro
 ```
 
-## Generating audio with ElevenLabs
+## Generating audio locally
 
-Create a script that reads the config, calls the ElevenLabs API for each scene, and writes MP3 files to the `public/` directory so Remotion can access them via `staticFile()`.
+Create a script that reads the config, synthesizes each scene's speech, and writes audio files to the `public/` directory so Remotion can access them via `staticFile()`.
 
-The core API call for a single scene:
+Synthesizing with Piper from the command line:
+
+```bash
+echo "Welcome to the show." | piper \
+  --model en_US-lessac-medium.onnx \
+  --output_file public/voiceover/my-comp/scene-01-intro.wav
+```
+
+Or driving it from Node so the whole scene list is handled in one pass:
 
 ```ts title="generate-voiceover.ts"
-const response = await fetch(
-  `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
-  {
-    method: "POST",
-    headers: {
-      "xi-api-key": process.env.ELEVENLABS_API_KEY!,
-      "Content-Type": "application/json",
-      Accept: "audio/mpeg",
-    },
-    body: JSON.stringify({
-      text: "Welcome to the show.",
-      model_id: "eleven_multilingual_v2",
-      voice_settings: {
-        stability: 0.5,
-        similarity_boost: 0.75,
-        style: 0.3,
-      },
-    }),
-  },
-);
+import { execFile } from "node:child_process";
+import { mkdirSync, writeFileSync } from "node:fs";
+import { promisify } from "node:util";
 
-const audioBuffer = Buffer.from(await response.arrayBuffer());
-writeFileSync(`public/voiceover/${compositionId}/${scene.id}.mp3`, audioBuffer);
+const run = promisify(execFile);
+
+for (const scene of scenes) {
+  const out = `public/voiceover/${compositionId}/${scene.id}.wav`;
+  mkdirSync(`public/voiceover/${compositionId}`, { recursive: true });
+
+  await run("piper", [
+    "--model", "en_US-lessac-medium.onnx",
+    "--output_file", out,
+  ], { input: scene.text });
+
+  console.log(`wrote ${out}`);
+}
 ```
+
+If you need a voice that is not one of the stock Piper voices, convert a reference clip to a speaker model with `voice-cloning-rvc` first and point the TTS step at that model.
+
 
 ## Dynamic composition duration with calculateMetadata
 

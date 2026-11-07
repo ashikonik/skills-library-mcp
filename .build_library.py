@@ -55,6 +55,29 @@ SPECIFIC_OUT = os.path.join(AGENTS_OUT, '_agent-specific')
 SKIP = {'node_modules', '.git', 'venv', '.venv', 'site-packages', '__pycache__',
         '.npm', '.gradle', '.m2', 'dist', 'build', '.next', 'target',
         '.ruff_cache'}
+
+# Paths that hold skills the upstream itself does not publish, held in
+# the tree for audit but kept out of the catalogue.
+#
+# `mattpocock-skills/not-shipped/` is Matt Pocock's `in-progress/` and
+# `misc/` buckets. The upstream ships 27 of its 39 skills in the
+# `mattpocock-skills` plugin; the other 12 are either unfinished
+# (`in-progress/`) or frozen and unmaintained (`misc/`), by the
+# upstream's own statement in `SCOPE.md`. They stay in the clone so
+# they can be read and checked, but they are not entries in this
+# library, because the upstream does not publish them either.
+#
+# The rule is path-scoped, not name-scoped: a bare `misc` in `SKIP`
+# would silence an unrelated directory somewhere else on the machine.
+NOT_SHIPPED = {os.path.join(OUT, 'mattpocock-skills', 'not-shipped')}
+
+# The upstream's own website content. `mattpocock-skills/docs/` holds a
+# human-facing page per promoted skill, published at aihero.dev. It is
+# the upstream's documentation *about* the skills, not the skills -- and
+# one file in it, `docs/agents/triage-labels.md`, sits in a directory
+# named `agents/`, so the scanner would file it as an agent to dispatch.
+# It is a table of issue-tracker labels.
+NOT_CATALOGUE = {os.path.join(OUT, 'mattpocock-skills', 'docs')}
 # NOTE: `.cache` is deliberately NOT skipped — package caches (e.g. uv's
 # archive-v0) can vendor real skills, such as Typer's `.agents/skills/typer`.
 # NOTE: `vendor` is NOT skipped either — a skill's own `vendor/` directory
@@ -239,6 +262,11 @@ def body_summary(content):
 def walk(root):
     for dp, dn, fn in os.walk(root):
         dn[:] = [d for d in dn if d not in SKIP]
+        # The upstream's unpublished buckets and its website content.
+        # See NOT_SHIPPED and NOT_CATALOGUE above.
+        dn[:] = [d for d in dn
+                 if os.path.join(dp, d) not in NOT_SHIPPED
+                 and os.path.join(dp, d) not in NOT_CATALOGUE]
         # Never re-scan this library's own generated output — it is rebuilt
         # from scratch each run and would otherwise feed back into itself.
         dn[:] = [d for d in dn
@@ -412,6 +440,36 @@ if not IN_PLACE:
         shutil.rmtree(SKILLS_OUT)
     os.makedirs(SKILLS_OUT)
 
+def merge_supporting_files(src, dst, entries):
+    """Copy files from the other copies of a skill into the winning copy.
+
+    `src` is the winning copy and `dst` is where it was copied to. The
+    other copies contribute any file the winner does not have. A file
+    the winner has is left alone -- the winner is the canonical copy.
+
+    Returns the list of files added.
+    """
+    added = []
+    for other, _loc, _content in entries:
+        if os.path.abspath(other) == os.path.abspath(src):
+            continue
+        for dirpath, dirnames, filenames in os.walk(other):
+            dirnames[:] = [d for d in dirnames if d not in SKIP]
+            for fn in filenames:
+                s_path = os.path.join(dirpath, fn)
+                rel = os.path.relpath(s_path, other)
+                d_path = os.path.join(dst, rel)
+                if os.path.exists(d_path):
+                    continue
+                os.makedirs(os.path.dirname(d_path), exist_ok=True)
+                try:
+                    shutil.copyfile(s_path, d_path)
+                    added.append(rel)
+                except (shutil.Error, OSError):
+                    continue
+    return added
+
+
 skill_records = []
 collisions = []
 for name, entries in sorted(skill_paths.items()):
@@ -436,6 +494,14 @@ for name, entries in sorted(skill_paths.items()):
         except (shutil.Error, OSError) as e:
             print('  !! copy failed %s: %s' % (name, e))
             continue
+        # Bring in supporting files that exist in another copy of this
+        # skill but not in the winning one -- most often the Codex
+        # interface sidecar, which a plugin build generates and a source
+        # repository does not carry. The winner's own files are never
+        # overwritten: it is the canonical copy.
+        merged = merge_supporting_files(src, dst, entries)
+        if merged:
+            print('  merged %d supporting file(s) into %s' % (len(merged), name))
     content = entries[0][2]
     fm = frontmatter(content)
     body = content[content.index('---', 3) + 3:] if fm else content

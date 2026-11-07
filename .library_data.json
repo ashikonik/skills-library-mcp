@@ -156,6 +156,17 @@
   },
   {
    "copies": 1,
+   "desc": "Video editor for narrative and cinematic work — assembly, pacing, transitions, colour grading, sound design, and final delivery. Use for story edits, explainer videos, documentary cuts, music videos, and any edit where the sequence and the sound matter more than a quick social trim.",
+   "desc_source": "yaml",
+   "ensemble": "",
+   "model": "sonnet",
+   "name": "cinematic-video-editor",
+   "path": "agents/cinematic-video-editor.md",
+   "source": "local-project:content-creation-mcp",
+   "tools": "[\"Read\", \"Grep\", \"Glob\", \"Bash\", \"Write\", \"Edit\"]"
+  },
+  {
+   "copies": 1,
    "desc": "The dedicated Claude Security orchestrator. Hand it an unattended job — \"fully scan this repository and patch what you find; I understand it will use a lot of tokens\" — and it runs the whole thing itself: capturing the revision, driving the multi-agent scan through the claude-security:scan workflow, assembling the verified report, and turning survivors into targeted patch files you apply when you choose, each verified by a panel of agents before it is written. Best as the main agent of a session.",
    "desc_source": "yaml",
    "ensemble": "orchestrates the scan and fix pipelines",
@@ -208,6 +219,17 @@
    "path": "agents/code-simplifier.md",
    "source": "marketplace:claude-plugins-official",
    "tools": ""
+  },
+  {
+   "copies": 1,
+   "desc": "ComfyUI workflow builder — constructing graph JSON for image and video generation, wiring checkpoints, samplers, ControlNet, IP-Adapter, LoRAs, VAEs, and the headless API. Use when building or debugging a ComfyUI workflow, batching generations, or running ComfyUI without the UI.",
+   "desc_source": "yaml",
+   "ensemble": "",
+   "model": "sonnet",
+   "name": "comfyui-workflow-builder",
+   "path": "agents/comfyui-workflow-builder.md",
+   "source": "local-project:content-creation-mcp",
+   "tools": "[\"Read\", \"Grep\", \"Glob\", \"Bash\", \"Write\", \"Edit\"]"
   },
   {
    "copies": 26,
@@ -573,6 +595,17 @@
    "tools": "[\"Read\", \"Grep\"]"
   },
   {
+   "copies": 1,
+   "desc": "Image art director for generating and refining AI images — prompt construction, model and checkpoint selection, style consistency across a set, reference control, upscaling, and final delivery. Use for hero images, concept art, product shots, social graphics, illustration sets, and any visual that must look intentional rather than generated.",
+   "desc_source": "yaml",
+   "ensemble": "",
+   "model": "sonnet",
+   "name": "image-art-director",
+   "path": "agents/image-art-director.md",
+   "source": "local-project:content-creation-mcp",
+   "tools": "[\"Read\", \"Grep\", \"Glob\", \"Bash\", \"Write\", \"Edit\"]"
+  },
+  {
    "copies": 50,
    "desc": "Java/Maven/Gradle build, compilation, and dependency error resolution specialist. Automatically detects Spring Boot or Quarkus and applies framework-specific fixes. Fixes build errors, Java compiler errors, and Maven/Gradle issues with minimal changes. Use when Java builds fail.",
    "desc_source": "yaml",
@@ -628,6 +661,17 @@
    "tools": "Read, Glob, Grep, Bash"
   },
   {
+   "copies": 1,
+   "desc": "Lip-sync technician for driving mouth movement from a replacement audio track — MuseTalk, LatentSync, Wav2Lip, VideoRetalking, and SadTalker, with audio preprocessing, face detection, per-shot segmentation, and artefact diagnosis. Use when dubbing, lip-syncing a still image, or replacing dialogue in footage where the mouth is visible.",
+   "desc_source": "yaml",
+   "ensemble": "",
+   "model": "sonnet",
+   "name": "lip-sync-technician",
+   "path": "agents/lip-sync-technician.md",
+   "source": "local-project:content-creation-mcp",
+   "tools": "[\"Read\", \"Grep\", \"Glob\", \"Bash\", \"Write\", \"Edit\"]"
+  },
+  {
    "copies": 51,
    "desc": "Operate autonomous agent loops, monitor progress, and intervene safely when loops stall.",
    "desc_source": "yaml",
@@ -650,7 +694,7 @@
    "tools": "["
   },
   {
-   "copies": 9,
+   "copies": 10,
    "desc": "Marketing strategist and copywriter for campaign planning, audience research, positioning, copy creation, and content review. Covers landing pages, email sequences, social posts, ad copy, short-form video scripts, and content calendars. Use when the user wants to plan or execute a product launch or marketing campaign.",
    "desc_source": "yaml",
    "ensemble": "",
@@ -659,6 +703,17 @@
    "path": "agents/marketing-agent.md",
    "source": "ecc",
    "tools": "[\"Read\", \"Grep\", \"Glob\", \"WebSearch\", \"WebFetch\"]"
+  },
+  {
+   "copies": 1,
+   "desc": "Media pipeline engineer — building reproducible ffmpeg-based pipelines that ingest, transcode, normalise, caption, and deliver video and audio for every platform, with proxies, checksums, resumability, and automated verification. Use for setting up a media workflow, batch processing, CDN packaging, and making an edit pipeline repeatable.",
+   "desc_source": "yaml",
+   "ensemble": "",
+   "model": "sonnet",
+   "name": "media-pipeline-engineer",
+   "path": "agents/media-pipeline-engineer.md",
+   "source": "local-project:content-creation-mcp",
+   "tools": "[\"Read\", \"Grep\", \"Glob\", \"Bash\", \"Write\", \"Edit\"]"
   },
   {
    "copies": 25,
@@ -793,7 +848,7 @@
    "tools": "[\"Read\", \"Grep\", \"Glob\", \"Bash\"]"
   },
   {
-   "copies": 75,
+   "copies": 76,
    "desc": "Expert planning specialist for complex features and refactoring. Use PROACTIVELY when users request feature implementation, architectural changes, or complex refactoring. Automatically activated for planning tasks.",
    "desc_source": "yaml",
    "ensemble": "",
@@ -926,6 +981,17 @@
   },
   {
    "copies": 1,
+   "desc": "Script and story editor — shaping a script for voiceover, tightening a long piece into a short, building narrative structure, writing hooks and titles, and cutting a draft without losing its spine. Use for video scripts, voiceover copy, landing page scripts, podcast outlines, and content rewrites.",
+   "desc_source": "yaml",
+   "ensemble": "",
+   "model": "sonnet",
+   "name": "script-and-story-editor",
+   "path": "agents/script-and-story-editor.md",
+   "source": "local-project:content-creation-mcp",
+   "tools": "[\"Read\", \"Grep\", \"Glob\", \"Write\", \"Edit\", \"WebSearch\"]"
+  },
+  {
+   "copies": 1,
    "desc": "Adversarial security reviewer — OWASP Top 10, CWE, dependency CVEs, secrets, injection. Use for security debt scanning and pre-modernization hardening.",
    "desc_source": "yaml",
    "ensemble": "",
@@ -947,7 +1013,18 @@
    "tools": "[\"Read\", \"Write\", \"Edit\", \"Bash\", \"Grep\", \"Glob\"]"
   },
   {
-   "copies": 25,
+   "copies": 1,
+   "desc": "SEO content strategist — keyword research and mapping, content briefs, topical clustering, on-page optimisation, internal linking, and content refresh plans that compound. Use for content calendars, keyword strategy, briefs, pillar pages, and rewriting existing pages to rank.",
+   "desc_source": "yaml",
+   "ensemble": "",
+   "model": "sonnet",
+   "name": "seo-content-strategist",
+   "path": "agents/seo-content-strategist.md",
+   "source": "local-project:content-creation-mcp",
+   "tools": "[\"Read\", \"Grep\", \"Glob\", \"Write\", \"Edit\", \"WebSearch\", \"WebFetch\"]"
+  },
+  {
+   "copies": 26,
    "desc": "SEO specialist for technical SEO audits, on-page optimization, structured data, Core Web Vitals, and content/keyword mapping. Use for site audits, meta tag reviews, schema markup, sitemap and robots issues, and SEO remediation plans.",
    "desc_source": "yaml",
    "ensemble": "",
@@ -956,6 +1033,17 @@
    "path": "agents/seo-specialist.md",
    "source": "ecc",
    "tools": "[\"Read\", \"Grep\", \"Glob\", \"WebSearch\", \"WebFetch\"]"
+  },
+  {
+   "copies": 1,
+   "desc": "Short-form video producer for vertical clips — finding the hook, writing the script, cutting the footage, reframing to 9:16, adding captions, and batching platform-ready exports. Use for reels, shorts, TikToks, and any vertical clip from longer material.",
+   "desc_source": "yaml",
+   "ensemble": "",
+   "model": "sonnet",
+   "name": "short-form-producer",
+   "path": "agents/short-form-producer.md",
+   "source": "local-project:content-creation-mcp",
+   "tools": "[\"Read\", \"Grep\", \"Glob\", \"Bash\", \"Write\", \"Edit\"]"
   },
   {
    "copies": 8,
@@ -991,6 +1079,17 @@
    "tools": "[\"Read\", \"Grep\", \"Glob\"]"
   },
   {
+   "copies": 1,
+   "desc": "Social publish manager — building a content calendar, adapting one idea per platform, writing platform-native copy and hashtag sets, tagging links with UTMs, and scheduling posts through open APIs to Bluesky, Mastodon, and Reddit. Use for posting plans, cross-platform repurposing, and scheduled publishing.",
+   "desc_source": "yaml",
+   "ensemble": "",
+   "model": "sonnet",
+   "name": "social-publish-manager",
+   "path": "agents/social-publish-manager.md",
+   "source": "local-project:content-creation-mcp",
+   "tools": "[\"Read\", \"Grep\", \"Glob\", \"Bash\", \"Write\", \"Edit\", \"WebSearch\"]"
+  },
+  {
    "copies": 9,
    "desc": "Extracts behavioral specs from existing codebases for OpenSpec. Produces flat Requirement and Invariant blocks with structured metadata (entities, enforced, id, test anchors). Outputs openspec/specs/<capability>/spec.md. Fully self-bootstrapping — no dependency on codebase-onboarding. Use when onboarding a brownfield project to spec-driven development.",
    "desc_source": "yaml",
@@ -1000,6 +1099,17 @@
    "path": "agents/spec-miner.md",
    "source": "ecc",
    "tools": "[\"Read\", \"Grep\", \"Glob\", \"Bash\", \"Write\"]"
+  },
+  {
+   "copies": 1,
+   "desc": "Stock media researcher — sourcing royalty-free photos, video, and music from Pexels, Unsplash, Wikimedia Commons, Internet Archive, and Pixabay, with search strategy, licence verification, attribution tracking, and a manifest that records the source of every asset. Use when finding b-roll, background images, stock footage, or licensed music for a video.",
+   "desc_source": "yaml",
+   "ensemble": "",
+   "model": "sonnet",
+   "name": "stock-media-researcher",
+   "path": "agents/stock-media-researcher.md",
+   "source": "local-project:content-creation-mcp",
+   "tools": "[\"Read\", \"Grep\", \"Glob\", \"Bash\", \"Write\", \"Edit\", \"WebFetch\"]"
   },
   {
    "copies": 17,
@@ -1046,6 +1156,17 @@
    "tools": "Read, Write, Edit, Glob, Grep, Bash"
   },
   {
+   "copies": 1,
+   "desc": "Thumbnail designer — generating, compositing, and testing thumbnails for video, articles, and social posts, with legible typography, contrast testing, face emphasis, and A/B variants. Use for YouTube thumbnails, article hero images, social post graphics, and course covers.",
+   "desc_source": "yaml",
+   "ensemble": "",
+   "model": "sonnet",
+   "name": "thumbnail-designer",
+   "path": "agents/thumbnail-designer.md",
+   "source": "local-project:content-creation-mcp",
+   "tools": "[\"Read\", \"Grep\", \"Glob\", \"Bash\", \"Write\", \"Edit\"]"
+  },
+  {
    "copies": 26,
    "desc": "Use this agent when you need expert analysis of type design in your codebase. Specifically use it (1) when introducing a new type to ensure it follows best practices for encapsulation and invariant expression, (2) during pull request creation to review all types being added, and (3) when refactoring existing types to improve their design quality. The agent will provide both qualitative feedback and quantitative ratings on encapsulation, invariant expression, usefulness, and enforcement. See \"When to invoke\" in the agent body for worked scenarios.",
    "desc_source": "yaml",
@@ -1088,6 +1209,17 @@
    "path": "agents/version-delta-analyst.md",
    "source": "marketplace:claude-plugins-official",
    "tools": "Read, Glob, Grep, Bash"
+  },
+  {
+   "copies": 1,
+   "desc": "Voice and sound designer — selecting a TTS engine, writing for the ear, cloning and converting voices, designing a soundscape with generated music and SFX, and mixing narration, music and effects to broadcast levels. Use for voiceovers, narration, jingles, sound effects, audio beds, and final audio mixes.",
+   "desc_source": "yaml",
+   "ensemble": "",
+   "model": "sonnet",
+   "name": "voice-and-sound-designer",
+   "path": "agents/voice-and-sound-designer.md",
+   "source": "local-project:content-creation-mcp",
+   "tools": "[\"Read\", \"Grep\", \"Glob\", \"Bash\", \"Write\", \"Edit\"]"
   },
   {
    "copies": 9,
@@ -1366,6 +1498,17 @@
    "rescued_from_tmp": false,
    "source": "ecc",
    "title": "Agent Self-Evaluation"
+  },
+  {
+   "copies": 1,
+   "desc": "Build slide decks programmatically — Marp, Slidev, reveal.js, python-pptx and HTML/CSS frameworks — with layouts, speaker notes, images, charts, and export to PDF or video. Use when the user wants a presentation, pitch deck, slide deck, talk slides, or a deck exported to PDF.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "agent-slide-decks",
+   "path": "skills/agent-slide-decks/",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
+   "title": "Agent Slide Decks"
   },
   {
    "copies": 34,
@@ -1654,7 +1797,7 @@
    "title": "Architecture Decision Records"
   },
   {
-   "copies": 41,
+   "copies": 42,
    "desc": "Write articles, guides, blog posts, tutorials, newsletter issues, and other long-form content in a distinctive voice derived from supplied examples or brand guidance. Use when the user wants polished written content longer than a paragraph, especially when voice consistency, structure, and credibility matter.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -1886,6 +2029,17 @@
   },
   {
    "copies": 1,
+   "desc": "Ask which skill or flow fits your situation. A router over the skills in this repo.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "ask-matt",
+   "path": "skills/ask-matt/",
+   "rescued_from_tmp": false,
+   "source": "mattpocock-clone",
+   "title": "Ask Matt"
+  },
+  {
+   "copies": 1,
    "desc": "Use when Codex is already in the attack-path-analysis phase of a security scan or the user explicitly asks to trace a security finding from source to sink and calibrate severity. Do not use as the primary trigger for full PR, commit, branch, patch, or repository scans.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -1894,6 +2048,17 @@
    "rescued_from_tmp": true,
    "source": "plugin:codex-security",
    "title": "Security Attack Path Analysis"
+  },
+  {
+   "copies": 1,
+   "desc": "Split audio into stems — vocals, drums, bass, other — with local open-source tools like Demucs and Spleeter, for remixing, sample extraction, karaoke tracks, and preparing audio for further processing. Use when the user wants to isolate vocals, extract instruments, make a karaoke version, or separate audio stems.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "audio-separation",
+   "path": "skills/audio-separation/",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
+   "title": "Audio Separation"
   },
   {
    "copies": 1,
@@ -1963,6 +2128,17 @@
   },
   {
    "copies": 1,
+   "desc": "Remove backgrounds from images and segment subjects using local open-source tools — rembg with BiRefNet and U²-Net models, IOPaint for inpainting, SAM 2 for promptable segmentation, and alpha matting for hair detail. Use when the user wants to remove an image background, cut out an object, make a transparent PNG, or segment a subject from a photo.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "background-removal-segmentation",
+   "path": "skills/background-removal-segmentation/",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
+   "title": "Image Background Removal and Segmentation"
+  },
+  {
+   "copies": 1,
    "desc": "The base44 CLI is used for EVERYTHING related to base44 projects: resource configuration (entities, backend functions, ai agents), initialization and actions (resource creation, deployment). This skill is the place for learning about how to configure resources. When you plan or implement a feature, you must learn this skill",
    "desc_source": "yaml",
    "locale_only": false,
@@ -1995,14 +2171,14 @@
    "title": "Troubleshoot Production Issues"
   },
   {
-   "copies": 1,
+   "copies": 2,
    "desc": "Drafts multiple email replies or follow-ups in batch using the Superhuman Mail MCP server — processing your inbox in bulk rather than one email at a time. Use this skill whenever someone asks to \"draft replies to my unread emails\", \"respond to all my emails\", \"write follow-ups for my meetings this week\", \"batch draft responses\", \"draft emails for all threads that need a reply\", \"auto-draft my inbox\", \"help me respond to everything\", \"write follow-up emails based on my meetings\", \"process my inbox\", \"draft responses to these threads\", or any variation of wanting multiple emails drafted at once. Also trigger when someone says \"I have a bunch of emails to respond to\", \"help me get through my inbox\", \"draft a mail merge\", \"send personalized emails to these people\", or wants to create multiple drafts from a single prompt. Trigger broadly — if someone wants more than one email drafted, this skill should activate.",
    "desc_source": "yaml",
    "locale_only": false,
    "name": "batch-draft-writer",
    "path": "skills/batch-draft-writer/",
-   "rescued_from_tmp": true,
-   "source": "plugin:superhuman",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
    "title": "Batch Draft & Follow-Up Writer"
   },
   {
@@ -2094,7 +2270,18 @@
    "title": "biostudies-arrayexpress-skill"
   },
   {
-   "copies": 8,
+   "copies": 1,
+   "desc": "Create 3D content in Blender headlessly — product renders, animations, scene composition, exports to glTF/FBX/USD, and rendering stills or turntables with Cycles or EEVEE. Use when the user wants a 3D render, a product shot, a 3D asset, a turntable animation, or Blender automation.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "blender-3d-content",
+   "path": "skills/blender-3d-content/",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
+   "title": "Blender 3D Content"
+  },
+  {
+   "copies": 9,
    "desc": "Use this skill when inspecting Blender characters, rigs, poses, animation retargeting, ground contact, facing direction, or model-vs-motion alignment where screenshots alone are not enough.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -2237,7 +2424,7 @@
    "title": "Brainstorming Ideas Into Designs"
   },
   {
-   "copies": 17,
+   "copies": 18,
    "desc": "Use when a brand needs to discover or articulate its identity through structured multi-session interviews. Covers purpose, positioning, audience, personality, voice, narrative, and founder-brand tension across 8 modules using laddering, 5 Whys, and projective techniques. Produces a resumable session with disk-persisted state and a master brandbook (90_SYNTHESIS.md).",
    "desc_source": "yaml",
    "locale_only": false,
@@ -2248,7 +2435,7 @@
    "title": "Brand Discovery"
   },
   {
-   "copies": 33,
+   "copies": 34,
    "desc": "Build a source-derived writing style profile from real posts, essays, launch notes, docs, or site copy, then reuse that profile across content, outreach, and social workflows. Use when the user wants voice consistency without generic AI writing tropes.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -2523,14 +2710,14 @@
    "title": "Canary Watch — Post-Deploy Monitoring"
   },
   {
-   "copies": 1,
+   "copies": 2,
    "desc": "Create on-brand Canva presentations from a brief, outline, existing Canva doc, or design link. Use when the user wants a branded slide deck, wants to turn notes into a presentation, or needs a presentation generated in Canva with the right brand kit and a clear slide plan.",
    "desc_source": "yaml",
    "locale_only": false,
    "name": "canva-branded-presentation",
    "path": "skills/canva-branded-presentation/",
-   "rescued_from_tmp": true,
-   "source": "plugin:canva",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
    "title": "Canva Branded Presentation"
   },
   {
@@ -2974,6 +3161,17 @@
    "title": "Code Tour"
   },
   {
+   "copies": 1,
+   "desc": "Shared vocabulary for designing deep modules. Use when the user wants to design or improve a module's interface, find deepening opportunities, decide where a seam goes, make code more testable or AI-navigable, or when another skill needs the deep-module vocabulary.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "codebase-design",
+   "path": "skills/codebase-design/",
+   "rescued_from_tmp": false,
+   "source": "mattpocock-clone",
+   "title": "Codebase Design"
+  },
+  {
    "copies": 24,
    "desc": "Analyze an unfamiliar codebase and generate a structured onboarding guide with architecture map, key entry points, conventions, and a starter CLAUDE.md. Use when joining a new project or setting up Claude Code for the first time in a repo.",
    "desc_source": "yaml",
@@ -3016,6 +3214,28 @@
    "rescued_from_tmp": false,
    "source": "ecc",
    "title": "Coding Standards & Best Practices"
+  },
+  {
+   "copies": 1,
+   "desc": "Build and run ComfyUI workflows for image generation and editing — SDXL, SD 1.5, Flux, ControlNet, IPAdapter, inpainting, upscaling, and IPAdapter Plus — including workflow JSON authoring, model placement, and the headless API for batch generation. Use when the user works with ComfyUI graphs for images, wants to automate image generation, or needs reproducible image pipelines.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "comfyui-image-workflows",
+   "path": "skills/comfyui-image-workflows/",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
+   "title": "ComfyUI Image Workflows"
+  },
+  {
+   "copies": 1,
+   "desc": "Build and run ComfyUI workflows for video generation and animation, including Wan and LTX-Video model wrappers, graph structure, custom node installation, workflow JSON authoring, and the ComfyUI API for headless batch generation. Use when the user works with ComfyUI graphs, wants to automate ComfyUI, or needs to generate video through a node-based pipeline.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "comfyui-video-workflows",
+   "path": "skills/comfyui-video-workflows/",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
+   "title": "ComfyUI Video Workflows"
   },
   {
    "copies": 1,
@@ -3128,7 +3348,7 @@
    "title": "Connections Optimizer"
   },
   {
-   "copies": 41,
+   "copies": 42,
    "desc": "Create platform-native content systems for X, LinkedIn, TikTok, YouTube, newsletters, and repurposed multi-platform campaigns. Use when the user wants social posts, threads, scripts, content calendars, or one source asset adapted cleanly across platforms.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -3282,7 +3502,7 @@
    "title": "Cross-Platform Path Handling"
   },
   {
-   "copies": 33,
+   "copies": 34,
    "desc": "Multi-platform content distribution across X, LinkedIn, Threads, and Bluesky. Adapts content per platform using content-engine patterns. Never posts identical content cross-platform. Use when the user wants to distribute content across social platforms.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -3601,7 +3821,7 @@
    "title": "Vercel Deployments & CI/CD"
   },
   {
-   "copies": 24,
+   "copies": 25,
    "desc": "Use this skill to generate or audit design systems, check visual consistency, and review PRs that touch styling.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -3621,6 +3841,28 @@
    "rescued_from_tmp": false,
    "source": "birthday",
    "title": "tasteskill v2"
+  },
+  {
+   "copies": 1,
+   "desc": "Diagnosis loop for hard bugs and performance regressions. Use when the user says \"diagnose\"/\"debug this\", or reports something broken/throwing/failing/slow.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "diagnosing-bugs",
+   "path": "skills/diagnosing-bugs/",
+   "rescued_from_tmp": false,
+   "source": "mattpocock-clone",
+   "title": "Diagnosing Bugs"
+  },
+  {
+   "copies": 1,
+   "desc": "Generate technical and explanatory diagrams — flowcharts, sequence diagrams, architecture diagrams, ERDs, class diagrams and freeform sketches — with Mermaid, Graphviz, PlantUML, D2, and Excalidraw, exported to SVG or PNG for embedding in docs, slides, or code. Use when the user wants a diagram, flowchart, architecture chart, sequence diagram, or visual explanation of a system.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "diagram-generation",
+   "path": "skills/diagram-generation/",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
+   "title": "Diagram Generation"
   },
   {
    "copies": 1,
@@ -3744,6 +3986,17 @@
    "title": "Documentation Lookup (Context7)"
   },
   {
+   "copies": 1,
+   "desc": "Build and sharpen a project's domain model. Use when discussing codebase terminology, writing or editing a GLOSSARY.md, or recording or editing an ADR.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "domain-modeling",
+   "path": "skills/domain-modeling/",
+   "rescued_from_tmp": false,
+   "source": "mattpocock-clone",
+   "title": "Domain Modeling"
+  },
+  {
    "copies": 24,
    "desc": "Idiomatic C# and .NET patterns, conventions, dependency injection, async/await, and best practices for building robust, maintainable .NET applications.",
    "desc_source": "yaml",
@@ -3755,25 +4008,25 @@
    "title": ".NET Development Patterns"
   },
   {
-   "copies": 1,
+   "copies": 2,
    "desc": "Drafts court filings — motions, memoranda of law, appellate briefs — as court-ready .docx, with Midpage research behind every citation. Use to \"draft a motion to dismiss,\" \"write the brief.\"",
    "desc_source": "yaml",
    "locale_only": false,
    "name": "draft-brief",
    "path": "skills/draft-brief/",
-   "rescued_from_tmp": true,
-   "source": "plugin:midpage",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
    "title": "Draft Brief"
   },
   {
-   "copies": 1,
+   "copies": 2,
    "desc": "Writes a formal objective legal research memo (Questions Presented, Brief Answers, Facts, IRAC Discussion, Conclusion) as a .docx. Use to \"draft a research memo on whether…\" Predicts, never advocates.",
    "desc_source": "yaml",
    "locale_only": false,
    "name": "draft-long-form-memo",
    "path": "skills/draft-long-form-memo/",
-   "rescued_from_tmp": true,
-   "source": "plugin:midpage",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
    "title": "Draft Long-Form Memo"
   },
   {
@@ -3909,7 +4162,7 @@
    "title": "Email Integration (Resend + React Email)"
   },
   {
-   "copies": 24,
+   "copies": 25,
    "desc": "Evidence-first mailbox triage, drafting, send verification, and sent-mail-safe follow-up workflow for ECC. Use when the user wants to organize email, draft or send through the real mail surface, or prove what landed in Sent.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -4514,7 +4767,7 @@
    "title": "Frontend App Builder"
   },
   {
-   "copies": 1,
+   "copies": 2,
    "desc": "Guidance for distinctive, intentional visual design when building new UI or reshaping an existing one. Helps with aesthetic direction, typography, and making choices that don't read as templated defaults.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -4547,7 +4800,7 @@
    "title": "Frontend Development Patterns"
   },
   {
-   "copies": 41,
+   "copies": 42,
    "desc": "Create stunning, animation-rich HTML presentations from scratch or by converting PowerPoint files. Use when the user wants to build a presentation, convert a PPT/PPTX to web, or create slides for a talk/pitch. Helps non-designers discover their aesthetic through visual exploration rather than abstract choices.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -4690,14 +4943,14 @@
    "title": "GateGuard — Fact-Forcing Pre-Action Gate"
   },
   {
-   "copies": 1,
+   "copies": 2,
    "desc": "Expert guidance for Geist, Vercel's default typography system and font family for precise Next.js interfaces. Use when configuring Geist Sans, Geist Mono, or Geist Pixel, setting up font imports, or applying Vercel typography and aesthetic guidance.",
    "desc_source": "yaml",
    "locale_only": false,
    "name": "geist",
    "path": "skills/geist/",
-   "rescued_from_tmp": true,
-   "source": "plugin:vercel",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
    "title": "Geist — Vercel's Font Family"
   },
   {
@@ -4998,14 +5251,14 @@
    "title": "Google Sheets"
   },
   {
-   "copies": 1,
-   "desc": "Google Slides work for finding, reading, summarizing, creating, importing, template following, visual cleanup, source-deck adaptation, structural repair, and content edits in native Slides decks.",
+   "copies": 2,
+   "desc": "Google Slides work for finding, reading, summarizing, creating, importing, template following, visual cleanup, source-deck adaptation, structural repair, and content edits in native Slides decks. Requires a Google Slides connector — in Codex that is the Google Drive plugin. For building decks from scratch without a Google connector, see agent-slide-decks, frontend-slides, or canva-branded-presentation.",
    "desc_source": "yaml",
    "locale_only": false,
    "name": "google-slides",
    "path": "skills/google-slides/",
-   "rescued_from_tmp": true,
-   "source": "plugin:google-drive",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
    "title": "Google Slides"
   },
   {
@@ -5029,6 +5282,39 @@
    "rescued_from_tmp": true,
    "source": "plugin:build-web-data-visualization",
    "title": "Grammar of Graphics and Declarative Visualization"
+  },
+  {
+   "copies": 1,
+   "desc": "A relentless interview to sharpen a plan or design.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "grill-me",
+   "path": "skills/grill-me/",
+   "rescued_from_tmp": false,
+   "source": "mattpocock-clone",
+   "title": "grill-me"
+  },
+  {
+   "copies": 1,
+   "desc": "A relentless interview to sharpen a plan or design, which also creates docs (ADR's and glossary) as we go.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "grill-with-docs",
+   "path": "skills/grill-with-docs/",
+   "rescued_from_tmp": false,
+   "source": "mattpocock-clone",
+   "title": "grill-with-docs"
+  },
+  {
+   "copies": 1,
+   "desc": "Grill the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their thinking, or uses any 'grill' trigger phrases.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "grilling",
+   "path": "skills/grilling/",
+   "rescued_from_tmp": false,
+   "source": "mattpocock-clone",
+   "title": "grilling"
   },
   {
    "copies": 1,
@@ -5073,6 +5359,17 @@
    "rescued_from_tmp": true,
    "source": "plugin:life-science-research",
    "title": "gwas-catalog-skill"
+  },
+  {
+   "copies": 1,
+   "desc": "Compact the current conversation into a handoff document for another agent to pick up.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "handoff",
+   "path": "skills/handoff/",
+   "rescued_from_tmp": false,
+   "source": "mattpocock-clone",
+   "title": "handoff"
   },
   {
    "copies": 24,
@@ -5438,7 +5735,7 @@
    "title": "human-protein-atlas-skill"
   },
   {
-   "copies": 2,
+   "copies": 3,
    "desc": "Rewrites text to sound like a real person wrote it — not an AI. Use this skill any time the user asks to humanize, de-AI, rewrite, make sound natural, remove AI patterns, or fix robotic-sounding text. Also trigger when the user pastes text and says things like \"make this mine,\" \"fix this,\" \"this sounds like AI,\" or \"clean this up.\" Even if the user doesn't use the word \"humanize,\" if they're handing over a block of text and want it to sound more human or personal, use this skill. Always apply the full banned-patterns list below — never skip it, never explain it to the user unless asked.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -5449,36 +5746,36 @@
    "title": "Humanizer Skill"
   },
   {
-   "copies": 1,
+   "copies": 2,
    "desc": "Create video compositions, animations, title cards, overlays, captions, voiceovers, audio-reactive visuals, and scene transitions in HyperFrames HTML. Use when asked to build any HTML-based video content, add captions or subtitles synced to audio, generate text-to-speech narration, create audio-reactive animation (beat sync, glow, pulse driven by music), add animated text highlighting (marker sweeps, hand-drawn circles, burst lines, scribble, sketchout), or add transitions between scenes (crossfades, wipes, reveals, shader transitions). Covers composition authoring, timing, media, and the full video production workflow. For CLI commands (init, lint, preview, render, transcribe, tts) see the hyperframes-cli skill.",
    "desc_source": "yaml",
    "locale_only": false,
    "name": "hyperframes",
    "path": "skills/hyperframes/",
-   "rescued_from_tmp": true,
-   "source": "plugin:hyperframes",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
    "title": "HyperFrames"
   },
   {
-   "copies": 1,
+   "copies": 2,
    "desc": "HyperFrames CLI tool — hyperframes init, lint, inspect, preview, render, transcribe, tts, doctor, browser, info, upgrade, compositions, docs, benchmark. Use when scaffolding a project, linting, validating, inspecting visual layout in compositions, previewing in the studio, rendering to video, transcribing audio, generating TTS, or troubleshooting the HyperFrames environment.",
    "desc_source": "yaml",
    "locale_only": false,
    "name": "hyperframes-cli",
    "path": "skills/hyperframes-cli/",
-   "rescued_from_tmp": true,
-   "source": "plugin:hyperframes",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
    "title": "HyperFrames CLI"
   },
   {
-   "copies": 1,
+   "copies": 2,
    "desc": "Install and wire registry blocks and components into HyperFrames compositions. Use when running hyperframes add, installing a block or component, wiring an installed item into index.html, or working with hyperframes.json. Covers the add command, install locations, block sub-composition wiring, component snippet merging, and registry discovery.",
    "desc_source": "yaml",
    "locale_only": false,
    "name": "hyperframes-registry",
    "path": "skills/hyperframes-registry/",
-   "rescued_from_tmp": true,
-   "source": "plugin:hyperframes",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
    "title": "HyperFrames Registry"
   },
   {
@@ -5493,7 +5790,7 @@
    "title": "ib-deck"
   },
   {
-   "copies": 1,
+   "copies": 2,
    "desc": "Generate or edit raster images when the task benefits from AI-created bitmap visuals such as photos, illustrations, textures, sprites, mockups, or transparent-background cutouts. Use when Codex should create a brand-new image, transform an existing image, or derive visual variants from references, and the output should be a bitmap asset rather than repo-native code or vector. Do not use when the task is better handled by editing existing SVG/vector/code-native assets, extending an established icon or logo system, or building the visual directly in HTML/CSS/canvas.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -5513,6 +5810,39 @@
    "rescued_from_tmp": false,
    "source": "birthday",
    "title": "impeccable"
+  },
+  {
+   "copies": 1,
+   "desc": "Implement a piece of work based on a spec or set of tickets.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "implement",
+   "path": "skills/implement/",
+   "rescued_from_tmp": false,
+   "source": "mattpocock-clone",
+   "title": "implement"
+  },
+  {
+   "copies": 1,
+   "desc": "Implement the result of /to-spec and /to-tickets in code.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "implement-spec",
+   "path": "skills/implement-spec/",
+   "rescued_from_tmp": false,
+   "source": "mattpocock-clone",
+   "title": "implement-spec"
+  },
+  {
+   "copies": 1,
+   "desc": "Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "improve-codebase-architecture",
+   "path": "skills/improve-codebase-architecture/",
+   "rescued_from_tmp": false,
+   "source": "mattpocock-clone",
+   "title": "Improve Codebase Architecture"
   },
   {
    "copies": 1,
@@ -5658,7 +5988,7 @@
    "title": "iOS ETTrace Performance"
   },
   {
-   "copies": 16,
+   "copies": 17,
    "desc": "Generate iOS app icons as PNG imagesets for Xcode asset catalogs from SF Symbols (5000+ Apple-native) or Iconify API (275k+ open source icons from 200+ collections). Use when generating icons, creating icon assets, adding icons to asset catalog, or searching for icons for iOS projects.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -6011,6 +6341,17 @@
   },
   {
    "copies": 1,
+   "desc": "Sync mouth movement to audio in video using local open-source models — MuseTalk, LatentSync, Wav2Lip, and VideoRetalking — with installation, performance comparison, audio preprocessing requirements, and artefact fixes. Use when the user wants lip sync, needs a talking avatar, wants to dub a video, or needs mouth movements to match a voice track.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "lip-sync",
+   "path": "skills/lip-sync/",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
+   "title": "Lip Sync"
+  },
+  {
+   "copies": 1,
    "desc": "Implement and review macOS SwiftUI Liquid Glass UI. Use when adopting system glass, removing conflicting custom chrome, or building glass surfaces.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -6066,6 +6407,28 @@
   },
   {
    "copies": 1,
+   "desc": "Choose and run local open-source image generation tools — AUTOMATIC1111 WebUI, Forge, InvokeAI, Fooocus, Diffusers, and Flux — with model selection, SDXL vs SD1.5 vs Flux comparison, VRAM requirements, and the API for scripted generation. Use when the user wants to generate images locally, pick a diffusion model, or set up a local image generation stack.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "local-diffusion-suite",
+   "path": "skills/local-diffusion-suite/",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
+   "title": "Local Diffusion Suite"
+  },
+  {
+   "copies": 1,
+   "desc": "Generate speech locally with open-source TTS engines — Piper, Coqui XTTS, Kokoro, Bark, VoxCPM, CosyVoice, Qwen3-TTS, Dia, ChatTTS, and Supertonic — with model comparison, installation, voice cloning support, emotion control, and API usage. Use when the user wants to generate a voiceover, synthesize speech, do text-to-speech locally, or needs a free offline TTS engine.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "local-tts-engines",
+   "path": "skills/local-tts-engines/",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
+   "title": "Local Text-to-Speech"
+  },
+  {
+   "copies": 1,
    "desc": "Map GWAS loci to ranked candidate genes using a deterministic multi-skill chain (EFO -> GWAS -> coordinates -> Open Targets L2G/coloc -> eQTL -> burden/coding context), with reproducible tables and optional figures. Use when a user provides a trait/EFO term and/or lead variants and needs locus-to-gene prioritization for downstream biology decisions.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -6085,6 +6448,17 @@
    "rescued_from_tmp": false,
    "source": "ecc",
    "title": "Logistics Exception Management"
+  },
+  {
+   "copies": 1,
+   "desc": "Extract short-form clips from long-form video — detecting highlight moments, scoring for virality, generating vertical reframing with speaker tracking, adding hook captions, and batch producing shorts from a podcast or long video. Use when the user wants to repurpose a long video into shorts, find highlights in a podcast, or make vertical clips from landscape footage.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "long-to-short-repurpose",
+   "path": "skills/long-to-short-repurpose/",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
+   "title": "Long to Short Repurposing"
   },
   {
    "copies": 1,
@@ -6120,7 +6494,7 @@
    "title": "Make Interfaces Feel Better"
   },
   {
-   "copies": 24,
+   "copies": 25,
    "desc": "Build reusable Manim explainers for technical concepts, graphs, system diagrams, and product walkthroughs, then hand off to the wider ECC video stack if needed. Use when the user wants a clean animated explainer rather than a generic talking-head script.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -6142,7 +6516,7 @@
    "title": "Market Research"
   },
   {
-   "copies": 8,
+   "copies": 9,
    "desc": "End-to-end marketing campaign planning and execution. Covers audience research, positioning, campaign angle definition, landing page copy, email sequences, social posts, ad copy, short-form video scripts, and content calendars. Use as the orchestration layer for multi-channel product launches.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -6176,6 +6550,17 @@
   },
   {
    "copies": 1,
+   "desc": "Review the changes since a fixed point (commit, branch, tag, or merge-base) along two axes: Standards (does the code follow this repo's documented coding standards?) and Spec (does the code match what the originating issue/spec asked for?). Runs both reviews in parallel sub-agents and reports them side by side. Use when the user wants to review a branch, a PR, work-in-progress changes, or asks to \"review since X\".",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "mattpocock-code-review",
+   "path": "skills/mattpocock-code-review/",
+   "rescued_from_tmp": false,
+   "source": "mattpocock-clone",
+   "title": "mattpocock-code-review"
+  },
+  {
+   "copies": 1,
    "desc": "This skill should be used when the user asks to \"add MCP server\", \"integrate MCP\", \"configure MCP in plugin\", \"use .mcp.json\", \"set up Model Context Protocol\", \"connect external service\", mentions \"${CLAUDE_PLUGIN_ROOT} with MCP\", or discusses MCP server types (SSE, stdio, HTTP, WebSocket). Provides comprehensive guidance for integrating Model Context Protocol servers into Claude Code plugins for external tool and service integration.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -6195,6 +6580,17 @@
    "rescued_from_tmp": false,
    "source": "ecc",
    "title": "MCP Server Patterns"
+  },
+  {
+   "copies": 1,
+   "desc": "Transcode and package video, audio and images for every platform — H.264/H.265/AV1 and VP9 encodes, bitrate ladders, loudness normalisation, resolution ladders, thumbnails, sprite sheets, streaming manifests and ffmpeg presets. Use when the user needs platform-specific exports, to compress video, to build adaptive bitrate ladders, or to normalise audio loudness.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "media-transcode-pipeline",
+   "path": "skills/media-transcode-pipeline/",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
+   "title": "Media Transcode Pipeline"
   },
   {
    "copies": 1,
@@ -6472,6 +6868,17 @@
    "title": "Motion System v4.2"
   },
   {
+   "copies": 1,
+   "desc": "Generate music, sound effects, and ambient audio locally with open-source models — AudioCraft MusicGen and AudioGen, ACE-Step, YuE, Stable Audio Open, and Bark's audio modes — with model comparison, prompting, duration limits, and looping and mixing techniques for video. Use when the user wants background music, a soundtrack, a jingle, sound effects, or AI-generated music for a video.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "music-generation",
+   "path": "skills/music-generation/",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
+   "title": "Music and Sound Generation"
+  },
+  {
    "copies": 16,
    "desc": "MySQL and MariaDB schema, query, indexing, transaction, replication, and connection-pool patterns for production backends.",
    "desc_source": "yaml",
@@ -6736,14 +7143,14 @@
    "title": "Netlify Identity"
   },
   {
-   "copies": 1,
+   "copies": 2,
    "desc": "Guide for using Netlify Image CDN for image optimization and transformation. Use when serving optimized images, creating responsive image markup, setting up user-uploaded image pipelines, or configuring image transformations. Covers the /.netlify/images endpoint, query parameters, remote image allowlisting, clean URL rewrites, and composing uploads with Functions + Blobs.",
    "desc_source": "yaml",
    "locale_only": false,
    "name": "netlify-image-cdn",
    "path": "skills/netlify-image-cdn/",
-   "rescued_from_tmp": true,
-   "source": "plugin:netlify",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
    "title": "Netlify Image CDN"
   },
   {
@@ -7011,14 +7418,14 @@
    "title": "Shotgun Metagenomics"
   },
   {
-   "copies": 1,
+   "copies": 2,
    "desc": "Choose and apply automatic layout strategies for node-link diagrams and connected-node visuals. Use when the user asks how to auto-arrange nodes, reduce line crossings, route edges, avoid overlaps, stabilize layout, or choose graph-layout algorithms for network diagrams, dependency graphs, database schema diagrams, ERDs, state machines, decision trees, flow diagrams, box-and-line editors, or other line-connected nodes.",
    "desc_source": "yaml",
    "locale_only": false,
    "name": "node-link-and-diagram-layout",
    "path": "skills/node-link-and-diagram-layout/",
-   "rescued_from_tmp": true,
-   "source": "plugin:build-web-data-visualization",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
    "title": "Node-Link and Diagram Layout"
   },
   {
@@ -7749,6 +8156,17 @@
   },
   {
    "copies": 1,
+   "desc": "Use when writing a PR body.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "pr",
+   "path": "skills/pr/",
+   "rescued_from_tmp": false,
+   "source": "mattpocock-clone",
+   "title": "pr"
+  },
+  {
+   "copies": 1,
    "desc": "Precedent M&A transactions analysis with deal multiples and acquisition history",
    "desc_source": "yaml",
    "locale_only": false,
@@ -8021,6 +8439,17 @@
    "rescued_from_tmp": true,
    "source": "plugin:life-science-research",
    "title": "proteomexchange-skill"
+  },
+  {
+   "copies": 1,
+   "desc": "Build a throwaway prototype to answer a design question. Use when the user wants to sanity-check whether a state model or logic feels right, or explore what a UI should look like.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "prototype",
+   "path": "skills/prototype/",
+   "rescued_from_tmp": false,
+   "source": "mattpocock-clone",
+   "title": "Prototype"
   },
   {
    "copies": 1,
@@ -8375,14 +8804,14 @@
    "title": "Regex vs LLM for Structured Text Parsing"
   },
   {
-   "copies": 1,
+   "copies": 2,
    "desc": "Best practices for Remotion - Video creation in React",
    "desc_source": "yaml",
    "locale_only": false,
    "name": "remotion-best-practices",
    "path": "skills/remotion-best-practices/",
-   "rescued_from_tmp": true,
-   "source": "plugin:remotion",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
    "title": "remotion-best-practices"
   },
   {
@@ -8661,14 +9090,14 @@
    "title": "repo-scan"
   },
   {
-   "copies": 1,
+   "copies": 2,
    "desc": "Lay out and export data-rich reports and documents. Use when the user needs report structure, figure packaging, PDFs, PowerPoint or Google Slides automation, or programmatic insertion of visualizations, UML-like diagrams, or architecture diagrams into documents.",
    "desc_source": "yaml",
    "locale_only": false,
    "name": "reports-pdfs-and-slide-automation",
    "path": "skills/reports-pdfs-and-slide-automation/",
-   "rescued_from_tmp": true,
-   "source": "plugin:build-web-data-visualization",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
    "title": "Reports, PDFs, and Slide Automation"
   },
   {
@@ -8681,6 +9110,17 @@
    "rescued_from_tmp": true,
    "source": "plugin:superpowers",
    "title": "Requesting Code Review"
+  },
+  {
+   "copies": 1,
+   "desc": "Investigate a question against high-trust primary sources and capture the findings as a Markdown file in the repo. Use when the user wants a topic researched, docs or API facts gathered, or reading legwork delegated to a background agent.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "research",
+   "path": "skills/research/",
+   "rescued_from_tmp": false,
+   "source": "mattpocock-clone",
+   "title": "research"
   },
   {
    "copies": 1,
@@ -8725,6 +9165,17 @@
    "rescued_from_tmp": true,
    "source": "plugin:life-science-research",
    "title": "research-router-skill"
+  },
+  {
+   "copies": 1,
+   "desc": "Conduct a retrospective on a coding session.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "retro",
+   "path": "skills/retro/",
+   "rescued_from_tmp": false,
+   "source": "mattpocock-clone",
+   "title": "retro"
   },
   {
    "copies": 24,
@@ -8970,6 +9421,17 @@
   },
   {
    "copies": 1,
+   "desc": "Edits scripts, storyboards, voiceover copy, and narrative structure — shaping a draft for a specific format and audience without losing its spine. Use when the user brings a script, transcript, voiceover read, story outline, or long-form piece and asks to tighten it, restructure it, cut it to length, write hooks and titles, sharpen the narrative arc, or adapt it to a different runtime or format. Not for generating new video, and not for general long-form articles or blog posts — this skill is for material that has to survive being performed, narrated, or timed.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "script-and-story-editing",
+   "path": "skills/script-and-story-editing/",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
+   "title": "Script and Story Editing"
+  },
+  {
+   "copies": 1,
    "desc": "Process, quality-control, annotate, and visualize single-cell or single-nucleus RNA-seq datasets across tissues and species. Use when Codex needs to build, adapt, or review a general scRNA-seq QC pipeline; choose dataset-appropriate cell-level filters from QC distributions; run required scDblFinder-based doublet and ambient-RNA filtering; annotate cells with matched references or marker-based fallbacks; or generate global and per-group UMAP visualizations for large scRNA-seq datasets.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -9068,7 +9530,7 @@
    "title": "Sentry (Read-only Observability)"
   },
   {
-   "copies": 24,
+   "copies": 25,
    "desc": "Audit, plan, and implement SEO improvements across technical SEO, on-page optimization, structured data, Core Web Vitals, and content strategy. Use when the user wants better search visibility, SEO remediation, schema markup, sitemap/robots work, or keyword mapping.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -9110,6 +9572,17 @@
    "rescued_from_tmp": true,
    "source": "plugin:daloopa",
    "title": "setup"
+  },
+  {
+   "copies": 1,
+   "desc": "Configure this repo for the engineering skills: set up its issue tracker, triage label vocabulary, and domain doc layout. Run once before first use of the other engineering skills.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "setup-matt-pocock-skills",
+   "path": "skills/setup-matt-pocock-skills/",
+   "rescued_from_tmp": false,
+   "source": "mattpocock-clone",
+   "title": "Setup Matt Pocock's Skills"
   },
   {
    "copies": 1,
@@ -9443,6 +9916,17 @@
   },
   {
    "copies": 1,
+   "desc": "End-to-end pipeline for producing short-form vertical video (YouTube Shorts, TikTok, Instagram Reels) locally and with AI. Covers topic selection, script generation, TTS voiceover, stock or generated B-roll, auto-assembly with MoviePy or FFmpeg, caption burn-in, and multi-platform publishing. Use when the user wants to make a reel, a short, a TikTok, a Shorts video, or any vertical 9:16 social video.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "shorts-reels-pipeline",
+   "path": "skills/shorts-reels-pipeline/",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
+   "title": "Short-Form Vertical Video Pipeline"
+  },
+  {
+   "copies": 1,
    "desc": "Sign in with Vercel guidance — OAuth 2.0/OIDC identity provider for user authentication via Vercel accounts. Use when implementing user login with Vercel as the identity provider.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -9629,7 +10113,7 @@
    "title": "Smart File Renaming"
   },
   {
-   "copies": 24,
+   "copies": 25,
    "desc": "Weighted social-graph ranking for warm intro discovery, bridge scoring, and network gap analysis across X and LinkedIn. Use when the user wants the reusable graph-ranking engine itself, not the broader outreach or network-maintenance workflow layered on top of it.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -9638,6 +10122,17 @@
    "rescued_from_tmp": false,
    "source": "ecc",
    "title": "Social Graph Ranker"
+  },
+  {
+   "copies": 1,
+   "desc": "Plan, schedule, and publish social media content across platforms — content calendars, per-platform formatting, hashtag and metadata sets, UTM tagging, and cross-posting to Mastodon, Bluesky, LinkedIn, Reddit, and self-hosted feeds via open APIs. Use when the user wants a posting schedule, a content calendar, to publish across platforms, or to repurpose one piece of content per network.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "social-publish-scheduling",
+   "path": "skills/social-publish-scheduling/",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
+   "title": "Social Publish Scheduling"
   },
   {
    "copies": 8,
@@ -9706,14 +10201,14 @@
    "title": "Spring Boot Verification Loop"
   },
   {
-   "copies": 1,
+   "copies": 2,
    "desc": "Generate and normalize 2D sprite animations. Use when the user asks for full-strip generation from approved source frames, consistent anchor and scale normalization, or preview assets for browser-game animation.",
    "desc_source": "yaml",
    "locale_only": false,
    "name": "sprite-pipeline",
    "path": "skills/sprite-pipeline/",
-   "rescued_from_tmp": true,
-   "source": "plugin:game-studio",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
    "title": "Sprite Pipeline"
   },
   {
@@ -9737,6 +10232,17 @@
    "rescued_from_tmp": true,
    "source": "plugin:build-web-data-visualization",
    "title": "Statistical and Uncertainty Visualization"
+  },
+  {
+   "copies": 1,
+   "desc": "Find and download royalty-free stock photos, video, and music for content production — Pexels, Pixabay, Unsplash, Wikimedia Commons, and Internet Archive — with API usage, licence verification, search query strategies, and attribution requirements. Use when the user needs B-roll, background footage, stock images, or free music for a video or article.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "stock-media-sourcing",
+   "path": "skills/stock-media-sourcing/",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
+   "title": "Stock Media Sourcing"
   },
   {
    "copies": 60,
@@ -9781,6 +10287,17 @@
    "rescued_from_tmp": true,
    "source": "plugin:superpowers",
    "title": "Subagent-Driven Development"
+  },
+  {
+   "copies": 1,
+   "desc": "Generate, time, and burn-in subtitles and captions using local open-source tools — whisper.cpp and faster-whisper for transcription, pysrt and WebVTT for timing, ffmpeg for burn-in, and ASS styling for word-level animated captions. Use when the user wants subtitles, captions, closed captions, transcript of a video, or accessible captioning.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "subtitle-generation",
+   "path": "skills/subtitle-generation/",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
+   "title": "Subtitle Generation"
   },
   {
    "copies": 1,
@@ -9948,7 +10465,7 @@
    "title": "Systematic Debugging"
   },
   {
-   "copies": 8,
+   "copies": 9,
    "desc": "A creative-direction (taste) layer for music videos and short-form edits in the angelcore / cloud-trance / hyperpop visual family. Distills a named-genre aesthetic vocabulary, a mood + color + light system, and a beat-synced editing grammar, then chains ECC's video skills (video-editing, fal-ai-media, remotion-video-creation, motion-*, content-engine) into one production pipeline. Use when the work is not just making a video function but making it feel intentional, when building a music video, a fancam/edit, a moodboard-driven reel, or when choosing a coherent visual direction for AI-generated b-roll.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -9957,6 +10474,17 @@
    "rescued_from_tmp": false,
    "source": "ecc",
    "title": "Taste"
+  },
+  {
+   "copies": 1,
+   "desc": "Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions \"red-green-refactor\", or wants integration tests.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "tdd",
+   "path": "skills/tdd/",
+   "rescued_from_tmp": false,
+   "source": "mattpocock-clone",
+   "title": "Test-Driven Development"
   },
   {
    "copies": 76,
@@ -9968,6 +10496,17 @@
    "rescued_from_tmp": false,
    "source": "ecc",
    "title": "Test-Driven Development Workflow"
+  },
+  {
+   "copies": 1,
+   "desc": "Teach the user a new skill or concept, within this workspace.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "teach",
+   "path": "skills/teach/",
+   "rescued_from_tmp": false,
+   "source": "mattpocock-clone",
+   "title": "teach"
   },
   {
    "copies": 8,
@@ -10158,6 +10697,17 @@
   },
   {
    "copies": 1,
+   "desc": "Generate video from text or image prompts using local, open-source models — Wan2.2, HunyuanVideo, LTX-Video, CogVideoX, Mochi, and AnimateDiff — with practical guidance on VRAM budgets, model selection, resolution, and frame counts. Use when the user wants to create AI video clips on their own machine, generate a text-to-video shot, turn a prompt into a video, or run a local video generation model.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "text-to-video-local",
+   "path": "skills/text-to-video-local/",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
+   "title": "Local Text-to-Video Generation"
+  },
+  {
+   "copies": 1,
    "desc": "Use when Codex is already in the threat-modeling phase of a security scan, the user explicitly invokes $threat-model, or the user explicitly asks to create, update, or persist a repository threat model. Do not use as the primary trigger for full PR, commit, branch, patch, or repository scans.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -10190,6 +10740,17 @@
    "title": "Three.js and WebGL Data Visualization"
   },
   {
+   "copies": 1,
+   "desc": "Generate thumbnails for videos and articles that get clicked — local image generation for the base image, compositing text overlays with Pillow, A/B variants, platform aspect ratios, and the visual rules that make a thumbnail legible at small sizes. Use when the user wants a YouTube thumbnail, article cover image, social preview card, or wants to A/B test thumbnail designs.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "thumbnail-generator",
+   "path": "skills/thumbnail-generator/",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
+   "title": "Thumbnail Generation"
+  },
+  {
    "copies": 16,
    "desc": "Expert guidance for developing with the tinystruct Java framework. Use when working on the tinystruct codebase or any project built on tinystruct — including creating Application classes, @Action-mapped routes, unit tests, ActionRegistry, HTTP/CLI dual-mode handling, the built-in HTTP server, the event system, JSON with Builder/Builders, database persistence with AbstractData, POJO generation, Server-Sent Events (SSE), file uploads, and outbound HTTP networking.",
    "desc_source": "yaml",
@@ -10199,6 +10760,39 @@
    "rescued_from_tmp": false,
    "source": "ecc",
    "title": "tinystruct Development Patterns"
+  },
+  {
+   "copies": 1,
+   "desc": "Turn a decision you can't fully answer into a questionnaire for someone else to fill in.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "to-questionnaire",
+   "path": "skills/to-questionnaire/",
+   "rescued_from_tmp": false,
+   "source": "mattpocock-clone",
+   "title": "<Questionnaire title>"
+  },
+  {
+   "copies": 1,
+   "desc": "Turn the current conversation into a spec and publish it to the project issue tracker: no interview, just synthesis of what you've already discussed.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "to-spec",
+   "path": "skills/to-spec/",
+   "rescued_from_tmp": false,
+   "source": "mattpocock-clone",
+   "title": "to-spec"
+  },
+  {
+   "copies": 1,
+   "desc": "Break a plan, spec, or the current conversation into a set of tracer-bullet tickets, each declaring its blocking edges, published to the configured tracker (edges as text in one file per ticket locally, or native blocking links on a real tracker).",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "to-tickets",
+   "path": "skills/to-tickets/",
+   "rescued_from_tmp": false,
+   "source": "mattpocock-clone",
+   "title": "To Tickets"
   },
   {
    "copies": 24,
@@ -10246,6 +10840,17 @@
   },
   {
    "copies": 1,
+   "desc": "Move issues and external PRs through a state machine of triage roles, categorise, verify, grill if needed, and write agent-ready briefs.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "triage",
+   "path": "skills/triage/",
+   "rescued_from_tmp": false,
+   "source": "mattpocock-clone",
+   "title": "Triage"
+  },
+  {
+   "copies": 1,
    "desc": "Use when the user supplies or imports existing security findings, vulnerability reports, or security/vulnerability Jira/Linear tickets from scanners, advisories, GitHub, Atlassian Rovo, Linear, or similar backlog sources and wants static repo-impact triage. Do not use for discovery, duplicate-bug triage, validation, or fixes.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -10265,6 +10870,17 @@
    "rescued_from_tmp": true,
    "source": "plugin:atlassian-rovo",
    "title": "Triage Issue"
+  },
+  {
+   "copies": 1,
+   "desc": "Compose a complete video from a script by generating a voiceover with local TTS, timing visuals to the audio, and assembling the result — including script-to-shot planning, forced alignment, audio-driven video length, and background music mixing. Use when the user wants to turn a script or text into a narrated video, make an explainer, or produce a video with a synthetic voice.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "tts-to-video",
+   "path": "skills/tts-to-video/",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
+   "title": "Script to Narrated Video"
   },
   {
    "copies": 1,
@@ -10971,14 +11587,14 @@
    "title": "ukb-topmed-phewas-skill"
   },
   {
-   "copies": 1,
+   "copies": 2,
    "desc": "Design, critique, read, write, render, and implement UML and UML-like software diagrams. Use when the user mentions UML, sequence diagrams, class diagrams, activity diagrams, state machines, use case diagrams, component diagrams, deployment diagrams, object diagrams, package diagrams, profile diagrams, timing diagrams, communication diagrams, interaction overview diagrams, composite structure diagrams, ERDs, database schema diagrams, C4, BPMN, swimlanes, flowcharts, network diagrams, application architecture diagrams, software architecture diagrams, diagram-as-code, model-as-code, XMI, UMLDI, PlantUML, Mermaid, Graphviz DOT, D2, Structurizr, DBML, diagrams.net/draw.io, Kroki, or interactive diagram editors and explorers.",
    "desc_source": "yaml",
    "locale_only": false,
    "name": "uml-and-software-architecture-visualization",
    "path": "skills/uml-and-software-architecture-visualization/",
-   "rescued_from_tmp": true,
-   "source": "plugin:build-web-data-visualization",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
    "title": "UML and Software Architecture Visualization"
   },
   {
@@ -11268,7 +11884,18 @@
    "title": "Verification Loop Skill"
   },
   {
-   "copies": 33,
+   "copies": 1,
+   "desc": "Remove or replace backgrounds in video footage using local open-source tools — rembg with video support, MediaPipe Selfie Segmentation, Robust Video Matting, and FFmpeg chroma key — for green screen replacement, subject isolation, and compositing over new backgrounds. Use when the user wants to remove a video background, do green screen keying, cut out a subject from footage, or composite a person onto another background.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "video-background-removal",
+   "path": "skills/video-background-removal/",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
+   "title": "Video Background Removal"
+  },
+  {
+   "copies": 34,
    "desc": "AI-assisted video editing workflows for cutting, structuring, and augmenting real footage. Covers the full pipeline from raw capture through FFmpeg, Remotion, ElevenLabs, fal.ai, and final polish in Descript or CapCut. Use when the user wants to edit video, cut footage, create vlogs, or build video content.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -11277,6 +11904,28 @@
    "rescued_from_tmp": false,
    "source": "ecc",
    "title": "Video Editing"
+  },
+  {
+   "copies": 1,
+   "desc": "Translate and dub video — transcribe, translate subtitles and dialogue, synthesize localized speech, align it to the original lip movement, and mix the result with the original audio. Covers Whisper, LLM translation, local TTS, forced alignment, voice cloning for consistent speakers, and lip-sync models like MuseTalk and LatentSync. Use when the user wants a video in another language, dubbed audio, translated subtitles, or a localized version of their content.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "video-translation-dubbing",
+   "path": "skills/video-translation-dubbing/",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
+   "title": "Video Translation & Dubbing"
+  },
+  {
+   "copies": 1,
+   "desc": "Upscale video resolution and increase frame rate using local open-source tools — Real-ESRGAN, video2x, Waifu2x, and RIFE frame interpolation — including tiling for large videos, model selection, batch processing, and artifact avoidance. Use when the user wants to upscale a video, improve resolution, make a video smoother, increase FPS, or convert 24fps to 60fps.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "video-upscale-interpolate",
+   "path": "skills/video-upscale-interpolate/",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
+   "title": "Video Upscaling and Frame Interpolation"
   },
   {
    "copies": 24,
@@ -11334,6 +11983,17 @@
    "title": "Vite Patterns"
   },
   {
+   "copies": 1,
+   "desc": "Clone and convert voices locally with open-source tools — GPT-SoVITS for zero-shot cloning, RVC for voice conversion with training, OpenVoice for instant cloning, and So-VITS-SVC for singing conversion — covering model training, reference audio requirements, and where each fits. Use when the user wants to clone a voice, convert speech to sound like someone, train a voice model, or do AI voice covers.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "voice-cloning-rvc",
+   "path": "skills/voice-cloning-rvc/",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
+   "title": "Voice Cloning and Conversion"
+  },
+  {
    "copies": 8,
    "desc": "Vue.js 3 Composition API patterns, component architecture, reactivity best practices, Pinia state management, Vue Router navigation, and Nuxt SSR patterns. Activates for Vue, Nuxt, Vite, or Pinia projects.",
    "desc_source": "yaml",
@@ -11357,13 +12017,35 @@
   },
   {
    "copies": 1,
+   "desc": "Stop. That last message did not land: re-pitch it.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "wait-what",
+   "path": "skills/wait-what/",
+   "rescued_from_tmp": false,
+   "source": "mattpocock-clone",
+   "title": "wait-what"
+  },
+  {
+   "copies": 1,
+   "desc": "Plan a huge chunk of work (more than one agent session can hold) as a shared map of decision tickets on your issue tracker, and resolve them one at a time until the way to the destination is clear.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "wayfinder",
+   "path": "skills/wayfinder/",
+   "rescued_from_tmp": false,
+   "source": "mattpocock-clone",
+   "title": "wayfinder"
+  },
+  {
+   "copies": 2,
    "desc": "Prepare and optimize browser-game 3D assets. Use when the user asks for GLB or glTF shipping work, including Blender cleanup and export, collision or LOD setup, compression, texture packaging, and runtime validation.",
    "desc_source": "yaml",
    "locale_only": false,
    "name": "web-3d-asset-pipeline",
    "path": "skills/web-3d-asset-pipeline/",
-   "rescued_from_tmp": true,
-   "source": "plugin:game-studio",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
    "title": "Web 3D Asset Pipeline"
   },
   {
@@ -11389,14 +12071,14 @@
    "title": "Web Performance Audit"
   },
   {
-   "copies": 1,
+   "copies": 2,
    "desc": "Capture a website and create a HyperFrames video from it. Use when: (1) a user provides a URL and wants a video, (2) someone says \"capture this site\", \"turn this into a video\", \"make a promo from my site\", (3) the user wants a social ad, product tour, or any video based on an existing website, (4) the user shares a link and asks for any kind of video content. Even if the user just pastes a URL — this is the skill to use.",
    "desc_source": "yaml",
    "locale_only": false,
    "name": "website-to-hyperframes",
    "path": "skills/website-to-hyperframes/",
-   "rescued_from_tmp": true,
-   "source": "plugin:hyperframes",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
    "title": "Website to HyperFrames"
   },
   {
@@ -11467,6 +12149,17 @@
   },
   {
    "copies": 1,
+   "desc": "Generate an interactive bash wizard that walks a human through steps only they can perform. Use when provisioning infrastructure, setting up credentials or CI secrets, walking an unfamiliar third-party dashboard, or running a one-off migration or cutover. Don't invoke this for steps the agent can perform itself.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "wizard",
+   "path": "skills/wizard/",
+   "rescued_from_tmp": false,
+   "source": "mattpocock-clone",
+   "title": "Wizard"
+  },
+  {
+   "copies": 1,
    "desc": "Reviews and authors Cloudflare Workers code against production best practices. Load when writing new Workers, reviewing Worker code, configuring wrangler.jsonc, or checking for common Workers anti-patterns (streaming, floating promises, global state, secrets, bindings, observability). Biases towards retrieval from Cloudflare docs over pre-trained knowledge.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -11522,6 +12215,17 @@
   },
   {
    "copies": 1,
+   "desc": "Writing documents for agents. Use when creating or editing skills, or modifying AGENTS.md or CLAUDE.md.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "writing-for-agents",
+   "path": "skills/writing-for-agents/",
+   "rescued_from_tmp": false,
+   "source": "mattpocock-clone",
+   "title": "writing-for-agents"
+  },
+  {
+   "copies": 2,
    "desc": "This skill should be used when the user asks to \"create a hookify rule\", \"write a hook rule\", \"configure hookify\", \"add a hookify rule\", or needs guidance on hookify rule syntax and patterns.",
    "desc_source": "yaml",
    "locale_only": false,
@@ -11532,25 +12236,25 @@
    "title": "Writing Hookify Rules"
   },
   {
-   "copies": 1,
+   "copies": 2,
    "desc": "Use when you have a spec or requirements for a multi-step task, before touching code",
    "desc_source": "yaml",
    "locale_only": false,
    "name": "writing-plans",
    "path": "skills/writing-plans/",
-   "rescued_from_tmp": true,
-   "source": "plugin:superpowers",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
    "title": "Writing Plans"
   },
   {
-   "copies": 1,
+   "copies": 2,
    "desc": "Use when creating new skills, editing existing skills, or verifying skills work before deployment",
    "desc_source": "yaml",
    "locale_only": false,
    "name": "writing-skills",
    "path": "skills/writing-skills/",
-   "rescued_from_tmp": true,
-   "source": "plugin:superpowers",
+   "rescued_from_tmp": false,
+   "source": "local-project:content-creation-mcp",
    "title": "Writing Skills"
   },
   {

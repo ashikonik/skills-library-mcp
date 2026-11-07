@@ -4,8 +4,8 @@
 
 | | |
 |---|---|
-| Skills | **977** — instructions, playbooks and reference material the model follows |
-| Agents | **102** — specialised sub-agents invoked for one bounded role |
+| Skills | **1029** — instructions, playbooks and reference material the model follows |
+| Agents | **114** — specialised sub-agents invoked for one bounded role |
 | Held aside | 14 pipeline-internal agents (see `agents/_agent-specific/`) |
 | Inventory | `SKILLS_AND_AGENTS_REPORT.md` — full census with sources |
 | Machine index | `.library_data.json` |
@@ -174,29 +174,44 @@ every change, not on request.
 
 ## 4. Skill Catalogue by Domain
 
-All 977 skills, grouped. The **use when** column is condensed from each skill's own
+All 1029 skills, grouped. The **use when** column is condensed from each skill's own
 frontmatter description — read that file for the full text.
 
-### 4.1 Core engineering practice — 16 skills
+### 4.1 Core engineering practice — 31 skills
 
 | Skill | Use when |
 |---|---|
+| `ask-matt` | Ask which skill or flow fits your situation. A router over the skills in this repo. |
 | `code-tour` | Create CodeTour `.tour` files — persona-targeted, step-by-step walkthroughs with real file and line anchors. Use for onboarding... |
 | `codebase-onboarding` | Analyze an unfamiliar codebase and generate a structured onboarding guide with architecture map, key entry points, conventions, and... |
 | `codehealth-mcp` | Real-time structural Code Health via CodeScene MCP — review before edits, verify score deltas after changes, gate commits and PRs.... |
 | `coding-standards` | Baseline cross-project coding conventions for naming, readability, immutability, and code-quality review. Use detailed frontend or... |
 | `cpp-coding-standards` | C++ coding standards based on the C++ Core Guidelines (isocpp.github.io). Use when writing, reviewing, or refactoring C++ code to... |
+| `diagnosing-bugs` | Diagnosis loop for hard bugs and performance regressions. Use when the user says "diagnose"/"debug this", or reports something... |
 | `error-handling` | Patterns for robust error handling across TypeScript, Python, and Go. Covers typed errors, error boundaries, retries, circuit... |
 | `finishing-a-development-branch` | Use when implementation is complete, all tests pass, and you need to decide how to integrate the work - guides completion of... |
 | `gateguard` | Fact-forcing gate that blocks Edit/Write/Bash (including MultiEdit) and demands concrete investigation (importers, data schemas,... |
 | `git-workflow` | Git workflow patterns including branching strategies, commit conventions, merge vs rebase, conflict resolution, and collaborative... |
 | `github-ops` | GitHub repository operations, automation, and management. Issue triage, PR management, CI/CD operations, release management, and... |
+| `grill-me` | A relentless interview to sharpen a plan or design. |
+| `grilling` | Grill the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their thinking, or uses any... |
+| `handoff` | Compact the current conversation into a handoff document for another agent to pick up. |
+| `implement` | Implement a piece of work based on a spec or set of tickets. |
+| `implement-spec` | Implement the result of /to-spec and /to-tickets in code. |
 | `java-coding-standards` | Java coding standards for Spring Boot and Quarkus services: naming, immutability, Optional usage, streams, exceptions, generics,... |
+| `pr` | Use when writing a PR body. |
+| `prototype` | Build a throwaway prototype to answer a design question. Use when the user wants to sanity-check whether a state model or logic... |
 | `repo-scan` | Cross-stack source code asset audit — classifies every file, detects embedded third-party libraries, and delivers actionable... |
+| `retro` | Conduct a retrospective on a coding session. |
 | `run-pre-commit-checks` | Run the mandatory pre-commit checks before committing code. Includes lint, type checking, and unit tests. MUST be run before every... |
 | `search-first` | Research-before-coding workflow. Search for existing tools, libraries, and patterns before writing custom code. Systematizes the... |
 | `systematic-debugging` | Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes |
+| `teach` | Teach the user a new skill or concept, within this workspace. |
+| `to-questionnaire` | Turn a decision you can't fully answer into a questionnaire for someone else to fill in. |
 | `using-git-worktrees` | Use when starting feature work that needs isolation from current workspace or before executing implementation plans - ensures an... |
+| `wait-what` | Stop. That last message did not land: re-pitch it. |
+| `wayfinder` | Plan a huge chunk of work (more than one agent session can hold) as a shared map of decision tickets on your issue tracker, and... |
+| `wizard` | Generate an interactive bash wizard that walks a human through steps only they can perform. Use when provisioning infrastructure,... |
 
 ### 4.2 API & integration — 14 skills
 
@@ -217,7 +232,7 @@ frontmatter description — read that file for the full text.
 | `twilio-messaging-webhooks` | Receive and respond to inbound messages and track outbound delivery status via Twilio webhooks — across SMS, MMS, WhatsApp, and... |
 | `twilio-sendgrid-webhooks` | Track email delivery and engagement via SendGrid Event Webhooks. Covers all 11 event types (delivery + engagement), webhook handler... |
 
-### 4.3 Testing & QA — 31 skills
+### 4.3 Testing & QA — 32 skills
 
 | Skill | Use when |
 |---|---|
@@ -244,6 +259,7 @@ frontmatter description — read that file for the full text.
 | `run-e2e-tests` | Run E2E tests to verify complete user workflows like environment discovery, creation, and selection. Use this before releases or... |
 | `springboot-tdd` | Test-driven development for Spring Boot using JUnit 5, Mockito, MockMvc, Testcontainers, and JaCoCo. Use when adding features,... |
 | `springboot-verification` | Verification loop for Spring Boot projects: build, static analysis, tests with coverage, security scans, and diff review before... |
+| `tdd` | Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions "red-green-refactor", or wants... |
 | `tdd-workflow` | Use this skill when writing new features, fixing bugs, or refactoring code. Enforces test-driven development with 80%+ coverage... |
 | `test-driven-development` | Use when implementing any feature or bugfix, before writing implementation code |
 | `test-triage` | Triage macOS tests across Xcode and SwiftPM. Use when narrowing failures, explaining assertions or crashes, or separating setup... |
@@ -287,7 +303,7 @@ frontmatter description — read that file for the full text.
 | `twilio-security-hardening` | Secure Twilio applications against common attacks. Covers credential management (API keys vs auth tokens), request validation... |
 | `vercel-sandbox` | Vercel Sandbox guidance — ephemeral Firecracker microVMs for running untrusted code safely. Supports AI agents, code generation,... |
 
-### 4.5 AI & LLM engineering — 68 skills
+### 4.5 AI & LLM engineering — 69 skills
 
 | Skill | Use when |
 |---|---|
@@ -299,6 +315,7 @@ frontmatter description — read that file for the full text.
 | `agent-introspection-debugging` | Structured self-debugging workflow for AI agent failures using capture, diagnosis, contained recovery, and introspection reports. |
 | `agent-payment-x402` | Add x402 payment execution to AI agents with per-task budgets, spending controls, and non-custodial wallets. Supports Base through... |
 | `agent-self-evaluation` | Use after completing any non-trivial task. The agent self-rates its output on 5 axes — accuracy, completeness, clarity,... |
+| `agent-slide-decks` | Build slide decks programmatically — Marp, Slidev, reveal.js, python-pptx and HTML/CSS frameworks — with layouts, speaker notes,... |
 | `agent-sort` | Build an evidence-backed ECC install plan for a specific repo by sorting skills, commands, rules, hooks, and extras into DAILY vs... |
 | `ai-elements` | AI Elements component library guidance — pre-built React components for AI interfaces built on shadcn/ui. Use when building chat... |
 | `ai-first-engineering` | Engineering operating model for teams where AI agents generate a large share of implementation output. |
@@ -360,7 +377,7 @@ frontmatter description — read that file for the full text.
 | `zoom-virtual-agent-ios` | Zoom Virtual Agent iOS integration via WKWebView. Use for Swift/Objective-C script injection, message handlers, support_handoff... |
 | `zoom-virtual-agent-web` | Zoom Virtual Agent SDK for web embeds. Use for campaign or entry ID chat launch, event-driven controls, user context updates, and... |
 
-### 4.6 Data, databases & pipelines — 49 skills
+### 4.6 Data, databases & pipelines — 51 skills
 
 | Skill | Use when |
 |---|---|
@@ -380,6 +397,7 @@ frontmatter description — read that file for the full text.
 | `hubspot-pipeline-health` | Use when reviewing HubSpot pipeline health, forecasts, stale deals, slipping close dates, or open deal risks. |
 | `jpa-patterns` | JPA/Hibernate patterns for entity design, relationships, query optimization, transactions, auditing, indexing, pagination, and... |
 | `kotlin-exposed-patterns` | JetBrains Exposed ORM patterns including DSL queries, DAO pattern, transactions, HikariCP connection pooling, Flyway migrations,... |
+| `media-transcode-pipeline` | Transcode and package video, audio and images for every platform — H.264/H.265/AV1 and VP9 encodes, bitrate ladders, loudness... |
 | `mysql-patterns` | MySQL and MariaDB schema, query, indexing, transaction, replication, and connection-pool patterns for production backends. |
 | `native-data-fetching` | Use when implementing or debugging ANY network request, API call, or data fetching. Covers fetch API, React Query, SWR, error... |
 | `neon-postgres` | Guides and best practices for working with Neon Serverless Postgres. Covers getting started, local development with Neon, choosing... |
@@ -405,6 +423,7 @@ frontmatter description — read that file for the full text.
 | `render-postgres` | Sets up and optimizes Managed PostgreSQL on Render—connection strings (internal vs external), creation constraints, storage... |
 | `scrollytelling-and-parallax-data-visualization` | Design and implement parallax scrolling and scrollytelling data visualizations. Use when the user asks for parallax scrolling,... |
 | `shopify-custom-data` | MUST be used first when prompts mention Metafields or Metaobjects. Use Metafields and Metaobjects to model and store custom data... |
+| `shorts-reels-pipeline` | End-to-end pipeline for producing short-form vertical video (YouTube Shorts, TikTok, Instagram Reels) locally and with AI. Covers... |
 | `sprite-pipeline` | Generate and normalize 2D sprite animations. Use when the user asks for full-strip generation from approved source frames,... |
 | `supabase` | Use when doing ANY task involving Supabase. Triggers: Supabase products (Database, Auth, Edge Functions, Realtime, Storage,... |
 | `supabase-postgres-best-practices` | Postgres performance optimization and best practices from Supabase. Use this skill when writing, reviewing, or optimizing Postgres... |
@@ -470,7 +489,7 @@ frontmatter description — read that file for the full text.
 | `vercel-storage` | Vercel storage expert guidance — Blob, Edge Config, and Marketplace storage (Neon Postgres, Upstash Redis). Use when choosing,... |
 | `wrangler` | Cloudflare Workers CLI for deploying, developing, and managing Workers, KV, R2, D1, Vectorize, Hyperdrive, Workers AI, Containers,... |
 
-### 4.8 Architecture & design — 10 skills
+### 4.8 Architecture & design — 13 skills
 
 | Skill | Use when |
 |---|---|
@@ -478,18 +497,22 @@ frontmatter description — read that file for the full text.
 | `architecture-decision-records` | Capture architectural decisions made during Claude Code sessions as structured ADRs. Auto-detects decision moments, records... |
 | `artifact-template-system-design` | Create a document using the System Design template and its retained reference file. Use when the user selects or names System... |
 | `blueprint` | Turn a one-line objective into a step-by-step construction plan for multi-session, multi-agent engineering projects. Each step has... |
+| `codebase-design` | Shared vocabulary for designing deep modules. Use when the user wants to design or improve a module's interface, find deepening... |
 | `design-system` | Use this skill to generate or audit design systems, check visual consistency, and review PRs that touch styling. |
+| `domain-modeling` | Build and sharpen a project's domain model. Use when discussing codebase terminology, writing or editing a GLOSSARY.md, or... |
 | `hexagonal-architecture` | Design, implement, and refactor Ports & Adapters systems with clear domain boundaries, dependency inversion, and testable use-case... |
+| `improve-codebase-architecture` | Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick. |
 | `twilio-customer-support-architect` | Planning skill for building customer service and support systems. Qualifies the developer's needs across the support ladder... |
 | `twilio-webhook-architecture` | Design, secure, and operate Twilio webhook endpoints. Covers inbound event handling, status callbacks, signature validation,... |
 | `uml-and-software-architecture-visualization` | Design, critique, read, write, render, and implement UML and UML-like software diagrams. Use when the user mentions UML, sequence... |
 | `wix-design-system` | Wix Design System component reference. Use when building UI with @wix/design-system, choosing components, checking props and... |
 
-### 4.9 Frontend, UI & accessibility — 43 skills
+### 4.9 Frontend, UI & accessibility — 44 skills
 
 | Skill | Use when |
 |---|---|
 | `artifact-template-design-report` | Create a document using the Design Report template and its retained reference file. Use when the user selects or names Design... |
+| `blender-3d-content` | Create 3D content in Blender headlessly — product renders, animations, scene composition, exports to glTF/FBX/USD, and rendering... |
 | `blender-motion-state-inspection` | Use this skill when inspecting Blender characters, rigs, poses, animation retargeting, ground contact, facing direction, or... |
 | `boltz-protein-design` | Design new protein binders with Boltz. Use when generating protein, peptide, antibody, nanobody, or custom binder candidates for a... |
 | `boltz-small-molecule-design` | Design new small-molecule binders with Boltz. Use when generating novel ligands or hits for a target without a fixed compound... |
@@ -631,7 +654,7 @@ frontmatter description — read that file for the full text.
 | `zoom-video-sdk-flutter` | Zoom Video SDK for Flutter. Use when building custom video session apps in Flutter with flutter_zoom_videosdk, event-driven... |
 | `zoom-video-sdk-ios` | Zoom Video SDK for iOS native apps. Use when building custom iOS video sessions with full UI control, token-based session auth, and... |
 
-### 4.14 Documents, writing & content — 36 skills
+### 4.14 Documents, writing & content — 38 skills
 
 | Skill | Use when |
 |---|---|
@@ -670,9 +693,11 @@ frontmatter description — read that file for the full text.
 | `session-report` | Generate an explorable HTML report of Claude Code session usage (tokens, cache, subagents, skills, expensive prompts) from... |
 | `sharepoint-shared-doc-maintenance` | Maintain shared SharePoint strategy, roadmap, planning, or status documents from changing source documents. Use when the user wants... |
 | `spec-to-backlog` | Automatically convert Confluence specification documents into structured Jira backlogs with Epics and implementation tickets. When... |
+| `video-translation-dubbing` | Translate and dub video — transcribe, translate subtitles and dialogue, synthesize localized speech, align it to the original lip... |
 | `visa-doc-translate` | Translate visa application documents (images) to English and create a bilingual PDF with original and translation |
+| `writing-for-agents` | Writing documents for agents. Use when creating or editing skills, or modifying AGENTS.md or CLAUDE.md. |
 
-### 4.15 Research & analysis — 11 skills
+### 4.15 Research & analysis — 12 skills
 
 | Skill | Use when |
 |---|---|
@@ -681,6 +706,7 @@ frontmatter description — read that file for the full text.
 | `market-research` | Conduct market research, competitive analysis, investor due diligence, and industry intelligence with source attribution and... |
 | `notion-research-documentation` | Research across Notion and synthesize into structured documentation; use when gathering info from multiple Notion sources to... |
 | `prediction-market-oracle-research` | Research prediction markets as data sources or oracle signals for products, agents, dashboards, and corporate decision... |
+| `research` | Investigate a question against high-trust primary sources and capture the findings as a Markdown file in the repo. Use when the... |
 | `research-note` | Generate a professional Word document research note |
 | `research-ops` | Evidence-first current-state research workflow for ECC. Use when the user wants fresh facts, comparisons, enrichment, or a... |
 | `research-partner` | Rigorous research support - structured literature reviews, taxonomy construction, constructive critique of papers, multi-stance... |
@@ -793,7 +819,7 @@ frontmatter description — read that file for the full text.
 | `tearsheet` | Quick one-page company overview and snapshot |
 | `working-capital` | Cash conversion cycle, earnings quality, and working capital deep-dive |
 
-### 4.18 Sales, outreach & marketing — 56 skills
+### 4.18 Sales, outreach & marketing — 57 skills
 
 | Skill | Use when |
 |---|---|
@@ -837,6 +863,7 @@ frontmatter description — read that file for the full text.
 | `slack-outgoing-message` | Primary skill for composing, drafting, or refining any outbound Slack content. Use this whenever the task will require using... |
 | `slack-reply-drafting` | Draft Slack replies from available context. Use when the user wants help finding messages that likely need a response and preparing... |
 | `social-graph-ranker` | Weighted social-graph ranking for warm intro discovery, bridge scoring, and network gap analysis across X and LinkedIn. Use when... |
+| `social-publish-scheduling` | Plan, schedule, and publish social media content across platforms — content calendars, per-platform formatting, hashtag and... |
 | `social-publisher` | Agent-driven scheduling and publishing of social media posts across 13 platforms via SocialClaw. Use when the user wants to publish... |
 | `teams` | Search through Microsoft Teams chats or channels, triage unread or recent activity, draft follow-ups, and manage Planner tasks... |
 | `teams-channel-summarization` | Summarize activity from one Microsoft Teams channel or one scoped Teams conversation and return a concise recap or post-ready... |
@@ -854,7 +881,7 @@ frontmatter description — read that file for the full text.
 | `wix-headless` | Build a complete Wix Managed Headless site from a single prompt, OR connect an existing project (HTML/JSX/Vite app, Claude Design... |
 | `wix-manage` | Wix business solution management recipes — REST API operations for configuring and managing Wix business solutions. Routes to:... |
 
-### 4.19 Communication & productivity — 101 skills
+### 4.19 Communication & productivity — 102 skills
 
 | Skill | Use when |
 |---|---|
@@ -882,6 +909,7 @@ frontmatter description — read that file for the full text.
 | `google-drive` | Use connected Google Drive as the single entrypoint for Drive, Docs, Sheets, and Slides work. Use when the user wants to find,... |
 | `google-drive-comments` | Write, reply to, and resolve Google Drive comments on Docs, Sheets, Slides, and Drive files with evidence-backed location context.... |
 | `google-sheets` | Analyze and edit connected Google Sheets with range precision. Use when the user wants to create Google Sheets, find a spreadsheet,... |
+| `grill-with-docs` | A relentless interview to sharpen a plan or design, which also creates docs (ADR's and glossary) as we go. |
 | `linear` | Manage issues, projects & team workflows in Linear. Use when the user wants to read, create or updates tickets in Linear. |
 | `m5-onboard` | End-to-end onboarding for a freshly-plugged-in M5Stack ESP32 device (Cardputer, Cardputer-Adv, Core, CoreS3, Stick) — detect on... |
 | `magicpath` | Use when the user mentions MagicPath, designs, UI components, themes, canvas selections, or repo-to-canvas UI work; run... |
@@ -975,21 +1003,27 @@ frontmatter description — read that file for the full text.
 | `network-config-validation` | Pre-deployment checks for router and switch configuration, including dangerous commands, duplicate addresses, subnet overlaps,... |
 | `routing-middleware` | Vercel Routing Middleware guidance — request interception before cache, rewrites, redirects, personalization. Works with any... |
 
-### 4.21 Game, 3D & video — 9 skills
+### 4.21 Game, 3D & video — 15 skills
 
 | Skill | Use when |
 |---|---|
+| `comfyui-video-workflows` | Build and run ComfyUI workflows for video generation and animation, including Wan and LTX-Video model wrappers, graph structure,... |
 | `game-playtest` | Run browser-game playtests and frontend QA. Use when the user asks for smoke tests, screenshot-based verification, browser... |
 | `game-studio` | Route early browser-game work. Use when the user needs stack selection and workflow planning across design, implementation, assets,... |
 | `heygen-avatar` | Create a persistent HeyGen avatar — a reusable face + voice identity for the agent, the user, or any named character — powered by... |
 | `heygen-video` | Generate HeyGen presenter videos via the v3 Video Agent pipeline — handles Frame Check (aspect ratio correction), prompt... |
 | `manim-video` | Build reusable Manim explainers for technical concepts, graphs, system diagrams, and product walkthroughs, then hand off to the... |
 | `phaser-2d-game` | Implement 2D browser games with Phaser. Use when the user wants a Phaser, TypeScript, and Vite stack for scenes, gameplay systems,... |
+| `subtitle-generation` | Generate, time, and burn-in subtitles and captions using local open-source tools — whisper.cpp and faster-whisper for... |
+| `text-to-video-local` | Generate video from text or image prompts using local, open-source models — Wan2.2, HunyuanVideo, LTX-Video, CogVideoX, Mochi, and... |
 | `three-webgl-game` | Implement browser-game runtimes with plain Three.js. Use when the user wants imperative scene control in TypeScript or Vite with... |
+| `tts-to-video` | Compose a complete video from a script by generating a voiceover with local TTS, timing visuals to the audio, and assembling the... |
+| `video-background-removal` | Remove or replace backgrounds in video footage using local open-source tools — rembg with video support, MediaPipe Selfie... |
 | `video-editing` | AI-assisted video editing workflows for cutting, structuring, and augmenting real footage. Covers the full pipeline from raw... |
+| `video-upscale-interpolate` | Upscale video resolution and increase frame rate using local open-source tools — Real-ESRGAN, video2x, Waifu2x, and RIFE frame... |
 | `web-game-foundations` | Set browser-game architecture before implementation. Use when the user needs engine choice, simulation and render boundaries, input... |
 
-### 4.22 Skill & agent authoring — 33 skills
+### 4.22 Skill & agent authoring — 34 skills
 
 | Skill | Use when |
 |---|---|
@@ -1015,6 +1049,7 @@ frontmatter description — read that file for the full text.
 | `proteomexchange-skill` | Submit compact ProteomeXchange PROXI requests for datasets, libraries, peptidoforms, proteins, PSMs, spectra, and USI examples. Use... |
 | `rnacentral-skill` | Submit compact RNAcentral API requests for RNA entry browsing, single-entry lookup, and cross-reference retrieval. Use when a user... |
 | `rules-distill` | Scan skills to extract cross-cutting principles and distill them into rules — append, revise, or create new rule files |
+| `setup-matt-pocock-skills` | Configure this repo for the engineering skills: set up its issue tracker, triage label vocabulary, and domain doc layout. Run once... |
 | `skill-comply` | Visualize whether skills, rules, and agent definitions are actually followed — auto-generates scenarios at 3 prompt strictness... |
 | `skill-creator` | Create new skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill from... |
 | `skill-creator-plus` | Create new skills, modify and improve existing skills, and measure skill performance. Use this whenever a user wants to build a... |
@@ -1053,13 +1088,14 @@ frontmatter description — read that file for the full text.
 | `stripe-best-practices` | Guides Stripe integration decisions — API selection (Checkout Sessions vs PaymentIntents), Connect platform setup (Accounts v2,... |
 | `upgrade-stripe` | Guide for upgrading Stripe API versions and SDKs |
 
-### 4.24 Agent orchestration & workflows — 31 skills
+### 4.24 Agent orchestration & workflows — 32 skills
 
 | Skill | Use when |
 |---|---|
 | `agentic-engineering` | Operate as an agentic engineer using eval-first execution, decomposition, and cost-aware model routing. Use when AI agents perform... |
 | `agentic-os` | Build persistent multi-agent operating systems on Claude Code. Covers kernel architecture, specialist agents, slash commands,... |
 | `autonomous-loops` | Patterns and architectures for autonomous Claude Code loops — from simple sequential pipelines to RFC-driven multi-agent DAG systems. |
+| `background-removal-segmentation` | Remove backgrounds from images and segment subjects using local open-source tools — rembg with BiRefNet and U²-Net models, IOPaint... |
 | `continuous-learning` | [DEPRECATED - use continuous-learning-v2] Legacy v1 stop-hook skill extractor. v2 is a strict superset with instinct-based,... |
 | `continuous-learning-v2` | Instinct-based learning system that observes sessions via hooks, creates atomic instincts with confidence scoring, and evolves them... |
 | `council` | Convene a four-voice council for ambiguous decisions, tradeoffs, and go/no-go calls. Use when multiple valid paths exist and you... |
@@ -1089,7 +1125,7 @@ frontmatter description — read that file for the full text.
 | `using-superpowers` | Use when starting any conversation - establishes how to find and use skills, requiring Skill tool invocation before ANY response... |
 | `workflow` | Vercel Workflow DevKit (WDK) expert guidance. Use when building durable workflows, long-running tasks, API routes or agents that... |
 
-### 4.25 Code review & quality — 17 skills
+### 4.25 Code review & quality — 19 skills
 
 | Skill | Use when |
 |---|---|
@@ -1098,6 +1134,7 @@ frontmatter description — read that file for the full text.
 | `fix-finding` | Use when the user explicitly asks to fix and verify a validated or plausible security finding. Do not use as the primary trigger... |
 | `gap-analysis` | Data Room Gap Analysis skill for Datasite deal rooms. Use this skill whenever a sell-side deal team wants to audit what is missing,... |
 | `investigation-mode` | Orchestrated debugging coordinator. Triggers on frustration signals (stuck, hung, broken, waiting) and systematically triages:... |
+| `mattpocock-code-review` | Review the changes since a fixed point (commit, branch, tag, or merge-base) along two axes: Standards (does the code follow this... |
 | `plankton-code-quality` | Write-time code quality enforcement using Plankton — auto-formatting, linting, and Claude-powered fixes on every file edit via hooks. |
 | `precedent-transactions` | Precedent M&A transactions analysis with deal multiples and acquisition history |
 | `production-audit` | Local-evidence production readiness audit for shipped apps, pre-launch reviews, post-merge checks, and "what breaks in prod?"... |
@@ -1106,6 +1143,7 @@ frontmatter description — read that file for the full text.
 | `requesting-code-review` | Use when completing tasks, implementing major features, or before merging to verify work meets requirements |
 | `risk-analysis-audit` | Risk Analysis Audit skill for Datasite deal rooms. Use this skill whenever a sell-side deal team wants to audit, review, or flag... |
 | `scribe` | Use when using Scribe. |
+| `triage` | Move issues and external PRs through a state machine of triage roles, categorise, verify, grill if needed, and write agent-ready... |
 | `triage-finding` | Use when the user supplies or imports existing security findings, vulnerability reports, or security/vulnerability Jira/Linear... |
 | `triage-issue` | Intelligently triage bug reports and error messages by searching for duplicates in Jira and offering to create new issues or add... |
 | `validation` | Use when Codex is already in the validation phase of a security scan or the user explicitly asks to determine whether one or more... |
@@ -1248,7 +1286,7 @@ frontmatter description — read that file for the full text.
 | `pytorch-patterns` | PyTorch deep learning patterns and best practices for building robust, efficient, and reproducible training pipelines, model... |
 | `transformers-js` | Use Transformers.js to run state-of-the-art machine learning models directly in JavaScript/TypeScript. Supports NLP (text... |
 
-### 4.32 Product, planning & team ops — 29 skills
+### 4.32 Product, planning & team ops — 31 skills
 
 | Skill | Use when |
 |---|---|
@@ -1278,6 +1316,8 @@ frontmatter description — read that file for the full text.
 | `setup` | Verify Daloopa MCP connection and show available skills |
 | `team-builder` | Interactive agent picker for composing and dispatching parallel teams |
 | `telemetry` | Add and verify lightweight macOS runtime telemetry. Use when wiring Logger events or inspecting logs for windows, sidebars, menus,... |
+| `to-spec` | Turn the current conversation into a spec and publish it to the project issue tracker: no interview, just synthesis of what you've... |
+| `to-tickets` | Break a plan, spec, or the current conversation into a set of tracer-bullet tickets, each declaring its blocking edges, published... |
 | `turbopack` | Turbopack expert guidance. Use when configuring the Next.js bundler, optimizing HMR, debugging build issues, or understanding the... |
 | `turborepo` | Turborepo expert guidance. Use when setting up or optimizing monorepo builds, configuring task caching, remote caching, parallel... |
 | `writing-plans` | Use when you have a spec or requirements for a multi-step task, before touching code |
@@ -1344,9 +1384,26 @@ frontmatter description — read that file for the full text.
 | `ponytail-help` | Quick reference for ponytail levels, skills and commands. One-shot display. Use for /ponytail-help, "ponytail help", "how do I use... |
 | `ponytail-review` | Quality review of a change: is the logic right, is it safe, does it hold under real load, is risky code tested, is it fast enough,... |
 
+### 4.39 Other / uncategorised — 12 skills
+
+| Skill | Use when |
+|---|---|
+| `audio-separation` | Split audio into stems — vocals, drums, bass, other — with local open-source tools like Demucs and Spleeter, for remixing, sample... |
+| `comfyui-image-workflows` | Build and run ComfyUI workflows for image generation and editing — SDXL, SD 1.5, Flux, ControlNet, IPAdapter, inpainting,... |
+| `diagram-generation` | Generate technical and explanatory diagrams — flowcharts, sequence diagrams, architecture diagrams, ERDs, class diagrams and... |
+| `lip-sync` | Sync mouth movement to audio in video using local open-source models — MuseTalk, LatentSync, Wav2Lip, and VideoRetalking — with... |
+| `local-diffusion-suite` | Choose and run local open-source image generation tools — AUTOMATIC1111 WebUI, Forge, InvokeAI, Fooocus, Diffusers, and Flux — with... |
+| `local-tts-engines` | Generate speech locally with open-source TTS engines — Piper, Coqui XTTS, Kokoro, Bark, VoxCPM, CosyVoice, Qwen3-TTS, Dia, ChatTTS,... |
+| `long-to-short-repurpose` | Extract short-form clips from long-form video — detecting highlight moments, scoring for virality, generating vertical reframing... |
+| `music-generation` | Generate music, sound effects, and ambient audio locally with open-source models — AudioCraft MusicGen and AudioGen, ACE-Step, YuE,... |
+| `script-and-story-editing` | Edits scripts, storyboards, voiceover copy, and narrative structure — shaping a draft for a specific format and audience without... |
+| `stock-media-sourcing` | Find and download royalty-free stock photos, video, and music for content production — Pexels, Pixabay, Unsplash, Wikimedia... |
+| `thumbnail-generator` | Generate thumbnails for videos and articles that get clicked — local image generation for the base image, compositing text overlays... |
+| `voice-cloning-rvc` | Clone and convert voices locally with open-source tools — GPT-SoVITS for zero-shot cloning, RVC for voice conversion with training,... |
+
 ## 5. Agent Catalogue by Function
 
-All 102 agents. **Model** is the model the definition requests; **Tools** is its
+All 114 agents. **Model** is the model the definition requests; **Tools** is its
 allow-list. Read the agent file before invoking — each carries its own process.
 
 ### Security — 6 agents
@@ -1527,6 +1584,23 @@ Each covers its language's idioms, security and performance. Most state *"MUST B
 | `swift-reviewer` | Expert Swift code reviewer specializing in protocol-oriented design, value semantics, ARC memory management, Swift Concurrency, and idiomatic patterns.... | sonnet | ["Read", "Grep", "Glob", "Bash"] |
 | `typescript-reviewer` | Expert TypeScript/JavaScript code reviewer specializing in type safety, async correctness, Node/web security, and idiomatic patterns. Use for all... | sonnet | ["Read", "Grep", "Glob", "Bash"] |
 | `vue-reviewer` | Expert Vue.js code reviewer specializing in Composition API correctness, reactivity pitfalls, component architecture, template security, and... | sonnet | ["Read", "Grep", "Glob", "Bash"] |
+
+### Other — 12 agents
+
+| Agent | Role | Model |
+|---|---|---|
+| `cinematic-video-editor` | Video editor for narrative and cinematic work — assembly, pacing, transitions, colour grading, sound design, and final delivery. Use for story edits,... | sonnet |
+| `comfyui-workflow-builder` | ComfyUI workflow builder — constructing graph JSON for image and video generation, wiring checkpoints, samplers, ControlNet, IP-Adapter, LoRAs, VAEs,... | sonnet |
+| `image-art-director` | Image art director for generating and refining AI images — prompt construction, model and checkpoint selection, style consistency across a set,... | sonnet |
+| `lip-sync-technician` | Lip-sync technician for driving mouth movement from a replacement audio track — MuseTalk, LatentSync, Wav2Lip, VideoRetalking, and SadTalker, with... | sonnet |
+| `media-pipeline-engineer` | Media pipeline engineer — building reproducible ffmpeg-based pipelines that ingest, transcode, normalise, caption, and deliver video and audio for... | sonnet |
+| `script-and-story-editor` | Script and story editor — shaping a script for voiceover, tightening a long piece into a short, building narrative structure, writing hooks and titles,... | sonnet |
+| `seo-content-strategist` | SEO content strategist — keyword research and mapping, content briefs, topical clustering, on-page optimisation, internal linking, and content refresh... | sonnet |
+| `short-form-producer` | Short-form video producer for vertical clips — finding the hook, writing the script, cutting the footage, reframing to 9:16, adding captions, and... | sonnet |
+| `social-publish-manager` | Social publish manager — building a content calendar, adapting one idea per platform, writing platform-native copy and hashtag sets, tagging links with... | sonnet |
+| `stock-media-researcher` | Stock media researcher — sourcing royalty-free photos, video, and music from Pexels, Unsplash, Wikimedia Commons, Internet Archive, and Pixabay, with... | sonnet |
+| `thumbnail-designer` | Thumbnail designer — generating, compositing, and testing thumbnails for video, articles, and social posts, with legible typography, contrast testing,... | sonnet |
+| `voice-and-sound-designer` | Voice and sound designer — selecting a TTS engine, writing for the ear, cloning and converting voices, designing a soundscape with generated music and... | sonnet |
 
 ### Held aside — 14 pipeline-internal agents
 

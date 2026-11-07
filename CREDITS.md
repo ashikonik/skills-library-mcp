@@ -12,52 +12,54 @@ away from what actually shipped.
 
 | | |
 |---|---:|
-| Published entries | 1088 |
-| Distinct authors and organisations | 56 |
+| Published entries | 1152 |
+| Distinct authors and organisations | 57 |
 
 ## By author
 
 | Author / organisation | Entries | Licence | Upstream |
 |---|---:|---|---|
 | Affaan Mustafa (affaan-m/ECC) *(some under terms)* | 339 | MIT | [ECC](https://github.com/affaan-m/ECC) |
-| OpenAI *(some under terms)* | 227 | Apache-2.0, MIT, Proprietary | — |
+| OpenAI *(some under terms)* | 221 | Apache-2.0, MIT, Proprietary | — |
 | Anthropic *(some under terms)* | 60 | Apache-2.0, SEE LICENSE IN LICENSE | — |
+| Local project: content-creation-mcp | 56 | Apache-2.0, MIT | — |
 | Twilio | 55 | MIT | [ai](https://github.com/twilio/ai) |
 | Zoom | 55 | MIT | [zoom-plugin-codex](https://github.com/zoom/zoom-plugin-codex) |
-| Vercel Labs | 47 | Apache-2.0 | [vercel-plugin](https://github.com/vercel/vercel-plugin) |
+| Vercel Labs | 46 | Apache-2.0 | [vercel-plugin](https://github.com/vercel/vercel-plugin) |
+| Matt Pocock | 27 | MIT | [skills](https://github.com/mattpocock/skills) |
 | Daloopa | 21 | Apache-2.0 | [daloopa-plugin-codex](https://github.com/daloopa/daloopa-plugin-codex) |
 | Render | 21 | MIT | [render-codex-plugin](https://github.com/renderinc/render-codex-plugin) |
 | Shopify | 20 | MIT | [Shopify-AI-Toolkit](https://github.com/Shopify/Shopify-AI-Toolkit) |
 | Microsoft *(some under terms)* | 18 | MIT, other (unrecognised) | — |
 | Figma *(some under terms)* | 16 | LicenseRef-Figma-Developer-Terms | [plugins](https://github.com/openai/plugins) |
-| Jesse Vincent | 14 | MIT | [superpowers](https://github.com/obra/superpowers) |
 | Expo Team | 13 | MIT | [expo](https://github.com/expo/skills/tree/main/plugins/expo) |
 | NVIDIA | 13 | Apache-2.0 AND CC-BY-4.0 | [skills](https://github.com/NVIDIA/skills) |
-| Netlify | 12 | MIT | [plugins](https://github.com/openai/plugins) |
+| Jesse Vincent | 12 | MIT | [superpowers](https://github.com/obra/superpowers) |
 | Hugging Face | 11 | MIT | [plugins](https://github.com/openai/plugins) |
+| Netlify | 11 | MIT | [plugins](https://github.com/openai/plugins) |
 | Google (Antigravity) *(some under terms)* | 10 | — | — |
 | Cloudflare | 9 | MIT | [plugins](https://github.com/openai/plugins) |
 | Moody's | 9 | MIT | [plugins](https://github.com/openai/plugins) |
 | Prisma (prisma/prisma) | 9 | MIT | [prisma](https://github.com/prisma/prisma) |
 | Boltz | 8 | MIT | [boltz-api-skills](https://github.com/boltz-bio/boltz-api-skills) |
 | Datasite | 8 | MIT | [plugins](https://github.com/openai/plugins) |
-| HeyGen | 7 | Apache-2.0, MIT | — |
 | This library (hand-authored) *(some under terms)* | 7 | Apache-2.0, MIT | — |
 | Dietrich Gebert | 6 | MIT | [ponytail](https://github.com/dietrichgebert/ponytail) |
-| Superhuman | 6 | MIT | [mcp-mail](https://github.com/superhuman/mcp-mail) |
 | Atlassian | 5 | MIT | [plugins](https://github.com/openai/plugins) |
 | Deepnote | 5 | Apache-2.0 | [deepnote](https://github.com/openai/plugins/tree/main/plugins/deepnote) |
+| Superhuman | 5 | MIT | [mcp-mail](https://github.com/superhuman/mcp-mail) |
 | CircleCI | 4 | MIT | [skills](https://github.com/circleci-public/skills) |
 | HubSpot | 4 | MIT | [plugins](https://github.com/openai/plugins) |
-| Midpage | 4 | MIT | [plugins](https://github.com/openai/plugins) |
 | Mixpanel | 4 | MIT | [mixpanel-headless](https://github.com/mixpanel/mixpanel-headless) |
 | Wix | 4 | MIT | [skills](https://github.com/wix/skills) |
 | Airtable | 3 | MIT | [skills](https://github.com/airtable/skills) |
-| Canva | 3 | MIT | [plugins](https://github.com/openai/plugins) |
 | Chronograph | 3 | MIT | [plugins](https://github.com/openai/plugins) |
 | GitHub (Copilot Chat) *(some under terms)* | 3 | — | [vscode-copilot-chat](https://github.com/microsoft/vscode-copilot-chat) |
+| HeyGen | 3 | Apache-2.0, MIT | — |
 | Morningstar | 3 | MIT | [morningstar-plugins](https://github.com/Morningstar/morningstar-plugins) |
 | base44 | 3 | MIT | [skills](https://github.com/base44/skills) |
+| Canva | 2 | MIT | [plugins](https://github.com/openai/plugins) |
+| Midpage | 2 | MIT | [plugins](https://github.com/openai/plugins) |
 | Neon | 2 | Apache-2.0 | [plugins](https://github.com/openai/plugins) |
 | Replay | 2 | MIT | [plugins](https://github.com/replayio/plugins) |
 | BrightHire | 1 | MIT | [brighthire-codex-plugin](https://github.com/brighthire/brighthire-codex-plugin) |
@@ -70,7 +72,6 @@ away from what actually shipped.
 | MagicPathAI *(some under terms)* | 1 | UNLICENSED | [agent-skills](https://github.com/MagicPathAI/agent-skills) |
 | Paul Bakaus | 1 | Apache-2.0 | [impeccable](https://github.com/pbakaus/impeccable) |
 | PostHog | 1 | MIT | [plugins](https://github.com/openai/plugins) |
-| Remotion | 1 | MIT | [remotion](https://github.com/remotion-dev/remotion) |
 | Sebastián Ramírez (fastapi/typer) | 1 | MIT | [typer](https://github.com/fastapi/typer) |
 | Stripe | 1 | MIT | [plugins](https://github.com/openai/plugins) |
 | Supabase | 1 | MIT | [supabase-plugin](https://github.com/supabase-community/supabase-plugin) |
@@ -258,12 +259,15 @@ along. Those notices, verbatim:
   — <https://github.com/affaan-m/ECC>
 - **OpenAI** — Apache-2.0, MIT, Proprietary
 - **Anthropic** — Apache-2.0, SEE LICENSE IN LICENSE
+- **Local project: content-creation-mcp** — Apache-2.0, MIT
 - **Twilio** — MIT
   — <https://github.com/twilio/ai>
 - **Zoom** — MIT
   — <https://github.com/zoom/zoom-plugin-codex>
 - **Vercel Labs** — Apache-2.0
   — <https://github.com/vercel/vercel-plugin>
+- **Matt Pocock** — MIT
+  — <https://github.com/mattpocock/skills>
 - **Daloopa** — Apache-2.0
   — <https://github.com/daloopa/daloopa-plugin-codex>
 - **Render** — MIT
@@ -273,15 +277,15 @@ along. Those notices, verbatim:
 - **Microsoft** — MIT, other (unrecognised)
 - **Figma** — LicenseRef-Figma-Developer-Terms
   — <https://github.com/openai/plugins>
-- **Jesse Vincent** — MIT
-  — <https://github.com/obra/superpowers>
 - **Expo Team** — MIT
   — <https://github.com/expo/skills/tree/main/plugins/expo>
 - **NVIDIA** — Apache-2.0 AND CC-BY-4.0
   — <https://github.com/NVIDIA/skills>
-- **Netlify** — MIT
-  — <https://github.com/openai/plugins>
+- **Jesse Vincent** — MIT
+  — <https://github.com/obra/superpowers>
 - **Hugging Face** — MIT
+  — <https://github.com/openai/plugins>
+- **Netlify** — MIT
   — <https://github.com/openai/plugins>
 - **Cloudflare** — MIT
   — <https://github.com/openai/plugins>
@@ -293,20 +297,17 @@ along. Those notices, verbatim:
   — <https://github.com/boltz-bio/boltz-api-skills>
 - **Datasite** — MIT
   — <https://github.com/openai/plugins>
-- **HeyGen** — Apache-2.0, MIT
 - **Dietrich Gebert** — MIT
   — <https://github.com/dietrichgebert/ponytail>
-- **Superhuman** — MIT
-  — <https://github.com/superhuman/mcp-mail>
 - **Atlassian** — MIT
   — <https://github.com/openai/plugins>
 - **Deepnote** — Apache-2.0
   — <https://github.com/openai/plugins/tree/main/plugins/deepnote>
+- **Superhuman** — MIT
+  — <https://github.com/superhuman/mcp-mail>
 - **CircleCI** — MIT
   — <https://github.com/circleci-public/skills>
 - **HubSpot** — MIT
-  — <https://github.com/openai/plugins>
-- **Midpage** — MIT
   — <https://github.com/openai/plugins>
 - **Mixpanel** — MIT
   — <https://github.com/mixpanel/mixpanel-headless>
@@ -314,14 +315,17 @@ along. Those notices, verbatim:
   — <https://github.com/wix/skills>
 - **Airtable** — MIT
   — <https://github.com/airtable/skills>
-- **Canva** — MIT
-  — <https://github.com/openai/plugins>
 - **Chronograph** — MIT
   — <https://github.com/openai/plugins>
+- **HeyGen** — Apache-2.0, MIT
 - **Morningstar** — MIT
   — <https://github.com/Morningstar/morningstar-plugins>
 - **base44** — MIT
   — <https://github.com/base44/skills>
+- **Canva** — MIT
+  — <https://github.com/openai/plugins>
+- **Midpage** — MIT
+  — <https://github.com/openai/plugins>
 - **Neon** — Apache-2.0
   — <https://github.com/openai/plugins>
 - **Replay** — MIT
@@ -344,8 +348,6 @@ along. Those notices, verbatim:
   — <https://github.com/pbakaus/impeccable>
 - **PostHog** — MIT
   — <https://github.com/openai/plugins>
-- **Remotion** — MIT
-  — <https://github.com/remotion-dev/remotion>
 - **Sebastián Ramírez** — MIT
   — <https://github.com/fastapi/typer>
 - **Stripe** — MIT
@@ -372,6 +374,16 @@ Kept whole at `ponytail/`, with its own licence and its own history.
 - Author: Dietrich Gebert
 - Upstream: <https://github.com/dietrichgebert/ponytail>
 - Licence: MIT — (c) 2026 Dietrich Gebert
+
+### Matt Pocock's skills
+
+Kept whole at `mattpocock-skills/`, with its own licence. The upstream
+ships 27 of its 39 skills in its own plugin; this repository ships
+the same 27.
+
+- Author: Matt Pocock
+- Upstream: <https://github.com/mattpocock/skills>
+- Licence: MIT — (c) 2026 Matt Pocock
 
 ### The Anthropic plugin marketplace
 
@@ -476,11 +488,13 @@ summarise it; this is the attribution itself.
 | `build-error-resolver` | agent | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `business-rules-extractor` | agent | Anthropic | Apache-2.0 | [Anthropic](https://github.com/anthropics/skills) |
 | `chief-of-staff` | agent | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
+| `cinematic-video-editor` | agent | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `claude-security` | agent | Anthropic | SEE LICENSE IN LICENSE | [Anthropic](https://github.com/anthropics/skills) |
 | `code-architect` | agent | Anthropic | Apache-2.0 | [Anthropic](https://github.com/anthropics/skills) |
 | `code-explorer` | agent | Anthropic | Apache-2.0 | [Anthropic](https://github.com/anthropics/skills) |
 | `code-reviewer` | agent | Anthropic | Apache-2.0 | [Anthropic](https://github.com/anthropics/skills) |
 | `code-simplifier` | agent | Anthropic | Apache-2.0 | [Anthropic](https://github.com/anthropics/skills) |
+| `comfyui-workflow-builder` | agent | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `comment-analyzer` | agent | Anthropic | Apache-2.0 | [Anthropic](https://github.com/anthropics/skills) |
 | `comparator` | agent | Anthropic | Apache-2.0 | [Anthropic](https://github.com/anthropics/skills) |
 | `conversation-analyzer` | agent | Anthropic | Apache-2.0 | [Anthropic](https://github.com/anthropics/skills) |
@@ -518,15 +532,18 @@ summarise it; this is the attribution itself.
 | `harness-optimizer` | agent | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `healthcare-reviewer` | agent | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `homelab-architect` | agent | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
+| `image-art-director` | agent | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `java-build-resolver` | agent | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `java-reviewer` | agent | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `kotlin-build-resolver` | agent | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `kotlin-reviewer` | agent | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `legacy-analyst` | agent | Anthropic | Apache-2.0 | [Anthropic](https://github.com/anthropics/skills) |
+| `lip-sync-technician` | agent | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `logs-reader` | agent | NVIDIA | Apache-2.0 AND CC-BY-4.0 | [skills](https://github.com/NVIDIA/skills) |
 | `loop-operator` | agent | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `maintainer` | agent | Microsoft | MIT | [Microsoft](https://github.com/microsoft) |
 | `marketing-agent` | agent | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
+| `media-pipeline-engineer` | agent | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `mle-reviewer` | agent | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `mutual-mapper` | agent | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `network-architect` | agent | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
@@ -558,21 +575,28 @@ summarise it; this is the attribution itself.
 | `scan-loader` | agent | Anthropic | SEE LICENSE IN LICENSE | [Anthropic](https://github.com/anthropics/skills) |
 | `scan-researcher` | agent | Anthropic | SEE LICENSE IN LICENSE | [Anthropic](https://github.com/anthropics/skills) |
 | `scan-verifier` | agent | Anthropic | SEE LICENSE IN LICENSE | [Anthropic](https://github.com/anthropics/skills) |
+| `script-and-story-editor` | agent | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `security-auditor` | agent | Anthropic | Apache-2.0 | [Anthropic](https://github.com/anthropics/skills) |
 | `security-reviewer` | agent | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
+| `seo-content-strategist` | agent | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `seo-specialist` | agent | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
+| `short-form-producer` | agent | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `signal-scorer` | agent | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `silent-failure-hunter` | agent | Anthropic | Apache-2.0 | [Anthropic](https://github.com/anthropics/skills) |
 | `skill-reviewer` | agent | Anthropic | Apache-2.0 | [Anthropic](https://github.com/anthropics/skills) |
+| `social-publish-manager` | agent | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `spec-miner` | agent | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
+| `stock-media-researcher` | agent | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `swift-build-resolver` | agent | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `swift-reviewer` | agent | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `tdd-guide` | agent | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `test-engineer` | agent | Anthropic | Apache-2.0 | [Anthropic](https://github.com/anthropics/skills) |
+| `thumbnail-designer` | agent | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `type-design-analyzer` | agent | Anthropic | Apache-2.0 | [Anthropic](https://github.com/anthropics/skills) |
 | `typescript-reviewer` | agent | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `uplift-migrator` | agent | Anthropic | Apache-2.0 | [Anthropic](https://github.com/anthropics/skills) |
 | `version-delta-analyst` | agent | Anthropic | Apache-2.0 | [Anthropic](https://github.com/anthropics/skills) |
+| `voice-and-sound-designer` | agent | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `vue-reviewer` | agent | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `workflow-expert` | agent | NVIDIA | Apache-2.0 AND CC-BY-4.0 | [skills](https://github.com/NVIDIA/skills) |
 | `zoom-integration-reviewer` | agent | Zoom | MIT | [zoom-plugin-codex](https://github.com/zoom/zoom-plugin-codex) |
@@ -590,6 +614,7 @@ summarise it; this is the attribution itself.
 | `agent-introspection-debugging` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `agent-payment-x402` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `agent-self-evaluation` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
+| `agent-slide-decks` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `agent-sort` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `agentic-engineering` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `agentic-os` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
@@ -637,17 +662,20 @@ summarise it; this is the attribution itself.
 | `artifact-template-system-design` | skill | OpenAI | Proprietary | [OpenAI](https://github.com/openai/plugins) |
 | `artifact-template-team-alignment` | skill | OpenAI | Proprietary | [OpenAI](https://github.com/openai/plugins) |
 | `artifact-template-three-statement-forecast` | skill | OpenAI | Proprietary | [OpenAI](https://github.com/openai/plugins) |
+| `ask-matt` | skill | Matt Pocock | MIT | [skills](https://github.com/mattpocock/skills) |
 | `attack-path-analysis` | skill | OpenAI | Proprietary | [OpenAI](https://github.com/openai/plugins) |
+| `audio-separation` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `auth` | skill | Vercel Labs | Apache-2.0 | [vercel-plugin](https://github.com/vercel/vercel-plugin) |
 | `automation` | skill | Google (Antigravity) | not stated | [Google (Antigravity)](https://antigravity.google) |
 | `automation-audit-ops` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `autonomous-agent-harness` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `autonomous-loops` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `backend-patterns` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
+| `background-removal-segmentation` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `base44-cli` | skill | base44 | MIT | [skills](https://github.com/base44/skills) |
 | `base44-sdk` | skill | base44 | MIT | [skills](https://github.com/base44/skills) |
 | `base44-troubleshooter` | skill | base44 | MIT | [skills](https://github.com/base44/skills) |
-| `batch-draft-writer` | skill | Superhuman | MIT | [mcp-mail](https://github.com/superhuman/mcp-mail) |
+| `batch-draft-writer` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `benchmark` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `benchmark-methodology` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `benchmark-optimization-loop` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
@@ -656,6 +684,7 @@ summarise it; this is the attribution itself.
 | `biobankjapan-phewas-skill` | skill | OpenAI | Proprietary | [OpenAI](https://github.com/openai/plugins) |
 | `biorxiv-skill` | skill | OpenAI | Proprietary | [OpenAI](https://github.com/openai/plugins) |
 | `biostudies-arrayexpress-skill` | skill | OpenAI | Proprietary | [OpenAI](https://github.com/openai/plugins) |
+| `blender-3d-content` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `blender-motion-state-inspection` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `blueprint` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `boltz-check-status` | skill | Boltz | MIT | [boltz-api-skills](https://github.com/boltz-bio/boltz-api-skills) |
@@ -695,7 +724,7 @@ summarise it; this is the attribution itself.
 | `bull-bear` | skill | Daloopa | Apache-2.0 | [daloopa-plugin-codex](https://github.com/daloopa/daloopa-plugin-codex) |
 | `bun-runtime` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `canary-watch` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
-| `canva-branded-presentation` | skill | Canva | MIT | [plugins](https://github.com/openai/plugins) |
+| `canva-branded-presentation` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `canva-resize-for-all-social-media` | skill | Canva | MIT | [plugins](https://github.com/openai/plugins) |
 | `canva-translate-design` | skill | Canva | MIT | [plugins](https://github.com/openai/plugins) |
 | `canvas2d-data-visualization` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
@@ -736,10 +765,13 @@ summarise it; this is the attribution itself.
 | `cms` | skill | Vercel Labs | Apache-2.0 | [vercel-plugin](https://github.com/vercel/vercel-plugin) |
 | `code-review` | skill | CodeRabbit AI | MIT | [codex-plugin](https://github.com/coderabbitai/codex-plugin) |
 | `code-tour` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
+| `codebase-design` | skill | Matt Pocock | MIT | [skills](https://github.com/mattpocock/skills) |
 | `codebase-onboarding` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `codehealth-mcp` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `codex-expo-run-actions` | skill | Expo Team | MIT | [expo](https://github.com/expo/skills/tree/main/plugins/expo) |
 | `coding-standards` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
+| `comfyui-image-workflows` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
+| `comfyui-video-workflows` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `command-development` | skill | Anthropic | Apache-2.0 | [Anthropic](https://github.com/anthropics/skills) |
 | `comp-sheet` | skill | Daloopa | Apache-2.0 | [daloopa-plugin-codex](https://github.com/daloopa/daloopa-plugin-codex) |
 | `competitive-platform-analysis` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
@@ -795,6 +827,8 @@ summarise it; this is the attribution itself.
 | `deployments-cicd` | skill | Vercel Labs | Apache-2.0 | [vercel-plugin](https://github.com/vercel/vercel-plugin) |
 | `design-system` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `design-taste-frontend` | skill | Leonxlnx | MIT | [taste-skill](https://github.com/Leonxlnx/taste-skill) |
+| `diagnosing-bugs` | skill | Matt Pocock | MIT | [skills](https://github.com/mattpocock/skills) |
+| `diagram-generation` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `dispatching-parallel-agents` | skill | Jesse Vincent | MIT | [superpowers](https://github.com/obra/superpowers) |
 | `django-celery` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `django-patterns` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
@@ -806,9 +840,10 @@ summarise it; this is the attribution itself.
 | `document-builder` | skill | This library (hand-authored) | MIT | This library (hand-authored) |
 | `document-quality-check` | skill | Datasite | MIT | [plugins](https://github.com/openai/plugins) |
 | `documentation-lookup` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
+| `domain-modeling` | skill | Matt Pocock | MIT | [skills](https://github.com/mattpocock/skills) |
 | `dotnet-patterns` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
-| `draft-brief` | skill | Midpage | MIT | [plugins](https://github.com/openai/plugins) |
-| `draft-long-form-memo` | skill | Midpage | MIT | [plugins](https://github.com/openai/plugins) |
+| `draft-brief` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
+| `draft-long-form-memo` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `durable-objects` | skill | Cloudflare | MIT | [plugins](https://github.com/openai/plugins) |
 | `dynamic-workflow-mode` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `dynamo-interconnect-check` | skill | NVIDIA | Apache-2.0 AND CC-BY-4.0 | [skills](https://github.com/NVIDIA/skills) |
@@ -892,7 +927,7 @@ summarise it; this is the attribution itself.
 | `gantt-chart-visualization` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
 | `gap-analysis` | skill | Datasite | MIT | [plugins](https://github.com/openai/plugins) |
 | `gateguard` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
-| `geist` | skill | Vercel Labs | Apache-2.0 | [vercel-plugin](https://github.com/vercel/vercel-plugin) |
+| `geist` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `geistdocs` | skill | Vercel Labs | Apache-2.0 | [vercel-plugin](https://github.com/vercel/vercel-plugin) |
 | `genebass-gene-burden-skill` | skill | OpenAI | Proprietary | [OpenAI](https://github.com/openai/plugins) |
 | `generate-snapshot` | skill | Microsoft | MIT | [Microsoft](https://github.com/microsoft) |
@@ -920,13 +955,17 @@ summarise it; this is the attribution itself.
 | `google-drive` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
 | `google-drive-comments` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
 | `google-sheets` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
-| `google-slides` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
+| `google-slides` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `google-workspace-ops` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `grammar-of-graphics-and-declarative-visualization` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
+| `grill-me` | skill | Matt Pocock | MIT | [skills](https://github.com/mattpocock/skills) |
+| `grill-with-docs` | skill | Matt Pocock | MIT | [skills](https://github.com/mattpocock/skills) |
+| `grilling` | skill | Matt Pocock | MIT | [skills](https://github.com/mattpocock/skills) |
 | `gsap` | skill | HeyGen | Apache-2.0 | [hyperframes](https://github.com/heygen-com/hyperframes) |
 | `gtex-eqtl-skill` | skill | OpenAI | Proprietary | [OpenAI](https://github.com/openai/plugins) |
 | `guidance-tracker` | skill | Daloopa | Apache-2.0 | [daloopa-plugin-codex](https://github.com/daloopa/daloopa-plugin-codex) |
 | `gwas-catalog-skill` | skill | OpenAI | Proprietary | [OpenAI](https://github.com/openai/plugins) |
+| `handoff` | skill | Matt Pocock | MIT | [skills](https://github.com/mattpocock/skills) |
 | `healthcare-cdss-patterns` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `healthcare-emr-patterns` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `healthcare-eval-harness` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
@@ -961,12 +1000,15 @@ summarise it; this is the attribution itself.
 | `huggingface-vision-trainer` | skill | Hugging Face | MIT | [plugins](https://github.com/openai/plugins) |
 | `human-protein-atlas-skill` | skill | OpenAI | Proprietary | [OpenAI](https://github.com/openai/plugins) |
 | `humanizer` | skill | This library (hand-authored) | MIT | This library (hand-authored) |
-| `hyperframes` | skill | HeyGen | Apache-2.0 | [hyperframes](https://github.com/heygen-com/hyperframes) |
-| `hyperframes-cli` | skill | HeyGen | Apache-2.0 | [hyperframes](https://github.com/heygen-com/hyperframes) |
-| `hyperframes-registry` | skill | HeyGen | Apache-2.0 | [hyperframes](https://github.com/heygen-com/hyperframes) |
+| `hyperframes` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
+| `hyperframes-cli` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
+| `hyperframes-registry` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `ib-deck` | skill | Daloopa | Apache-2.0 | [daloopa-plugin-codex](https://github.com/daloopa/daloopa-plugin-codex) |
 | `imagegen` | skill | OpenAI | Apache-2.0 | [OpenAI](https://github.com/openai/plugins) |
 | `impeccable` | skill | Paul Bakaus | Apache-2.0 | [impeccable](https://github.com/pbakaus/impeccable) |
+| `implement` | skill | Matt Pocock | MIT | [skills](https://github.com/mattpocock/skills) |
+| `implement-spec` | skill | Matt Pocock | MIT | [skills](https://github.com/mattpocock/skills) |
+| `improve-codebase-architecture` | skill | Matt Pocock | MIT | [skills](https://github.com/mattpocock/skills) |
 | `improve-skill` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
 | `industry` | skill | Daloopa | Apache-2.0 | [daloopa-plugin-codex](https://github.com/daloopa/daloopa-plugin-codex) |
 | `inflection` | skill | Daloopa | Apache-2.0 | [daloopa-plugin-codex](https://github.com/daloopa/daloopa-plugin-codex) |
@@ -1012,13 +1054,17 @@ summarise it; this is the attribution itself.
 | `launch-readiness-orchestrator` | skill | Datasite | MIT | [plugins](https://github.com/openai/plugins) |
 | `lead-intelligence` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `linear` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
+| `lip-sync` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `liquid-glass` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
 | `liquid-glass-design` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `literature-review` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `litigation-update-post` | skill | Midpage | MIT | [plugins](https://github.com/openai/plugins) |
 | `llm-trading-agent-security` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
+| `local-diffusion-suite` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
+| `local-tts-engines` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `locus-to-gene-mapper-skill` | skill | OpenAI | Proprietary | [OpenAI](https://github.com/openai/plugins) |
 | `logistics-exception-management` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
+| `long-to-short-repurpose` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `m5-onboard` | skill | Anthropic | Apache-2.0 | [Anthropic](https://github.com/anthropics/skills) |
 | `magicpath` | skill | MagicPathAI | UNLICENSED | [MagicPathAI](https://www.magicpath.ai) |
 | `make-interfaces-feel-better` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
@@ -1027,8 +1073,10 @@ summarise it; this is the attribution itself.
 | `marketing-campaign` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `marketplace` | skill | Vercel Labs | Apache-2.0 | [vercel-plugin](https://github.com/vercel/vercel-plugin) |
 | `math-olympiad` | skill | Anthropic | Apache-2.0 | [Anthropic](https://github.com/anthropics/skills) |
+| `mattpocock-code-review` | skill | Matt Pocock | MIT | [skills](https://github.com/mattpocock/skills) |
 | `mcp-integration` | skill | Anthropic | Apache-2.0 | [Anthropic](https://github.com/anthropics/skills) |
 | `mcp-server-patterns` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
+| `media-transcode-pipeline` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `meeting-scheduler` | skill | Superhuman | MIT | [mcp-mail](https://github.com/superhuman/mcp-mail) |
 | `messages-ops` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `metabolights-skill` | skill | OpenAI | Proprietary | [OpenAI](https://github.com/openai/plugins) |
@@ -1054,6 +1102,7 @@ summarise it; this is the attribution itself.
 | `motion-foundations` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `motion-patterns` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `motion-ui` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
+| `music-generation` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `mysql-patterns` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `nanoclaw-repl` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `native-data-fetching` | skill | Expo Team | MIT | [expo](https://github.com/expo/skills/tree/main/plugins/expo) |
@@ -1078,7 +1127,7 @@ summarise it; this is the attribution itself.
 | `netlify-frameworks` | skill | Netlify | MIT | [plugins](https://github.com/openai/plugins) |
 | `netlify-functions` | skill | Netlify | MIT | [plugins](https://github.com/openai/plugins) |
 | `netlify-identity` | skill | Netlify | MIT | [plugins](https://github.com/openai/plugins) |
-| `netlify-image-cdn` | skill | Netlify | MIT | [plugins](https://github.com/openai/plugins) |
+| `netlify-image-cdn` | skill | Local project: content-creation-mcp | Apache-2.0 | Local project: content-creation-mcp |
 | `netmiko-ssh-automation` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `network-bgp-diagnostics` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `network-config-validation` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
@@ -1103,7 +1152,7 @@ summarise it; this is the attribution itself.
 | `ngs-runtime-env` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
 | `ngs-scrna-seq` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
 | `ngs-shotgun-metagenomics` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
-| `node-link-and-diagram-layout` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
+| `node-link-and-diagram-layout` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `nodejs-keccak256` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `notion-knowledge-capture` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
 | `notion-meeting-intelligence` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
@@ -1170,6 +1219,7 @@ summarise it; this is the attribution itself.
 | `ponytail-review` | skill | Dietrich Gebert | MIT | [ponytail](https://github.com/dietrichgebert/ponytail) |
 | `postgres-patterns` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `posthog` | skill | PostHog | MIT | [plugins](https://github.com/openai/plugins) |
+| `pr` | skill | Matt Pocock | MIT | [skills](https://github.com/mattpocock/skills) |
 | `precedent-transactions` | skill | Daloopa | Apache-2.0 | [daloopa-plugin-codex](https://github.com/daloopa/daloopa-plugin-codex) |
 | `prediction-market-oracle-research` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `prediction-market-risk-review` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
@@ -1195,6 +1245,7 @@ summarise it; this is the attribution itself.
 | `prompt-optimizer` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `propose-security-hardening` | skill | OpenAI | Proprietary | [OpenAI](https://github.com/openai/plugins) |
 | `proteomexchange-skill` | skill | OpenAI | Proprietary | [OpenAI](https://github.com/openai/plugins) |
+| `prototype` | skill | Matt Pocock | MIT | [skills](https://github.com/mattpocock/skills) |
 | `provision-droplet` | skill | DigitalOcean | not stated (manifest) | [DigitalOcean](https://www.digitalocean.com) |
 | `pubchem-pug-skill` | skill | OpenAI | Proprietary | [OpenAI](https://github.com/openai/plugins) |
 | `pubmed-database` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
@@ -1227,7 +1278,7 @@ summarise it; this is the attribution itself.
 | `recursive-decision-ledger` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `redis-patterns` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `regex-vs-llm-structured-text` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
-| `remotion-best-practices` | skill | Remotion | MIT | [remotion](https://github.com/remotion-dev/remotion) |
+| `remotion-best-practices` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `remotion-video-creation` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `render-background-workers` | skill | Render | MIT | [render-codex-plugin](https://github.com/renderinc/render-codex-plugin) |
 | `render-blueprints` | skill | Render | MIT | [render-codex-plugin](https://github.com/renderinc/render-codex-plugin) |
@@ -1253,12 +1304,14 @@ summarise it; this is the attribution itself.
 | `replay-qa-api` | skill | Replay | MIT | [plugins](https://github.com/replayio/plugins) |
 | `replayio` | skill | Replay | MIT | [plugins](https://github.com/replayio/plugins) |
 | `repo-scan` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
-| `reports-pdfs-and-slide-automation` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
+| `reports-pdfs-and-slide-automation` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `requesting-code-review` | skill | Jesse Vincent | MIT | [superpowers](https://github.com/obra/superpowers) |
+| `research` | skill | Matt Pocock | MIT | [skills](https://github.com/mattpocock/skills) |
 | `research-note` | skill | Daloopa | Apache-2.0 | [daloopa-plugin-codex](https://github.com/daloopa/daloopa-plugin-codex) |
 | `research-ops` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `research-partner` | skill | This library (hand-authored) | MIT | This library (hand-authored) |
 | `research-router-skill` | skill | OpenAI | Proprietary | [OpenAI](https://github.com/openai/plugins) |
+| `retro` | skill | Matt Pocock | MIT | [skills](https://github.com/mattpocock/skills) |
 | `returns-reverse-logistics` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `review-agent` | skill | OpenAI | Apache-2.0 | [OpenAI](https://github.com/openai/plugins) |
 | `rhea-skill` | skill | OpenAI | Proprietary | [OpenAI](https://github.com/openai/plugins) |
@@ -1281,6 +1334,7 @@ summarise it; this is the attribution itself.
 | `satori` | skill | Vercel Labs | Apache-2.0 | [vercel-plugin](https://github.com/vercel/vercel-plugin) |
 | `scholar-evaluation` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `scribe` | skill | Zoom | MIT | [zoom-plugin-codex](https://github.com/zoom/zoom-plugin-codex) |
+| `script-and-story-editing` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `scrna-seq-qc` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
 | `scrollytelling-and-parallax-data-visualization` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
 | `search-company-knowledge` | skill | Atlassian | MIT | [plugins](https://github.com/openai/plugins) |
@@ -1294,6 +1348,7 @@ summarise it; this is the attribution itself.
 | `session-report` | skill | Anthropic | Apache-2.0 | [Anthropic](https://github.com/anthropics/skills) |
 | `settings-precedence` | skill | Microsoft | MIT | [Microsoft](https://github.com/microsoft) |
 | `setup` | skill | Daloopa | Apache-2.0 | [daloopa-plugin-codex](https://github.com/daloopa/daloopa-plugin-codex) |
+| `setup-matt-pocock-skills` | skill | Matt Pocock | MIT | [skills](https://github.com/mattpocock/skills) |
 | `setup-zoom-oauth` | skill | Zoom | MIT | [zoom-plugin-codex](https://github.com/zoom/zoom-plugin-codex) |
 | `setup-zoom-webhooks` | skill | Zoom | MIT | [zoom-plugin-codex](https://github.com/zoom/zoom-plugin-codex) |
 | `setup-zoom-websockets` | skill | Zoom | MIT | [zoom-plugin-codex](https://github.com/zoom/zoom-plugin-codex) |
@@ -1324,6 +1379,7 @@ summarise it; this is the attribution itself.
 | `shopify-pos-ui` | skill | Shopify | MIT | [Shopify-AI-Toolkit](https://github.com/Shopify/Shopify-AI-Toolkit) |
 | `shopify-storefront-graphql` | skill | Shopify | MIT | [Shopify-AI-Toolkit](https://github.com/Shopify/Shopify-AI-Toolkit) |
 | `shopify-use-shopify-cli` | skill | Shopify | MIT | [Shopify-AI-Toolkit](https://github.com/Shopify/Shopify-AI-Toolkit) |
+| `shorts-reels-pipeline` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `sign-in-with-vercel` | skill | Vercel Labs | Apache-2.0 | [vercel-plugin](https://github.com/vercel/vercel-plugin) |
 | `signing-entitlements` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
 | `skill-comply` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
@@ -1342,19 +1398,22 @@ summarise it; this is the attribution itself.
 | `slack-reply-drafting` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
 | `smart-file-renaming` | skill | Datasite | MIT | [plugins](https://github.com/openai/plugins) |
 | `social-graph-ranker` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
+| `social-publish-scheduling` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `social-publisher` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `spec-to-backlog` | skill | Atlassian | MIT | [plugins](https://github.com/openai/plugins) |
 | `springboot-patterns` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `springboot-security` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `springboot-tdd` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `springboot-verification` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
-| `sprite-pipeline` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
+| `sprite-pipeline` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `start` | skill | Zoom | MIT | [zoom-plugin-codex](https://github.com/zoom/zoom-plugin-codex) |
 | `statistical-and-uncertainty-visualization` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
+| `stock-media-sourcing` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `strategic-compact` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `string-skill` | skill | OpenAI | Proprietary | [OpenAI](https://github.com/openai/plugins) |
 | `stripe-best-practices` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
 | `subagent-driven-development` | skill | Jesse Vincent | MIT | [superpowers](https://github.com/obra/superpowers) |
+| `subtitle-generation` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `supabase` | skill | Supabase | MIT | [supabase-plugin](https://github.com/supabase-community/supabase-plugin) |
 | `supabase-postgres-best-practices` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
 | `superhuman-mail` | skill | Superhuman | MIT | [mcp-mail](https://github.com/superhuman/mcp-mail) |
@@ -1371,7 +1430,9 @@ summarise it; this is the attribution itself.
 | `swr` | skill | Vercel Labs | Apache-2.0 | [vercel-plugin](https://github.com/vercel/vercel-plugin) |
 | `systematic-debugging` | skill | Jesse Vincent | MIT | [superpowers](https://github.com/obra/superpowers) |
 | `taste` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
+| `tdd` | skill | Matt Pocock | MIT | [skills](https://github.com/mattpocock/skills) |
 | `tdd-workflow` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
+| `teach` | skill | Matt Pocock | MIT | [skills](https://github.com/mattpocock/skills) |
 | `team-agent-orchestration` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `team-builder` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `teams` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
@@ -1389,16 +1450,23 @@ summarise it; this is the attribution itself.
 | `test-driven-development` | skill | Jesse Vincent | MIT | [superpowers](https://github.com/obra/superpowers) |
 | `test-triage` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
 | `testing-data-visualizations` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
+| `text-to-video-local` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `threat-model` | skill | OpenAI | Proprietary | [OpenAI](https://github.com/openai/plugins) |
 | `three-webgl-game` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
 | `threejs-data-visualization` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
+| `thumbnail-generator` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `tinystruct-patterns` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
+| `to-questionnaire` | skill | Matt Pocock | MIT | [skills](https://github.com/mattpocock/skills) |
+| `to-spec` | skill | Matt Pocock | MIT | [skills](https://github.com/mattpocock/skills) |
+| `to-tickets` | skill | Matt Pocock | MIT | [skills](https://github.com/mattpocock/skills) |
 | `token-budget-advisor` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `tpmi-phewas-skill` | skill | OpenAI | Proprietary | [OpenAI](https://github.com/openai/plugins) |
 | `track-findings` | skill | OpenAI | Proprietary | [OpenAI](https://github.com/openai/plugins) |
 | `transformers-js` | skill | Hugging Face | MIT | [plugins](https://github.com/openai/plugins) |
+| `triage` | skill | Matt Pocock | MIT | [skills](https://github.com/mattpocock/skills) |
 | `triage-finding` | skill | OpenAI | Proprietary | [OpenAI](https://github.com/openai/plugins) |
 | `triage-issue` | skill | Atlassian | MIT | [plugins](https://github.com/openai/plugins) |
+| `tts-to-video` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `turbopack` | skill | Vercel Labs | Apache-2.0 | [vercel-plugin](https://github.com/vercel/vercel-plugin) |
 | `turborepo` | skill | Vercel Labs | Apache-2.0 | [vercel-plugin](https://github.com/vercel/vercel-plugin) |
 | `twilio-account-setup` | skill | Twilio | MIT | [ai](https://github.com/twilio/ai) |
@@ -1463,7 +1531,7 @@ summarise it; this is the attribution itself.
 | `ui-to-vue` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `ui-toolkit` | skill | Zoom | MIT | [zoom-plugin-codex](https://github.com/zoom/zoom-plugin-codex) |
 | `ukb-topmed-phewas-skill` | skill | OpenAI | Proprietary | [OpenAI](https://github.com/openai/plugins) |
-| `uml-and-software-architecture-visualization` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
+| `uml-and-software-architecture-visualization` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `uncloud` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `unified-notifications-ops` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `uniprot-skill` | skill | OpenAI | Proprietary | [OpenAI](https://github.com/openai/plugins) |
@@ -1490,32 +1558,40 @@ summarise it; this is the attribution itself.
 | `verification` | skill | Vercel Labs | Apache-2.0 | [vercel-plugin](https://github.com/vercel/vercel-plugin) |
 | `verification-before-completion` | skill | Jesse Vincent | MIT | [superpowers](https://github.com/obra/superpowers) |
 | `verification-loop` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
+| `video-background-removal` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `video-editing` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
+| `video-translation-dubbing` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
+| `video-upscale-interpolate` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `videodb` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `view-refactor` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
 | `visa-doc-translate` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `visualization-strategy-and-critique` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
 | `vite-patterns` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
+| `voice-cloning-rvc` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `vue-patterns` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `vulnerability-writeup` | skill | OpenAI | Proprietary | [OpenAI](https://github.com/openai/plugins) |
-| `web-3d-asset-pipeline` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
+| `wait-what` | skill | Matt Pocock | MIT | [skills](https://github.com/mattpocock/skills) |
+| `wayfinder` | skill | Matt Pocock | MIT | [skills](https://github.com/mattpocock/skills) |
+| `web-3d-asset-pipeline` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `web-game-foundations` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
 | `web-perf` | skill | Cloudflare | MIT | [plugins](https://github.com/openai/plugins) |
-| `website-to-hyperframes` | skill | HeyGen | Apache-2.0 | [hyperframes](https://github.com/heygen-com/hyperframes) |
+| `website-to-hyperframes` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `window-management` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
 | `windows-desktop-e2e` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `wix-app` | skill | Wix | MIT | [skills](https://github.com/wix/skills) |
 | `wix-design-system` | skill | Wix | MIT | [skills](https://github.com/wix/skills) |
 | `wix-headless` | skill | Wix | MIT | [skills](https://github.com/wix/skills) |
 | `wix-manage` | skill | Wix | MIT | [skills](https://github.com/wix/skills) |
+| `wizard` | skill | Matt Pocock | MIT | [skills](https://github.com/mattpocock/skills) |
 | `workers-best-practices` | skill | Cloudflare | MIT | [plugins](https://github.com/openai/plugins) |
 | `workflow` | skill | Vercel Labs | Apache-2.0 | [vercel-plugin](https://github.com/vercel/vercel-plugin) |
 | `working-capital` | skill | Daloopa | Apache-2.0 | [daloopa-plugin-codex](https://github.com/daloopa/daloopa-plugin-codex) |
 | `workspace-surface-audit` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `wrangler` | skill | Cloudflare | MIT | [plugins](https://github.com/openai/plugins) |
+| `writing-for-agents` | skill | Matt Pocock | MIT | [skills](https://github.com/mattpocock/skills) |
 | `writing-hookify-rules` | skill | Anthropic | Apache-2.0 | [Anthropic](https://github.com/anthropics/skills) |
-| `writing-plans` | skill | Jesse Vincent | MIT | [superpowers](https://github.com/obra/superpowers) |
-| `writing-skills` | skill | Jesse Vincent | MIT | [superpowers](https://github.com/obra/superpowers) |
+| `writing-plans` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
+| `writing-skills` | skill | Local project: content-creation-mcp | MIT | Local project: content-creation-mcp |
 | `x-api` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `yeet` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
 | `zoom-apps-sdk` | skill | Zoom | MIT | [zoom-plugin-codex](https://github.com/zoom/zoom-plugin-codex) |

@@ -1,32 +1,43 @@
 ---
 name: geist
-description: Expert guidance for Geist, Vercel's default typography system and font family for precise Next.js interfaces. Use when configuring Geist Sans, Geist Mono, or Geist Pixel, setting up font imports, or applying Vercel typography and aesthetic guidance.
+description: Expert guidance for Geist, Vercel's default typography system and font
+  family for precise Next.js interfaces. Use when configuring Geist Sans, Geist Mono,
+  or Geist Pixel, setting up font imports, or applying Vercel typography and aesthetic
+  guidance.
 metadata:
   priority: 4
   docs:
-    - "https://vercel.com/font"
-    - "https://github.com/vercel/geist-font"
-  sitemap: "https://vercel.com/sitemap/docs.xml"
+  - https://vercel.com/font
+  - https://github.com/vercel/geist-font
+  sitemap: https://vercel.com/sitemap/docs.xml
   pathPatterns:
-    - 'app/layout.*'
-    - 'src/app/layout.*'
-    - 'app/globals.css'
-    - 'src/app/globals.css'
-    - 'styles/**'
-    - 'tailwind.config.*'
-    - 'apps/*/app/layout.*'
-    - 'apps/*/src/app/layout.*'
-    - 'apps/*/app/globals.css'
-    - 'apps/*/src/app/globals.css'
+  - app/layout.*
+  - src/app/layout.*
+  - app/globals.css
+  - src/app/globals.css
+  - styles/**
+  - tailwind.config.*
+  - apps/*/app/layout.*
+  - apps/*/src/app/layout.*
+  - apps/*/app/globals.css
+  - apps/*/src/app/globals.css
   importPatterns:
-    - 'geist'
-    - 'geist/font'
-    - 'geist/font/*'
+  - geist
+  - geist/font
+  - geist/font/*
   bashPatterns:
-    - '\bnpm\s+(install|i|add)\s+[^\n]*\bgeist\b'
-    - '\bpnpm\s+(install|i|add)\s+[^\n]*\bgeist\b'
-    - '\bbun\s+(install|i|add)\s+[^\n]*\bgeist\b'
-    - '\byarn\s+add\s+[^\n]*\bgeist\b'
+  - \bnpm\s+(install|i|add)\s+[^\n]*\bgeist\b
+  - \bpnpm\s+(install|i|add)\s+[^\n]*\bgeist\b
+  - \bbun\s+(install|i|add)\s+[^\n]*\bgeist\b
+  - \byarn\s+add\s+[^\n]*\bgeist\b
+  promptSignals:
+    phrases:
+    - use geist sans
+    - configure geist mono
+    - set up vercel typography
+    - import geist fonts
+    - geist pixel font
+    - vercel font setup
 ---
 
 # Geist — Vercel's Font Family

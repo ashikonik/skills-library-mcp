@@ -46,6 +46,23 @@ if PUBLISHED and 'SKILLS_LIBRARY_SCAN_ROOT' not in os.environ:
 SKIP = {'node_modules', '.git', 'venv', '.venv', 'site-packages', '__pycache__',
         '.npm', '.gradle', '.m2', 'dist', 'build', '.next', 'vendor', 'target',
         '.ruff_cache', '.cache'}
+
+# Paths that hold skills the upstream itself does not publish, held in the
+# tree for audit but kept out of the catalogue. The library applies the
+# same exclusion (see `.build_library.py`); the report scans the machine
+# on its own, so it has to be told.
+#
+# The rule is path-scoped, not name-scoped: a bare `not-shipped` in the
+# SKIP set would silence an unrelated directory with the same name
+# somewhere else on the machine.
+NOT_SHIPPED = {os.path.join(OUT, 'mattpocock-skills', 'not-shipped')}
+
+# The upstream's own website content. `mattpocock-skills/docs/` holds a
+# human-facing page per promoted skill, published at aihero.dev. Those
+# pages are not skills and do not belong in a catalogue of skills --
+# they would be counted as one each, which is how a docs page ends up
+# looking like an agent.
+NOT_CATALOGUE = {os.path.join(OUT, 'mattpocock-skills', 'docs')}
 LOCALES = {'ja-JP', 'zh-CN', 'zh-TW', 'ko-KR', 'tr', 'es', 'fr', 'de',
            'pt-BR', 'it', 'ru', 'pl'}
 
@@ -232,6 +249,11 @@ def desc_of(content):
 def walk(root):
     for dp, dn, fn in os.walk(root):
         dn[:] = [d for d in dn if d not in SKIP]
+        # The upstream's unpublished buckets and its website content.
+        # See NOT_SHIPPED and NOT_CATALOGUE above.
+        dn[:] = [d for d in dn
+                 if os.path.join(dp, d) not in NOT_SHIPPED
+                 and os.path.join(dp, d) not in NOT_CATALOGUE]
         # A *published* copy of this library is not an upstream source: it
         # holds the same skills, already consolidated. Scanning it would
         # double-count every entry. A tree is recognised by its own
@@ -350,6 +372,30 @@ if not IN_PLACE:
         (ROOT + '/.gemini/antigravity-cli/builtin/skills/', 'Gemini Antigravity: builtin skills'),
         (ROOT + '/.vscode/extensions/', 'VS Code: extension-bundled skills'),
     ]
+
+
+# The ECC ("Everything Claude Code") repository is cloned several times
+# on this machine. Each clone mirrors the same skills, so the report
+# says so -- but the list is COMPUTED, not written out. A hardcoded list
+# of directories goes stale the moment the disk changes, and a stale
+# path in the report is a broken reference the verifier rightly fails.
+ECC_CLONE_CANDIDATES = [
+    'Projects/ECC',
+    'Projects/CSE488/ECC',
+    'Projects/PRIoTP-main/ECC',
+    'Hackathon/ECC',
+    'Study Materials /EWU/Summer2026/CSE412/Project/ECC',
+]
+
+
+def ecc_clones():
+    """The ECC clones that are actually on disk, as absolute paths.
+
+    The count of these is what the report claims, so the claim cannot
+    drift from the disk.
+    """
+    paths = [os.path.join(ROOT, rel) for rel in ECC_CLONE_CANDIDATES]
+    return [p for p in paths if os.path.isdir(p)]
 
 
 def collection(paths):
@@ -511,14 +557,13 @@ if IN_PLACE:
     w('showing how many times each definition appears on disk.')
     w('')
 else:
-    w('The headline number on disk is badly misleading. The tree contains **5 byte-identical copies of')
+    clones = ecc_clones()
+    w('The headline number on disk is badly misleading. The tree contains **%d byte-identical copies of'
+      % len(clones))
     w('the ECC ("Everything Claude Code") repository**:')
     w('')
-    w('- `%s/Projects/ECC`' % ROOT)
-    w('- `%s/Projects/CSE488/ECC`' % ROOT)
-    w('- `%s/Projects/PRIoTP-main/ECC`' % ROOT)
-    w('- `%s/Hackathon/ECC`' % ROOT)
-    w('- `%s/Study Materials /EWU/Summer2026/CSE412/Project/ECC`' % ROOT)
+    for _p in clones:
+        w('- `%s`' % _p)
     w('')
     w('Each copy mirrors the same skills across **4 tool surfaces** (`.agents/` 37, `.kiro/` 43,')
     w('`.cursor/` 10, `.claude/` 1) and ships a `docs/<locale>/` tree holding a translated copy of every')
@@ -607,11 +652,11 @@ w('## 5. Capability Coverage by Domain')
 w('')
 
 DOMAINS = [
-    ('Code Review & Quality', ['review', 'simplif', 'cleaner', 'comment-analyzer', 'refactor',
+    ('Code Review & Quality', ['triage', 'review', 'simplif', 'cleaner', 'comment-analyzer', 'refactor',
                                'silent-failure', 'type-design', 'pr-test', 'agent-eval', 'taste',
                                'code-tour', 'codebase-onboarding', 'repo-scan', 'health']),
     ('Build & Compilation Fixers', ['build-', '-build-resolver', 'build-fix']),
-    ('Architecture & Design', ['architect', 'adr', 'hexagonal', 'design-system', 'blueprint',
+    ('Architecture & Design', ['domain-modeling', 'architect', 'adr', 'hexagonal', 'design-system', 'blueprint',
                                'system-design', 'codebase-onboarding', 'legacy', 'moderniz',
                                'architecture', 'decision-record']),
     ('Language & Framework Patterns', ['python', 'typescript', 'react', 'vue', 'angular', 'django',
@@ -638,7 +683,7 @@ DOMAINS = [
                                  'terraform', 'observab', 'monitor', 'infra', 'provision',
                                  'release', 'config-gc', 'sre', 'uptime', 'cloudflare',
                                  'netlify', 'render-', 'vercel-', 'wrangler', 'worker']),
-    ('Documentation & Writing', ['doc', 'readme', 'write', 'article', 'memo', 'brief', 'report',
+    ('Documentation & Writing', ['writing-for-agents', 'doc', 'readme', 'write', 'article', 'memo', 'brief', 'report',
                                  'citation', 'cite', 'humanizer', 'latex', 'markdown', 'summar',
                                  'translation', 'visa-doc', 'narrative', 'spec-to-backlog',
                                  'draft-', 'capture-tasks']),
@@ -667,7 +712,7 @@ DOMAINS = [
                                       'seo', 'content', 'ads', 'campaign', 'brand', 'copy',
                                       'newsletter', 'calendar', 'gmail', 'publisher', 'crosspost',
                                       'article-writing', 'lead-intelligence', 'canva']),
-    ('Communication & Productivity', ['notion', 'sharepoint', 'linear', 'jira', 'asana', 'clickup',
+    ('Communication & Productivity', ['grill-with-docs', 'notion', 'sharepoint', 'linear', 'jira', 'asana', 'clickup',
                                        'zoom', 'calendar', 'email', 'slack', 'teams', 'todo',
                                        'task', 'meeting', 'minutes', 'gmail', 'drive', 'sheets',
                                        'docs', 'transcribe', 'superhuman', 'm5-', 'magicpath',
@@ -686,10 +731,22 @@ def hit(name, keys):
     Naive substring matching produces false positives ('gene' inside 'generate',
     'ngs-' inside 'settings-precedence'), so keywords are matched on token
     boundaries with separators treated as whitespace.
+
+    A key written as "=name" matches the WHOLE normalised name and
+    nothing else. It is the escape for a name that is a word of a
+    longer name, where no keyword can tell them apart: the key
+    "implement" also matches "figma-implement-motion", because
+    collapsing the hyphens gives "figma implement motion".
     """
     norm = re.sub(r'[-_/]+', ' ', name.lower())
     norm = ' '.join(norm.split())
     for k in keys:
+        if k.startswith('='):
+            # an exact-name key: the whole normalised name, nothing else
+            if norm == ' '.join(
+                    re.sub(r'[-_/]+', ' ', k[1:].lower()).split()):
+                return True
+            continue
         kw = ' '.join(re.sub(r'[-_/]+', ' ', k.lower()).split())
         if not kw:
             continue
@@ -925,7 +982,8 @@ else:
     w('| `%s/Projects/ECC/skills/` | The 271-skill core library — the single largest skill collection on the system. |' % ROOT)
     w('| `%s/Projects/ECC/agents/` | The 67-agent roster — the source of truth for agent definitions. |' % ROOT)
     w('| `%s/Projects/ECC/commands/` | 92 slash commands. |' % ROOT)
-    w('| `%s/Projects/CSE488/ECC`, `%s/Projects/PRIoTP-main/ECC`, `%s/Hackathon/ECC`, `%s/Study Materials /EWU/Summer2026/CSE412/Project/ECC` | Byte-identical clones of the ECC repo — pure duplication. |' % (ROOT, ROOT, ROOT, ROOT))
+    w('| %s | Byte-identical clones of the ECC repo — pure duplication. |'
+      % ', '.join('`%s`' % _p for _p in ecc_clones()))
     w('| `%s/.config/ecc/` | Installed ECC runtime config (skills, agents, commands, `.claude/`, `.opencode/`). |' % ROOT)
     w('| `%s/.claude/plugins/marketplaces/ecc/` | ECC installed as a Claude Code plugin marketplace. |' % ROOT)
     w('| `%s/.claude/plugins/cache/ecc/ecc/2.0.0/` | Pinned cached copy (v2.0.0). |' % ROOT)

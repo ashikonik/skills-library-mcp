@@ -19,7 +19,11 @@ the guide, then re-extract.
 import re
 
 DOMAINS = DOMAINS = [
-    ('Core engineering practice', ['coding-standards', 'codebase-onboarding', 'code-tour',
+    ('Core engineering practice', ['ask-matt', 'diagnosing-bugs', 'grill-me', 'grilling',
+                                   'handoff', '=implement', 'implement-spec', 'pr', 'prototype',
+                                   'retro', 'teach', 'to-questionnaire', 'wait-what',
+                                   'wayfinder', 'wizard',
+                                   'coding-standards', 'codebase-onboarding', 'code-tour',
                                    'codehealth-mcp', 'repo-scan', 'repo-analysis',
                                    'git-workflow', 'github-ops', 'run-pre-commit-checks',
                                    'using-git-worktrees', 'finishing-a-development-branch',
@@ -44,7 +48,8 @@ DOMAINS = DOMAINS = [
                         'terraform', 'observab', 'monitor', 'infra', 'provision', 'finishing-a-development-branch',
                         'config-gc', 'sre', 'uptime', 'cloudflare', 'netlify', 'render-',
                         'vercel-', 'wrangler', 'worker', 'airtable', 'serverless']),
-    ('Architecture & design', ['architect', 'adr', 'hexagonal', 'design-system', 'blueprint',
+    ('Architecture & design', ['domain-modeling', 'codebase-design', 'architect', 'adr',
+                                'hexagonal', 'design-system', 'blueprint',
                                 'system-design', 'architecture', 'decision-record', 'domain-driven',
                                 'clean-architecture', 'microservice', 'event-driven']),
     ('Frontend, UI & accessibility', ['design', 'frontend', 'ui-', 'a11y', 'accessib', 'visual',
@@ -64,7 +69,8 @@ DOMAINS = DOMAINS = [
                               'typer', 'click', 'tyro', 'argparse', 'fire', 'cyclopts']),
     ('Mobile & desktop', ['ios', 'android', 'flutter', 'swiftui', 'mobile', 'desktop',
                            'windows-desktop', 'harmonyos', 'compose', 'react-native', 'expo']),
-    ('Documents, writing & content', ['doc', 'readme', 'write', 'article', 'memo', 'brief',
+    ('Documents, writing & content', ['writing-for-agents', 'doc', 'readme', 'write',
+                                      'article', 'memo', 'brief',
                                       'report', 'citation', 'cite', 'humanizer', 'latex',
                                       'markdown', 'summar', 'translation', 'visa-doc',
                                       'narrative', 'spec-to-backlog', 'draft-', 'artifact-template',
@@ -92,7 +98,8 @@ DOMAINS = DOMAINS = [
                                      'seo', 'content', 'ads', 'campaign', 'brand', 'copy',
                                      'newsletter', 'publisher', 'crosspost', 'canva',
                                      'lead-intelligence', 'tiq-', 'wix-', 'shopify-']),
-    ('Communication & productivity', ['notion', 'sharepoint', 'linear', 'jira', 'asana', 'clickup',
+    ('Communication & productivity', ['grill-with-docs', 'notion', 'sharepoint', 'linear',
+                                      'jira', 'asana', 'clickup',
                                       'zoom', 'calendar', 'email', 'slack', 'teams', 'todo',
                                       'task', 'meeting', 'minutes', 'gmail', 'drive', 'sheets',
                                       'docs', 'transcribe', 'superhuman', 'magicpath', 'deepnote',
@@ -103,7 +110,8 @@ DOMAINS = DOMAINS = [
     ('Game, 3D & video', ['game', '3d', 'three-', 'phaser', 'unity', 'unreal', 'remotion',
                           'video', 'subtitle', 'video-editing', 'heytgen', 'animation',
                           'motion-', 'avatar']),
-    ('Skill & agent authoring', ['skill-', 'writing-skills', 'agent-development', 'plugin',
+    ('Skill & agent authoring', ['setup-matt-pocock-skills', 'skill-', 'writing-skills',
+                                 'agent-development', 'plugin',
                                  'command-development', 'hook-development', 'hookify',
                                  'prompt-optimizer', 'rules-distill', 'ai-elements', 'scaffold']),
     ('Vendor SaaS APIs', ['twilio-', 'zoom-', 'shopify-', 'netlify-', 'render-', 'vercel-',
@@ -185,7 +193,8 @@ DOMAINS = DOMAINS = [
                                 'chatgpt-app-submission', 'transformers-js', 'agy-',
                                 'antigravity', 'dynamo-', 'micro', 'example-command',
                                 'ml-adoption-playbook', 'ml-', 'aiq-', 'pytorch-patterns']),
-    ('Product, planning & team ops', ['brainstorming', 'executing-plans', 'writing-plans',
+    ('Product, planning & team ops', ['to-spec', 'to-tickets', 'brainstorming',
+                                      'executing-plans', 'writing-plans',
                                       'fa-jobs-to-be-done', 'team-builder', 'setup',
                                       'bootstrap', 'canary-watch', 'run-smoke-tests',
                                       'reports-pdfs-and-slide', 'document-quality-check',
@@ -222,9 +231,20 @@ def hit(name, keys):
     Word boundaries matter: `hit('agent-creator', ['agent'])` must not fire
     on a substring in the middle of a longer word, and `hit('test', ['test'])`
     must not fire on `testing-writer` unless the whole word matches.
+
+    A key written as "=name" matches the WHOLE normalised name and
+    nothing else. It is the escape for a name that is a word of a
+    longer name, where no keyword can tell them apart: the key
+    "implement" also matches "figma-implement-motion", because
+    collapsing the hyphens gives "figma implement motion".
     """
     n = norm(name)
     for k in keys:
+        if k.startswith('='):
+            # an exact-name key: the whole normalised name, nothing else
+            if n == norm(k[1:]):
+                return True
+            continue
         kw = ' '.join(re.sub(r'[-_/]+', ' ', k.lower()).split())
         if not kw:
             continue

@@ -10,13 +10,13 @@
    "skill:writing-skills"
   ],
   "scores": [
-   61.5998,
-   32.2108,
-   26.3827,
-   23.7108,
-   23.2108,
-   20.6718,
-   18.7041
+   62.0967,
+   32.3422,
+   26.5695,
+   23.8422,
+   23.3422,
+   20.7274,
+   18.7533
   ],
   "total": 26
  },
@@ -34,16 +34,16 @@
    "skill:laravel-security"
   ],
   "scores": [
-   12.6722,
-   9.8086,
-   9.2073,
-   7.5355,
-   7.5355,
-   6.995,
-   6.995,
-   6.2855,
-   6.2855,
-   6.2855
+   12.751,
+   9.8807,
+   9.325,
+   7.5976,
+   7.5976,
+   7.1072,
+   7.1072,
+   6.3476,
+   6.3476,
+   6.3476
   ],
   "total": 15
  },
@@ -57,12 +57,12 @@
    "skill:jira-integration"
   ],
   "scores": [
-   44.3436,
-   27.8537,
-   20.1236,
-   18.4623,
-   11.8537,
-   11.2261
+   44.3659,
+   27.914,
+   20.1237,
+   18.4678,
+   11.914,
+   11.3463
   ],
   "total": 22
  },
@@ -74,10 +74,10 @@
    "skill:mcp-server-patterns"
   ],
   "scores": [
-   50.3436,
-   24.849,
-   20.1236,
-   18.4623
+   50.3659,
+   24.8712,
+   20.1237,
+   18.4678
   ],
   "total": 11
  },
@@ -95,16 +95,16 @@
    "skill:django-patterns"
   ],
   "scores": [
-   34.1711,
-   33.7947,
-   32.4945,
-   31.6711,
-   29.1807,
-   25.7467,
+   34.2307,
+   33.8544,
+   32.4948,
+   31.7307,
+   29.2006,
+   25.7986,
    22.25,
    22.0,
-   14.8517,
-   14.6675
+   14.9313,
+   14.8951
   ],
   "total": 40
  },
@@ -124,14 +124,16 @@
    "skill:api-connector-builder",
    "skill:backend-patterns",
    "skill:mcp-server-patterns",
-   "agent:database-reviewer"
+   "agent:database-reviewer",
+   "skill:coding-standards"
   ],
   "scores": [
-   33.849,
-   24.849,
-   19.0976,
-   18.4623,
-   17.5
+   33.8712,
+   24.8712,
+   19.3314,
+   18.4678,
+   17.5,
+   8.4935
   ],
   "total": 20
  },
@@ -149,16 +151,16 @@
    "skill:artifact-template-three-statement-forecast"
   ],
   "scores": [
-   43.0817,
-   17.6901,
-   17.6901,
-   17.6901,
-   17.6901,
-   17.6901,
-   17.6901,
-   17.6901,
-   17.5793,
-   16.4034
+   43.1721,
+   17.9383,
+   17.9383,
+   17.9383,
+   17.9383,
+   17.9383,
+   17.9383,
+   17.9383,
+   17.8011,
+   16.6262
   ],
   "total": 20
  },
@@ -176,7 +178,7 @@
    "skill:caveman-mode"
   ],
   "scores": [
-   50.5669
+   51.0262
   ],
   "total": 1
  },
@@ -191,13 +193,13 @@
    "skill:deployment-patterns"
   ],
   "scores": [
-   49.0435,
-   47.9381,
-   36.3851,
-   36.2479,
-   13.4306,
-   13.4306,
-   12.7479
+   49.1743,
+   48.0652,
+   36.295,
+   36.2251,
+   13.4852,
+   13.4852,
+   12.7251
   ],
   "total": 10
  },
@@ -215,14 +217,14 @@
   ],
   "scores": [
    25.25,
-   19.611,
-   18.361,
+   19.6385,
+   18.3885,
    17.5,
    16.25,
    16.25,
    16.25,
    16.25,
-   10.5116
+   10.5216
   ],
   "total": 9
  },
@@ -232,60 +234,60 @@
    "agent:code-reviewer",
    "skill:code-review",
    "skill:receiving-code-review",
+   "skill:mattpocock-code-review",
    "skill:flutter-dart-code-review",
    "skill:plankton-code-quality",
    "skill:requesting-code-review",
    "skill:document-quality-check",
-   "skill:prediction-market-risk-review",
-   "skill:review-agent"
+   "skill:prediction-market-risk-review"
   ],
   "scores": [
-   41.5309,
-   38.4779,
-   28.864,
-   25.4619,
-   25.4619,
-   22.0525,
-   20.5964,
-   16.3628,
-   14.4199,
-   13.1288
+   41.7805,
+   38.7061,
+   29.196,
+   25.7379,
+   25.7379,
+   25.7379,
+   22.3865,
+   20.8034,
+   16.6284,
+   14.642
   ],
-  "total": 52
+  "total": 53
  },
  "code-review": {
   "ids": [
    "skill:code-review",
    "skill:receiving-code-review",
+   "skill:mattpocock-code-review",
    "skill:flutter-dart-code-review",
    "skill:requesting-code-review",
    "skill:review-agent",
    "skill:ponytail-review",
    "agent:code-reviewer",
    "agent:java-reviewer",
-   "skill:orch-refine-code",
-   "skill:codehealth-mcp"
+   "skill:orch-refine-code"
   ],
   "scores": [
-   25.4619,
-   25.4619,
-   25.4619,
-   20.5964,
-   13.1288,
-   13.1288,
-   13.0758,
-   10.4971,
-   9.0875,
-   8.282
+   25.7379,
+   25.7379,
+   25.7379,
+   25.7379,
+   20.8034,
+   13.3224,
+   13.3224,
+   13.248,
+   10.6284,
+   9.2115
   ],
-  "total": 39
+  "total": 40
  },
  "competition math olympiad proof": {
   "ids": [
    "skill:math-olympiad"
   ],
   "scores": [
-   70.317
+   70.8948
   ],
   "total": 1
  },
@@ -297,29 +299,29 @@
  "create a new skill": {
   "ids": [
    "skill:skill-creator-plus",
+   "skill:writing-skills",
    "skill:skill-creator",
    "skill:skill-development",
    "agent:skill-reviewer",
    "skill:figma-create-new-file",
    "agent:agent-creator",
-   "skill:writing-skills",
    "skill:skill-scout",
    "skill:skill-library-adder",
    "skill:example-skill"
   ],
   "scores": [
-   37.7079,
-   34.7079,
-   34.7079,
-   32.8234,
-   29.7911,
-   28.9971,
-   27.8167,
-   12.7079,
-   10.3234,
-   9.5953
+   37.875,
+   35.8656,
+   34.875,
+   34.875,
+   32.9544,
+   29.9668,
+   29.0328,
+   12.875,
+   10.4544,
+   9.7627
   ],
-  "total": 49
+  "total": 51
  },
  "data database pipeline": {
   "ids": [
@@ -335,16 +337,16 @@
    "skill:canvas2d-data-visualization"
   ],
   "scores": [
-   36.4916,
-   34.6713,
-   34.2815,
-   34.2815,
-   33.018,
-   31.2815,
-   31.2431,
-   25.2815,
-   25.2815,
-   25.2815
+   36.8483,
+   34.9756,
+   34.4909,
+   34.4909,
+   32.7971,
+   31.4909,
+   31.3518,
+   25.4909,
+   25.4909,
+   25.4909
   ],
   "total": 28
  },
@@ -362,16 +364,16 @@
    "skill:react-and-nextjs-data-visualization"
   ],
   "scores": [
-   57.1669,
-   52.5931,
-   48.1669,
-   48.1669,
-   37.3116,
-   36.5931,
-   35.4106,
-   33.0903,
-   32.1669,
-   27.9455
+   57.6045,
+   53.0147,
+   48.6045,
+   48.6045,
+   37.5238,
+   37.0147,
+   35.6181,
+   33.2454,
+   32.6045,
+   28.3261
   ],
   "total": 12
  },
@@ -388,15 +390,15 @@
    "skill:neon-postgres-egress-optimizer"
   ],
   "scores": [
-   38.8174,
-   36.5493,
-   30.6907,
-   27.5493,
-   23.8767,
-   23.8767,
-   20.204,
+   39.1108,
+   36.6734,
+   30.9165,
+   27.6734,
+   23.9443,
+   23.9443,
+   20.2151,
    16.25,
-   11.5493
+   11.6734
   ],
   "total": 13
  },
@@ -405,9 +407,9 @@
    "skill:debug-failing-test"
   ],
   "scores": [
-   63.3167
+   62.845
   ],
-  "total": 3
+  "total": 4
  },
  "debugging production incident": {
   "ids": [
@@ -418,11 +420,11 @@
    "skill:vercel-agent"
   ],
   "scores": [
-   28.3268,
-   20.8268,
+   28.3588,
+   20.8588,
    16.25,
    16.25,
-   9.8934
+   9.9756
   ],
   "total": 6
  },
@@ -437,23 +439,25 @@
    "skill:docker-patterns"
   ],
   "scores": [
-   27.0597,
-   27.0597
+   27.3477,
+   27.3477
   ],
   "total": 2
  },
  "document-builder": {
   "ids": [
    "skill:document-builder",
+   "agent:comfyui-workflow-builder",
    "skill:article-writing",
    "skill:competitive-report-structure"
   ],
   "scores": [
-   59.6115,
+   59.5937,
+   19.095,
    16.0,
    16.0
   ],
-  "total": 12
+  "total": 13
  },
  "explore the codebase agent": {
   "ids": [
@@ -469,18 +473,18 @@
    "skill:supply-chain"
   ],
   "scores": [
-   34.852,
-   26.352,
-   26.352,
+   34.8162,
+   26.3162,
+   26.3162,
    25.25,
-   22.3863,
-   21.2916,
-   18.713,
+   21.7279,
+   20.7175,
+   18.7041,
    17.5,
    17.5,
    16.25
   ],
-  "total": 18
+  "total": 19
  },
  "fix a failing build": {
   "ids": [
@@ -496,18 +500,18 @@
    "skill:circleci-builds"
   ],
   "scores": [
-   35.5127,
-   31.9072,
-   31.9072,
-   31.4072,
+   35.5291,
+   31.8991,
+   31.8991,
+   31.3991,
    25.25,
    22.25,
-   20.7718,
-   19.6149,
-   19.6149,
-   14.6779
+   20.389,
+   19.6169,
+   19.6169,
+   14.6016
   ],
-  "total": 13
+  "total": 14
  },
  "fix my latex document errors": {
   "ids": [
@@ -517,8 +521,8 @@
    "skill:competitive-report-structure"
   ],
   "scores": [
-   42.4158,
-   39.554,
+   42.7509,
+   39.6474,
    16.0,
    16.0
   ],
@@ -533,11 +537,11 @@
    "skill:impeccable"
   ],
   "scores": [
-   27.9112,
-   24.8854,
-   24.8854,
-   16.5563,
-   11.3413
+   27.9353,
+   25.1136,
+   25.1136,
+   16.6001,
+   11.3785
   ],
   "total": 5
  },
@@ -547,8 +551,8 @@
    "skill:token-budget-advisor"
   ],
   "scores": [
-   20.1569,
-   9.5957
+   20.1052,
+   9.156
   ],
   "total": 2
  },
@@ -567,7 +571,7 @@
    "skill:humanizer"
   ],
   "scores": [
-   64.0686
+   62.9353
   ],
   "total": 1
  },
@@ -579,10 +583,10 @@
    "skill:frontend-a11y"
   ],
   "scores": [
-   48.1732,
-   38.8854,
-   34.0092,
-   26.4713
+   48.4592,
+   39.1136,
+   34.124,
+   26.5284
   ],
   "total": 5
  },
@@ -596,11 +600,11 @@
    "skill:pylance-python-profiling"
   ],
   "scores": [
-   38.0288,
-   34.9032,
-   34.4032,
-   29.0288,
-   19.2572,
+   38.0766,
+   34.8271,
+   34.3271,
+   29.0766,
+   19.2691,
    16.0
   ],
   "total": 7
@@ -611,8 +615,8 @@
    "skill:test-triage"
   ],
   "scores": [
-   7.7879,
-   6.5379
+   7.8456,
+   6.5956
   ],
   "total": 2
  },
@@ -633,8 +637,8 @@
    "agent:architect"
   ],
   "scores": [
-   33.1514,
-   10.7141,
+   33.3825,
+   10.8291,
    9.5
   ],
   "total": 4
@@ -644,17 +648,17 @@
    "agent:mle-reviewer",
    "skill:mle-workflow",
    "skill:pytorch-patterns",
-   "skill:ml-adoption-playbook",
    "skill:huggingface-llm-trainer",
+   "skill:ml-adoption-playbook",
    "skill:transformers-js"
   ],
   "scores": [
-   19.1855,
-   17.6855,
-   12.7784,
-   12.7784,
-   12.7784,
-   9.4986
+   18.8519,
+   17.3519,
+   12.6087,
+   12.6087,
+   12.5042,
+   9.3919
   ],
   "total": 6
  },
@@ -663,7 +667,7 @@
    "skill:math-olympiad"
   ],
   "scores": [
-   57.4536
+   57.9158
   ],
   "total": 1
  },
@@ -674,9 +678,9 @@
    "skill:building-mcp-server-on-cloudflare"
   ],
   "scores": [
-   65.2684,
-   52.7855,
-   52.7855
+   65.8109,
+   53.2279,
+   53.2279
   ],
   "total": 28
  },
@@ -694,16 +698,16 @@
    "skill:google-workspace-ops"
   ],
   "scores": [
-   18.3658,
-   18.3658,
-   6.0914,
-   4.8414,
-   4.8414,
-   4.8414,
-   4.8414,
-   4.5914,
-   4.5914,
-   4.5914
+   18.595,
+   18.595,
+   6.1488,
+   4.8988,
+   4.8988,
+   4.8988,
+   4.8988,
+   4.6488,
+   4.6488,
+   4.6488
   ],
   "total": 11
  },
@@ -712,7 +716,7 @@
    "skill:moody-s-rating-analysis"
   ],
   "scores": [
-   6.9801
+   7.0379
   ],
   "total": 1
  },
@@ -741,8 +745,8 @@
    "agent:harness-optimizer"
   ],
   "scores": [
-   46.7187,
-   24.0789
+   46.6261,
+   24.2516
   ],
   "total": 8
  },
@@ -751,7 +755,7 @@
    "skill:python-testing"
   ],
   "scores": [
-   40.1907
+   40.4709
   ],
   "total": 2
  },
@@ -774,16 +778,16 @@
    "skill:vue-patterns"
   ],
   "scores": [
-   26.7466,
-   20.5922,
-   18.2597,
-   18.2597,
-   17.7597,
-   16.2983,
-   16.2983,
-   16.2983,
-   12.695,
-   12.695
+   27.2356,
+   20.9263,
+   18.5411,
+   18.5411,
+   18.0411,
+   16.5751,
+   16.5751,
+   16.5751,
+   12.9592,
+   12.9592
   ],
   "total": 19
  },
@@ -803,8 +807,8 @@
    "skill:literature-review"
   ],
   "scores": [
-   42.586,
-   38.5152
+   42.7908,
+   38.9117
   ],
   "total": 2
  },
@@ -816,9 +820,9 @@
    "agent:database-reviewer"
   ],
   "scores": [
-   37.8509,
-   24.849,
-   18.4623,
+   37.9299,
+   24.8712,
+   18.4678,
    17.5
   ],
   "total": 4
@@ -837,16 +841,16 @@
    "skill:receiving-code-review"
   ],
   "scores": [
-   44.4619,
-   35.0758,
-   28.8331,
-   28.8331,
-   27.5276,
-   27.1155,
+   44.7379,
+   35.248,
+   28.9156,
+   28.9156,
+   27.5963,
+   27.1845,
    25.25,
-   24.111,
+   24.1385,
    23.5,
-   22.1426
+   22.4493
   ],
   "total": 17
  },
@@ -859,11 +863,11 @@
    "skill:triage-finding"
   ],
   "scores": [
-   26.02,
-   25.3254,
-   21.9849,
-   17.3532,
-   8.7857
+   26.3641,
+   25.611,
+   22.3244,
+   17.6305,
+   8.8983
   ],
   "total": 5
  },
@@ -881,16 +885,16 @@
    "agent:react-reviewer"
   ],
   "scores": [
-   26.02,
-   16.3883,
-   14.5111,
-   13.9569,
-   13.9569,
-   11.3253,
-   8.5708,
-   8.5708,
-   8.5708,
-   8.5708
+   26.3641,
+   16.6702,
+   14.7722,
+   14.1779,
+   14.1779,
+   11.484,
+   8.688,
+   8.688,
+   8.688,
+   8.688
   ],
   "total": 22
  },
@@ -902,10 +906,10 @@
    "skill:autonomous-agent-harness"
   ],
   "scores": [
-   22.3863,
-   22.3863,
-   16.7897,
-   5.5966
+   22.617,
+   22.617,
+   16.9627,
+   5.6542
   ],
   "total": 4
  },
@@ -922,10 +926,10 @@
    "agent:agent-evaluator"
   ],
   "scores": [
-   86.0377,
-   34.852,
-   26.352,
-   26.352
+   86.7213,
+   34.8162,
+   26.3162,
+   26.3162
   ],
   "total": 6
  },
@@ -935,22 +939,24 @@
    "skill:workflow",
    "skill:django-tdd",
    "agent:tdd-guide",
+   "skill:tdd",
    "skill:laravel-tdd",
    "skill:quarkus-tdd",
    "skill:springboot-tdd",
    "agent:ecc-coordinator"
   ],
   "scores": [
-   28.3963,
-   20.1569,
-   17.7049,
-   13.7787,
-   13.2787,
-   13.2787,
-   13.2787,
-   8.9654
+   28.3095,
+   20.1052,
+   17.6408,
+   13.7306,
+   13.2306,
+   13.2306,
+   13.2306,
+   13.2306,
+   8.9365
   ],
-  "total": 14
+  "total": 15
  },
  "terraform module state locking": {
   "ids": [],
@@ -963,8 +969,8 @@
    "skill:game-playtest"
   ],
   "scores": [
-   21.0235,
-   8.6107
+   21.2293,
+   8.6718
   ],
   "total": 2
  },
@@ -973,7 +979,7 @@
    "skill:investigation-mode"
   ],
   "scores": [
-   12.204
+   12.2608
   ],
   "total": 1
  },
@@ -985,10 +991,10 @@
    "skill:temporal-developer"
   ],
   "scores": [
-   14.1333,
-   12.0019,
-   6.1333,
-   5.8833
+   14.191,
+   11.9651,
+   6.191,
+   5.941
   ],
   "total": 4
  },
@@ -1006,7 +1012,7 @@
    "agent:typescript-reviewer"
   ],
   "scores": [
-   29.3196
+   29.7442
   ],
   "total": 1
  },
@@ -1039,18 +1045,18 @@
    "skill:orch-change-feature"
   ],
   "scores": [
-   27.3648,
-   27.3648,
+   27.4215,
+   27.4215,
    25.25,
    25.0,
    22.25,
    22.0,
    22.0,
    22.0,
-   18.572,
-   18.572
+   18.7984,
+   18.7984
   ],
-  "total": 21
+  "total": 22
  },
  "writing technical documentation": {
   "ids": [
@@ -1060,10 +1066,10 @@
    "skill:search-company-knowledge"
   ],
   "scores": [
-   20.4849,
-   13.6616,
-   10.3475,
-   8.8475
+   20.6559,
+   13.7186,
+   10.3674,
+   8.8674
   ],
   "total": 4
  },

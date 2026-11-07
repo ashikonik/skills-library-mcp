@@ -1,6 +1,16 @@
 ---
 name: writing-plans
-description: Use when you have a spec or requirements for a multi-step task, before touching code
+description: Use when you have a spec or requirements for a multi-step task, before
+  touching code
+metadata:
+  promptSignals:
+    phrases:
+    - write an implementation plan
+    - plan a multi-step task
+    - plan before writing code
+    - break a feature into steps
+    - implementation plan from a spec
+    - plan a refactor
 ---
 
 # Writing Plans

@@ -1,6 +1,16 @@
 ---
 name: writing-skills
-description: Use when creating new skills, editing existing skills, or verifying skills work before deployment
+description: Use when creating new skills, editing existing skills, or verifying skills
+  work before deployment
+metadata:
+  promptSignals:
+    phrases:
+    - create a new skill
+    - write a skill
+    - edit an existing skill
+    - verify a skill works
+    - author a skill
+    - skill frontmatter and structure
 ---
 
 # Writing Skills

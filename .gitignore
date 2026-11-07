@@ -1,8 +1,9 @@
 # The skills and the agents ARE this repository. They are tracked.
 
-# Third-party clone with its own .git -- a nested repo would become a
-# gitlink and break this repository's history.
+# Third-party clones with their own .git -- a nested repo would become
+# a gitlink and break this repository's history.
 ponytail/.git
+mattpocock-skills/.git
 
 # Python
 __pycache__/

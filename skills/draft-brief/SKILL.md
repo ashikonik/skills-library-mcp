@@ -1,9 +1,19 @@
 ---
 name: draft-brief
-description: "Drafts court filings — motions, memoranda of law, appellate briefs — as court-ready .docx, with Midpage research behind every citation. Use to \"draft a motion to dismiss,\" \"write the brief.\""
+description: Drafts court filings — motions, memoranda of law, appellate briefs —
+  as court-ready .docx, with Midpage research behind every citation. Use to "draft
+  a motion to dismiss," "write the brief."
 metadata:
   version: 0.2.0
   author: midpage
+  promptSignals:
+    phrases:
+    - draft a motion to dismiss
+    - write an appellate brief
+    - draft a memorandum of law
+    - court filing
+    - write a legal brief
+    - legal motion with citations
 ---
 
 # Draft Brief

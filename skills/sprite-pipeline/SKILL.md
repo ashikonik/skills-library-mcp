@@ -1,6 +1,17 @@
 ---
 name: sprite-pipeline
-description: Generate and normalize 2D sprite animations. Use when the user asks for full-strip generation from approved source frames, consistent anchor and scale normalization, or preview assets for browser-game animation.
+description: Generate and normalize 2D sprite animations. Use when the user asks for
+  full-strip generation from approved source frames, consistent anchor and scale normalization,
+  or preview assets for browser-game animation.
+metadata:
+  promptSignals:
+    phrases:
+    - generate a sprite animation
+    - full strip sprite sheet
+    - normalize sprite anchors
+    - scale normalize game sprites
+    - preview browser game animation
+    - 2d sprite frames
 ---
 
 # Sprite Pipeline

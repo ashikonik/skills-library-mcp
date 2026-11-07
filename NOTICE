@@ -287,7 +287,7 @@ for it; the vendored copies remain Anthropic's.
 
 | Reason | Count |
 |---|---:|
-| Published — the licence permits redistribution | 953 |
+| Published — the licence permits redistribution | 1017 |
 | Published — the owner's instruction; the terms do not permit it | 135 |
 | Excluded — the maintainer's own private project files | 2 |
 | Excluded — test fixtures, not published content | 3 |
@@ -328,6 +328,13 @@ The `ponytail/` directory is an upstream clone kept whole, with its
 own `LICENSE` (MIT, (c) 2026 Dietrich Gebert) and its own history.
 It is a third-party project, redistributed unchanged under its own
 licence, and it is *not* covered by this repository's MIT licence.
+
+The `mattpocock-skills/` directory is a second upstream clone, kept
+whole, with its own `LICENSE` (MIT, (c) 2026 Matt Pocock). It is a
+third-party project, redistributed under its own licence, and it is
+*not* covered by this repository's MIT licence. Its `UPSTREAM.md`
+records the commit it is pinned to and the two changes made to the
+clone, both of which the upstream itself sanctions.
 
 The `skills/impeccable/` directory is redistributed under Apache-2.0
 from [pbakaus/impeccable](https://github.com/pbakaus/impeccable);

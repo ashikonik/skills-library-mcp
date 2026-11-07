@@ -1,6 +1,19 @@
 ---
 name: netlify-image-cdn
-description: Guide for using Netlify Image CDN for image optimization and transformation. Use when serving optimized images, creating responsive image markup, setting up user-uploaded image pipelines, or configuring image transformations. Covers the /.netlify/images endpoint, query parameters, remote image allowlisting, clean URL rewrites, and composing uploads with Functions + Blobs.
+description: Guide for using Netlify Image CDN for image optimization and transformation.
+  Use when serving optimized images, creating responsive image markup, setting up
+  user-uploaded image pipelines, or configuring image transformations. Covers the
+  /.netlify/images endpoint, query parameters, remote image allowlisting, clean URL
+  rewrites, and composing uploads with Functions + Blobs.
+metadata:
+  promptSignals:
+    phrases:
+    - optimize images with netlify cdn
+    - netlify image transformations
+    - responsive image markup
+    - allowlist remote images
+    - clean url image rewrites
+    - serve optimized images
 ---
 
 # Netlify Image CDN

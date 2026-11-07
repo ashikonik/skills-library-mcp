@@ -1,6 +1,18 @@
 ---
 name: reports-pdfs-and-slide-automation
-description: Lay out and export data-rich reports and documents. Use when the user needs report structure, figure packaging, PDFs, PowerPoint or Google Slides automation, or programmatic insertion of visualizations, UML-like diagrams, or architecture diagrams into documents.
+description: Lay out and export data-rich reports and documents. Use when the user
+  needs report structure, figure packaging, PDFs, PowerPoint or Google Slides automation,
+  or programmatic insertion of visualizations, UML-like diagrams, or architecture
+  diagrams into documents.
+metadata:
+  promptSignals:
+    phrases:
+    - lay out a report
+    - export a pdf report
+    - generate a powerpoint automatically
+    - insert a diagram into a document
+    - package figures for a report
+    - programmatic slide automation
 ---
 
 # Reports, PDFs, and Slide Automation

@@ -1,6 +1,20 @@
 ---
 name: node-link-and-diagram-layout
-description: Choose and apply automatic layout strategies for node-link diagrams and connected-node visuals. Use when the user asks how to auto-arrange nodes, reduce line crossings, route edges, avoid overlaps, stabilize layout, or choose graph-layout algorithms for network diagrams, dependency graphs, database schema diagrams, ERDs, state machines, decision trees, flow diagrams, box-and-line editors, or other line-connected nodes.
+description: Choose and apply automatic layout strategies for node-link diagrams and
+  connected-node visuals. Use when the user asks how to auto-arrange nodes, reduce
+  line crossings, route edges, avoid overlaps, stabilize layout, or choose graph-layout
+  algorithms for network diagrams, dependency graphs, database schema diagrams, ERDs,
+  state machines, decision trees, flow diagrams, box-and-line editors, or other line-connected
+  nodes.
+metadata:
+  promptSignals:
+    phrases:
+    - arrange nodes automatically
+    - reduce line crossings in a graph
+    - choose a graph layout algorithm
+    - route edges without overlaps
+    - database schema diagram layout
+    - state machine diagram layout
 ---
 
 # Node-Link and Diagram Layout

@@ -71,7 +71,11 @@ COPY_FILES = [
 
 # The upstream clone: kept whole, minus its own .git. A nested repo would
 # become a gitlink and break the parent's history.
-UPSTREAM_CLONES = ['ponytail']
+# The upstream clones that travel into the published tree whole, with
+# their own LICENSE and their own attribution. A clone is not content
+# this repository wrote, so it is copied rather than regenerated, and
+# its licence rides along with it.
+UPSTREAM_CLONES = ['ponytail', 'mattpocock-skills']
 
 SKIP_DIRS = {'__pycache__', 'node_modules', '.git', '.pytest_cache',
              '.ruff_cache', '.mypy_cache'}
@@ -91,9 +95,10 @@ SCRATCH_FILES = {'_patch.py', '_scratch.py', 'scratch.py'}
 PUBLIC_GITIGNORE = """\
 # The skills and the agents ARE this repository. They are tracked.
 
-# Third-party clone with its own .git -- a nested repo would become a
-# gitlink and break this repository's history.
+# Third-party clones with their own .git -- a nested repo would become
+# a gitlink and break this repository's history.
 ponytail/.git
+mattpocock-skills/.git
 
 # Python
 __pycache__/

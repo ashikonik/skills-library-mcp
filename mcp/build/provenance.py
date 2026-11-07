@@ -270,6 +270,49 @@ PONYTAIL = {
     'repository': 'https://github.com/dietrichgebert/ponytail',
 }
 
+# The second upstream clone: Matt Pocock's skill library, vendored whole
+# at a pinned commit. Its own LICENSE names the author, so the credit goes
+# to them and not to the maintainer who happens to have cloned it.
+#
+# The clone lives inside this library's own directory, so the generic
+# container rule in `describe()` would label it "this-library" and credit
+# the maintainer for somebody else's work. The rule below catches it
+# first.
+MATTPOCOCK_SKILLS = (
+    'ask-matt',
+    'codebase-design',
+    'diagnosing-bugs',
+    'domain-modeling',
+    'grill-me',
+    'grill-with-docs',
+    'grilling',
+    'handoff',
+    'implement',
+    'implement-spec',
+    'improve-codebase-architecture',
+    'mattpocock-code-review',
+    'pr',
+    'prototype',
+    'research',
+    'retro',
+    'setup-matt-pocock-skills',
+    'tdd',
+    'teach',
+    'to-questionnaire',
+    'to-spec',
+    'to-tickets',
+    'triage',
+    'wait-what',
+    'wayfinder',
+    'wizard',
+    'writing-for-agents',
+)
+MATTPOCOCK = {
+    'license': 'MIT',
+    'owner': 'Matt Pocock',
+    'repository': 'https://github.com/mattpocock/skills',
+}
+
 # The maintainer's own packs. They carry no licence file of their own --
 # they predate the licence decision -- so the licence resolver finds
 # nothing and calls them "restricted". They are the maintainer's own
@@ -716,6 +759,13 @@ def describe(src):
         if src.startswith(os.path.join(HOME, 'Projects', 'ECC')):
             container, owner = 'ecc', 'Affaan Mustafa (affaan-m/ECC)'
             repo = 'https://github.com/affaan-m/ECC'
+        elif src.startswith(os.path.join(HOME, 'Projects', 'Skills_n_Agents',
+                                         'mattpocock-skills')):
+            # The vendored upstream clone. It lives inside this library's
+            # own directory, so without this branch the rule below would
+            # credit the maintainer for somebody else's work.
+            container, owner = 'mattpocock-clone', MATTPOCOCK['owner']
+            repo = MATTPOCOCK['repository']
         elif src.startswith(os.path.join(HOME, 'Projects', 'Skills_n_Agents')):
             container, owner = 'this-library', 'This library (hand-authored)'
         elif src.startswith(os.path.join(HOME, 'Projects', 'CSE412')):
@@ -892,6 +942,15 @@ def resolve(library_data=None):
                 owner = PONYTAIL['owner']
                 repo = PONYTAIL['repository']
                 container = 'ponytail-clone'
+            elif name in MATTPOCOCK_SKILLS:
+                # The second upstream clone, kept whole. Same reasoning
+                # as the ponytail clone: the licence and the credit are
+                # the upstream author's, not the maintainer's.
+                lic = MATTPOCOCK['license']
+                lic_src = 'upstream clone'
+                owner = MATTPOCOCK['owner']
+                repo = MATTPOCOCK['repository']
+                container = 'mattpocock-clone'
             elif name in OWN_PACKS:
                 # The maintainer's own pack. The licence comes from the
                 # pack's own LICENSE file when it has one -- the file is

@@ -108,35 +108,38 @@ var words = raw.filter(function (w) {
 3. **Is this a produced music track (vocals + full instrumentation)?** → Start with `medium.en`, expect to need manual lyrics or an external API
 4. **Is this multilingual?** → Use `medium` or `large-v3` (no `.en` suffix)
 
-## Using External Transcription APIs
+## Importing a Transcript
 
-For the best accuracy, use an external API and import the result:
-
-**OpenAI Whisper API** (recommended for quality):
+If you already have a transcript file, import it directly:
 
 ```bash
-# Generate with word timestamps, then import
-curl https://api.openai.com/v1/audio/transcriptions \
-  -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -F file=@audio.mp3 -F model=whisper-1 \
-  -F response_format=verbose_json \
-  -F "timestamp_granularities[]=word" \
-  -o transcript-openai.json
-
-npx hyperframes transcribe transcript-openai.json
+npx hyperframes transcribe transcript.json
 ```
 
-**Groq Whisper API** (fast, free tier available):
+`transcript.json`, `.srt`, and `.vtt` files are all accepted. When the
+transcript was produced by a local transcription run rather than an external
+service, it has the same shape — a list of segments with `start`, `end`, and
+`text` fields, plus optional word-level timings.
+
+### Producing a transcript locally
+
+Transcription runs locally with whisper.cpp or faster-whisper; no API key and
+no hosted service is involved. The `subtitle-generation` skill covers the
+full setup, including caption line-breaking and reading-speed enforcement.
 
 ```bash
-curl https://api.groq.com/openai/v1/audio/transcriptions \
-  -H "Authorization: Bearer $GROQ_API_KEY" \
-  -F file=@audio.mp3 -F model=whisper-large-v3 \
-  -F response_format=verbose_json \
-  -F "timestamp_granularities[]=word" \
-  -o transcript-groq.json
+# faster-whisper, with word timestamps
+python3 -c "
+from faster_whisper import WhisperModel
+model = WhisperModel('large-v3', device='cuda', compute_type='float16')
+segments, _ = model.transcribe('audio.mp3', word_timestamps=True)
+import json
+print(json.dumps([
+  {'start': s.start, 'end': s.end, 'text': s.text.strip()} for s in segments
+], indent=2))
+" > transcript.json
 
-npx hyperframes transcribe transcript-groq.json
+npx hyperframes transcribe transcript.json
 ```
 
 ## If No Transcript Exists

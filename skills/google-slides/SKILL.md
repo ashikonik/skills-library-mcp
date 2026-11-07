@@ -1,11 +1,48 @@
 ---
 name: google-slides
-description: Google Slides work for finding, reading, summarizing, creating, importing, template following, visual cleanup, source-deck adaptation, structural repair, and content edits in native Slides decks.
+description: Google Slides work for finding, reading, summarizing, creating, importing,
+  template following, visual cleanup, source-deck adaptation, structural repair, and
+  content edits in native Slides decks. Requires a Google Slides connector — in Codex
+  that is the Google Drive plugin. For building decks from scratch without a Google
+  connector, see agent-slide-decks, frontend-slides, or canva-branded-presentation.
+metadata:
+  requires: google-slides-connector
+  promptSignals:
+    phrases:
+    - read a google slides deck
+    - summarize a google slides file
+    - create a google slides deck
+    - import slides into google slides
+    - clean up a slides layout
+    - edit google slides content
 ---
 
 # Google Slides
 
 Use this skill for Google Slides work in Codex local-plugin sessions.
+
+## Requirements
+
+This skill needs a **Google Slides connector**: a tool that can read and
+write native Google Slides decks. The rest of this corpus is
+harness-agnostic, but this skill is not — the connector is what makes the
+work possible, and its tool names differ between harnesses.
+
+| Harness | Connector |
+|---|---|
+| Codex | the Google Drive plugin (`google-drive@openai-curated`) |
+| Another MCP client | whatever Slides connector that client exposes |
+
+The tool names used throughout `references/` are Codex's
+(`mcp__codex_apps__google_drive_*`). A client with a differently-named
+connector should map its own names onto the same operations: get
+presentation, get slide, get slide thumbnail, batch update presentation,
+import presentation.
+
+If no connector is available, this skill cannot be used. For building decks
+from scratch without a Google connector, use `agent-slide-decks` (Marp,
+Slidev, reveal.js, python-pptx), `frontend-slides` (HTML presentations), or
+`canva-branded-presentation`.
 
 ## Purpose Of This File
 
