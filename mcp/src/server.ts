@@ -32,6 +32,7 @@ import {
 import type { Harness } from './frontmatter.js';
 import { installRevisionHandlers, installRevisionResultFields, installSkillsExtension, RevisionState } from './revision.js';
 import { decodeCursor, cursorMatches, type Cursor } from './protocol.js';
+import { FilterError } from './filters.js';
 import { defaultPolicy, describePolicy, loadPolicy, permit, refusalFields, type Policy } from './policy.js';
 import { recordInstall, forgetInstall, recordsFor } from './manifest.js';
 
@@ -244,17 +245,26 @@ export function createServer(deps: Deps): McpServer {
         const c = decodeCursor(cursor);
         if (c && cursorMatches(c, query)) decoded = c;
       }
-      const out = search.search(query, {
-        limit,
-        kind,
-        tier,
-        domain,
-        source,
-        license,
-        verdict,
-        include_body,
-        cursor: decoded?.after,
-      });
+      let out: ReturnType<typeof search.search>;
+      try {
+        out = search.search(query, {
+          limit,
+          kind,
+          tier,
+          domain,
+          source,
+          license,
+          verdict,
+          include_body,
+          cursor: decoded?.after,
+        });
+      } catch (e) {
+        // A filter that names nothing is a mistake in the call, not an
+        // empty library. The caller is told which filter was wrong and
+        // what the valid values are.
+        if (e instanceof FilterError) return asError(e.message);
+        throw e;
+      }
 
       // The cursor fields belong to `2026-07-28`. On the older
       // revision they are removed: a client reading the old revision

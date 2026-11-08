@@ -40,6 +40,7 @@ from installers import (                            # noqa: E402
 )
 import protocol                                  # noqa: E402
 import skills_extension                          # noqa: E402
+import filters                                   # noqa: E402
 import policy                                    # noqa: E402
 import policy_rules                              # noqa: E402
 import manifest                                  # noqa: E402
@@ -589,18 +590,24 @@ class Server:
                 if decoded and protocol.cursor_matches(decoded, q):
                     cursor = decoded['after']
 
-        out = self.index.search(
-            q,
-            limit=limit,
-            kind=args.get('kind'),
-            tier=args.get('tier'),
-            domain=args.get('domain'),
-            source=args.get('source'),
-            license=args.get('license'),
-            verdict=args.get('verdict'),
-            include_body=args.get('include_body', False),
-            cursor=cursor,
-        )
+        try:
+            out = self.index.search(
+                q,
+                limit=limit,
+                kind=args.get('kind'),
+                tier=args.get('tier'),
+                domain=args.get('domain'),
+                source=args.get('source'),
+                license=args.get('license'),
+                verdict=args.get('verdict'),
+                include_body=args.get('include_body', False),
+                cursor=cursor,
+            )
+        except filters.FilterError as e:
+            # A filter that names nothing is a mistake in the call, not
+            # an empty library. The caller is told which filter was
+            # wrong and what the valid values are.
+            raise ToolError(str(e))
 
         # The cursor fields belong to `2026-07-28`. On the older
         # revision they are removed: a client reading the old revision

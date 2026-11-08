@@ -16,10 +16,10 @@ Scoring
 -------
     idf(t)       = ln(1 + N / df(t))            N = number of entries
     name_exact   = 3.0 * idf(t)   t is a name token
-    name_partial = 1.5 * idf(t)   t is a prefix/substring of a name token
+    name_partial = 1.5 * idf(t)   t is a prefix of a name token
     desc_match   = 1.0 * idf(t)   t is a description token
     phrase       = 6.0            a query bigram matches a name bigram
-    signal       = 8.0 * idf(t)   t is in metadata.promptSignals.phrases
+    signal       = 8.0            t is in metadata.promptSignals.phrases
     task_match   = 25.0           the query matches a row of the task index
     task_content = 8.0            the query has the row's content, verb dropped
     task_head    = 16.0           the row's content is the query's HEAD noun
@@ -78,6 +78,7 @@ sys.path.insert(0, os.path.join(BASE, 'mcp', 'python'))
 
 from build_index import tokenize, bigrams, head_tokens, STOPWORDS   # noqa: E402
 import protocol   # noqa: E402
+import filters    # noqa: E402
 
 
 DEFAULT_LIMIT = 10
@@ -406,6 +407,15 @@ class SearchIndex:
         for t in self.tasks:
             self.task_content[t['task']] = [list(c) for c in (t.get('content') or [])]
 
+        # The filter vocabulary, so a filter argument that names
+        # nothing can be reported as an error rather than as an empty
+        # result. See `mcp/python/filters.py`.
+        self.filter_values = filters.vocabulary(
+            self.entries,
+            lambda e: e.get('domain'),
+            lambda e: e.get('provenance'),
+        )
+
     def idf(self, t):
         return math.log(1.0 + self.n / float(self.df.get(t, 0) or 1))
 
@@ -720,6 +730,16 @@ class SearchIndex:
             return {'query': query, 'total_matched': 0, 'filtered_out': 0,
                     'returned': 0, 'truncated': False, 'note': '',
                     'results': []}
+
+        # The filter arguments are resolved against the index's
+        # vocabulary before anything is scored. A filter that names
+        # nothing is an error, not an empty result -- see
+        # `mcp/python/filters.py`.
+        domain = filters.resolve('domain', domain, self.filter_values['domain'])
+        source = filters.resolve('source', source, self.filter_values['source'])
+        license = filters.resolve('license', license, self.filter_values['license'])
+        verdict = filters.resolve('verdict', verdict, self.filter_values['verdict'])
+
         q_bigrams = bigrams(q_tokens)
         query_lower = ' '.join((query or '').lower().split())
         # The query's head nouns -- what it is *about*, as opposed to the
@@ -742,7 +762,7 @@ class SearchIndex:
             prov = e.get('provenance') or {}
             if source and prov.get('container') != source:
                 continue
-            if license and (prov.get('license') or '').lower() != license.lower():
+            if license and prov.get('license') != license:
                 continue
             if verdict and prov.get('verdict') != verdict:
                 continue

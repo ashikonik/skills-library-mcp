@@ -161,6 +161,22 @@ def check_server(label, cmd, env=None):
     check('%s: the error names the missing field' % label,
           'names' in msg, msg[:200])
 
+    # A filter that names nothing is a tool error, not an empty
+    # result. The caller has to be able to tell "you asked for a domain
+    # that does not exist" from "your query matched nothing".
+    _, bad = drive(cmd, env, with_call={'query': 'write code',
+                                         'domain': 'Not A Domain'})
+    badres = bad.get(9, {}).get('result', {})
+    badmsg = ''
+    if badres.get('content'):
+        badmsg = badres['content'][0].get('text', '')
+    check('%s: an unknown filter returns isError' % label,
+          badres.get('isError') is True, str(badres)[:200])
+    check('%s: the error names the filter' % label,
+          'domain' in badmsg, badmsg[:200])
+    check('%s: the error names the value' % label,
+          'Not A Domain' in badmsg, badmsg[:200])
+
     return {
         'tools': [(t['name'], t.get('title'), t.get('description'),
                    json.dumps(t.get('annotations'), sort_keys=True))

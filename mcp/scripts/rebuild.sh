@@ -79,6 +79,12 @@ step "running the search rules gate"
 # not visibly change.
 python3 "$LIBRARY_ROOT/mcp/tests/test_search_rules.py"
 
+step "running the filter validation gate"
+# A filter that names nothing is an error, not an empty result. This
+# gate checks that, and checks that the two implementations resolve a
+# filter the same way -- including the wording of the error.
+python3 "$LIBRARY_ROOT/mcp/tests/test_filter_validation.py"
+
 step "checking the search ranking"
 # The ranking gate is the only regression check on *order*, so it
 # belongs here and not only under `.verify_all.py`.
@@ -91,6 +97,7 @@ bash "$LIBRARY_ROOT/mcp/scripts/break_check_policy.sh"
 bash "$LIBRARY_ROOT/mcp/scripts/break_check_skills.sh"
 bash "$LIBRARY_ROOT/mcp/scripts/break_check_provenance.sh"
 bash "$LIBRARY_ROOT/mcp/scripts/break_check_search.sh"
+bash "$LIBRARY_ROOT/mcp/scripts/break_check_filters.sh"
 
 echo
 echo "REBUILD: PASS"

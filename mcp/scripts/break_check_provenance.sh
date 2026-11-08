@@ -96,7 +96,7 @@ PYEOF
 
 break_and_expect_fail \
   "the verdict filter stops filtering (TypeScript)" "$TS" \
-  "s = s.replace(\"      if (opts.verdict && prov.verdict !== opts.verdict) continue;\", \"      if (false) continue;\")"
+  "s = s.replace(\"      if (verdict && prov.verdict !== verdict) continue;\", \"      if (false) continue;\")"
 
 break_and_expect_fail \
   "the verdict filter stops filtering (Python)" "$PY" \
@@ -104,15 +104,15 @@ break_and_expect_fail \
 
 break_and_expect_fail \
   "the licence filter stops filtering (TypeScript)" "$TS" \
-  "s = s.replace(\"      if (opts.license && prov.license.toLowerCase() !== opts.license.toLowerCase()) continue;\", \"      if (false) continue;\")"
+  "s = s.replace(\"      if (license && prov.license !== license) continue;\", \"      if (false) continue;\")"
 
 break_and_expect_fail \
   "the licence filter stops filtering (Python)" "$PY" \
-  "s = s.replace(\"            if license and (prov.get('license') or '').lower() != license.lower():\n                continue\", \"            if False:\n                continue\")"
+  "s = s.replace(\"            if license and prov.get('license') != license:\n                continue\", \"            if False:\n                continue\")"
 
 break_and_expect_fail \
   "the source filter stops filtering (TypeScript)" "$TS" \
-  "s = s.replace(\"      if (opts.source && prov.container !== opts.source) continue;\", \"      if (false) continue;\")"
+  "s = s.replace(\"      if (source && prov.container !== source) continue;\", \"      if (false) continue;\")"
 
 break_and_expect_fail \
   "the source filter stops filtering (Python)" "$PY" \

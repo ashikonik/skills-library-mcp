@@ -10,10 +10,10 @@
  * -------
  *     idf(t)       = ln(1 + N / df(t))            N = number of entries
  *     name_exact   = 3.0 * idf(t)   t is a name token
- *     name_partial = 1.5 * idf(t)   t is a prefix/substring of a name token
+ *     name_partial = 1.5 * idf(t)   t is a prefix of a name token
  *     desc_match   = 1.0 * idf(t)   t is a description token
  *     phrase       = 6.0            a query bigram matches a name bigram
- *     signal       = 8.0 * idf(t)   t is in metadata.promptSignals.phrases
+ *     signal       = 8.0            t is in metadata.promptSignals.phrases
  *     task_match   = 25.0           the query matches a row of the task index
  *     task_content = 8.0            the query has the row's content, verb dropped
  *     task_head    = 16.0           the row's content is the query's HEAD noun
@@ -61,6 +61,8 @@
  */
 import { tokenize, bigrams, headTokens } from './tokenize.js';
 import { encodeCursor } from './protocol.js';
+import * as filters from './filters.js';
+import type { FilterName } from './filters.js';
 import type {
   Entry,
   LibraryIndex,
@@ -434,6 +436,10 @@ export class SearchIndex {
   /** Each entry's position in each task row. Position 0 is the row's
    *  primary entry -- the one its note recommends. */
   private readonly taskPositions = new Map<string, number>();
+  /** The filter vocabulary, so a filter argument that names nothing can
+   *  be reported as an error rather than as an empty result. See
+   *  `mcp/src/filters.ts`. */
+  readonly filterValues: Record<FilterName, string[]>;
 
   constructor(data: LibraryIndex) {
     this.data = data;
@@ -482,6 +488,15 @@ export class SearchIndex {
       // so both servers match a row the same way.
       this.taskContent.set(t.task, (t.content ?? []).map((c) => [...c]));
     }
+
+    // The filter vocabulary, so a filter argument that names nothing
+    // can be reported as an error rather than as an empty result. See
+    // `mcp/src/filters.ts`.
+    this.filterValues = filters.vocabulary(
+      this.entries,
+      (e) => (e as Entry).domain,
+      (e) => (e as Entry).provenance,
+    );
 
     // ...and each entry's position in each row. The table lists a row's
     // primary entry first, so position 0 is that entry; a later member
@@ -832,6 +847,14 @@ export class SearchIndex {
         results: [],
       };
     }
+    // The filter arguments are resolved against the index's vocabulary
+    // before anything is scored. A filter that names nothing is an
+    // error, not an empty result -- see `mcp/src/filters.ts`.
+    const domain = filters.resolve('domain', opts.domain, this.filterValues.domain);
+    const source = filters.resolve('source', opts.source, this.filterValues.source);
+    const license = filters.resolve('license', opts.license, this.filterValues.license);
+    const verdict = filters.resolve('verdict', opts.verdict, this.filterValues.verdict);
+
     const qBigrams = bigrams(qTokens);
     const queryLower = (query ?? '')
       .toLowerCase()
@@ -848,14 +871,14 @@ export class SearchIndex {
     for (const e of this.entries) {
       if (opts.kind && e.kind !== opts.kind) continue;
       if (opts.tier !== undefined && opts.tier !== null && e.tier !== opts.tier) continue;
-      if (opts.domain && e.domain !== opts.domain) continue;
+      if (domain && e.domain !== domain) continue;
       // The provenance filters. A caller who needs to know what may
       // be redistributed asks for it here, rather than filtering the
       // results afterwards.
       const prov = e.provenance;
-      if (opts.source && prov.container !== opts.source) continue;
-      if (opts.license && prov.license.toLowerCase() !== opts.license.toLowerCase()) continue;
-      if (opts.verdict && prov.verdict !== opts.verdict) continue;
+      if (source && prov.container !== source) continue;
+      if (license && prov.license !== license) continue;
+      if (verdict && prov.verdict !== verdict) continue;
       const [s, matched, tokenHits, structured] = this.scoreEntry(
         e, qTokens, qBigrams, queryLower, heads);
       if (s <= 0) continue;
