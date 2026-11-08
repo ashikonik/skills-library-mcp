@@ -19,6 +19,15 @@ The last four need the MCP index. If `mcp/data/index.json` is missing
 they are skipped with a message rather than failed -- a fresh clone
 without a built index should not report a false failure -- but the
 skipped steps are named in the output, so a green run never hides them.
+
+**A skip is not a pass.** The exit code distinguishes two kinds of
+skip. The machine-scanning steps are skipped *by design* in a published
+tree -- there is no machine behind it -- and that is an expected skip.
+Any other skip means a gate did not run: the index is missing, or the
+TypeScript build is missing, or a step reported its own skip. Those
+make the run INCOMPLETE, and the script exits non-zero saying so. A
+verification that did not check the thing it claims to check must not
+report success.
 """
 import os
 import subprocess
@@ -55,6 +64,7 @@ STEPS = [
     ('MCP cross-implementation', 'mcp/tests/test_agreement.py'),
     ('MCP protocol', 'mcp/tests/test_jsonrpc.py'),
     ('search ranking', 'mcp/scripts/eval_search.py'),
+    ('published tree in sync', 'mcp/tests/test_published_tree.py'),
 ]
 
 # The steps that compare the library against the machine it was scanned
@@ -82,6 +92,7 @@ INDEX = os.path.join(BASE, 'mcp', 'data', 'index.json')
 
 failures = []
 skipped = []
+unexpected_skips = []
 for label, script in STEPS:
     print('=' * 70)
     print('== %s   (%s)' % (label, script))
@@ -99,6 +110,7 @@ for label, script in STEPS:
         print('SKIPPED: %s not found. Run scripts/rebuild.sh to build it.'
               % INDEX)
         skipped.append(label)
+        unexpected_skips.append(label)
         print()
         continue
     r = subprocess.run([sys.executable, script], capture_output=True, text=True)
@@ -107,6 +119,13 @@ for label, script in STEPS:
         sys.stdout.write('--- stderr ---\n' + r.stderr[-1500:])
     if r.returncode != 0:
         failures.append(label)
+    elif 'SKIP' in r.stdout:
+        # A step that prints its own SKIP line has skipped rather than
+        # passed. The cross-implementation gate does this when the
+        # TypeScript build is missing, and the published-tree check does
+        # it when there is no published tree. Either way the gate did
+        # not run, and the run is not a pass.
+        unexpected_skips.append(label)
     print()
 
 print('=' * 70)
@@ -115,4 +134,32 @@ if skipped:
 if failures:
     print('FAILED STEPS: %s' % ', '.join(failures))
     sys.exit(1)
-print('ALL %d VERIFICATION STEPS PASSED' % len(STEPS))
+
+# A skip is not a pass, and not every skip is an expected one.
+#
+# The machine-only steps are skipped *by design* in a published tree --
+# there is no machine behind it. That is an expected skip and the run
+# is still a pass.
+#
+# The index-dependent steps are skipped when the index is missing. That
+# is NOT expected: it means the gate did not run, and a run that did
+# not test the thing it claims to test must not report success. The
+# same is true of the cross-implementation gate, which skips when the
+# TypeScript build is missing.
+#
+# So the exit code distinguishes the two, and the summary line says
+# which happened. A green run with a hidden skip is exactly the
+# failure mode this project already has once.
+if unexpected_skips:
+    print('UNEXPECTED SKIPS: %s' % ', '.join(unexpected_skips))
+    print()
+    print('These steps did not run. The verification is INCOMPLETE:')
+    print('the thing they check was not checked. Build the index and')
+    print('the TypeScript server, then run this again.')
+    sys.exit(1)
+
+if skipped:
+    print('ALL %d VERIFICATION STEPS PASSED (%d expected skip(s): %s)'
+          % (len(STEPS), len(skipped), ', '.join(skipped)))
+else:
+    print('ALL %d VERIFICATION STEPS PASSED' % len(STEPS))

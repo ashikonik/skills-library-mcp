@@ -21,6 +21,11 @@ The TypeScript side is driven through its built `dist/`, so the test
 skips (rather than fails) when the project has not been built yet --
 a fresh clone should not report a false failure.
 
+**A skip is not a pass.** When the TypeScript build is missing the gate
+compares nothing, and it exits non-zero saying INCOMPLETE rather than
+PASS. A verification that did not check the thing it claims to check
+must not report success.
+
 Run with `--update-golden` to regenerate `golden/search_golden.json`.
 That is deliberately a separate flag: regenerating the golden file to
 make a test pass would defeat the point of having one.
@@ -46,6 +51,15 @@ GOLDEN = os.path.join(HERE, 'golden', 'search_golden.json')
 TS_ENTRY = os.path.join(MCP, 'dist', 'index.js')
 
 failures = []
+skips = []
+
+# `--update-golden` rewrites the golden file from the Python results.
+# It is a maintenance mode, not a check: the TypeScript comparisons
+# below it are not applicable, because the whole point is to record
+# what one implementation currently produces before the other is
+# compared against it. The public tree's assembler runs it in a tree
+# with no TypeScript build at all.
+UPDATING = '--update-golden' in sys.argv
 
 
 def fail(msg):
@@ -55,6 +69,18 @@ def fail(msg):
 
 def ok(msg):
     sys.stdout.write('ok   %s\n' % msg)
+
+
+def skip(msg):
+    """Record a check that did not run.
+
+    A skip is not a pass. The point of this gate is that the Python
+    fallback and the TypeScript server agree; if the TypeScript build
+    is missing, the gate compared nothing, and saying PASS would claim
+    a guarantee it never checked.
+    """
+    skips.append(msg)
+    sys.stderr.write('SKIP: %s\n' % msg)
 
 
 # --------------------------------------------------------------- 1. search
@@ -119,10 +145,11 @@ def check_search(idx):
             fh.write('\n')
         ok('wrote the golden file')
 
+    if UPDATING:
+        return
     if not os.path.isfile(TS_ENTRY):
-        sys.stderr.write(
-            'SKIP: the TypeScript build is missing (%s). Run `npm run build` '
-            'in mcp/ first.\n' % TS_ENTRY)
+        skip('the TypeScript build is missing (%s). Run `npm run build` '
+             'in mcp/ first.' % TS_ENTRY)
         return
 
     ts = ts_results(GOLDEN_QUERIES)
@@ -163,8 +190,10 @@ def check_tokenizer(idx):
     sys.stdout.write('     %d vocabulary tokens\n' % len(vocab))
 
     script = os.path.join(HERE, '_ts_tokenize.mjs')
+    if UPDATING:
+        return
     if not os.path.isfile(TS_ENTRY):
-        sys.stderr.write('SKIP: the TypeScript build is missing.\n')
+        skip('the TypeScript build is missing.')
         return
     proc = subprocess.run(
         ['node', script, json.dumps(vocab)],
@@ -210,8 +239,10 @@ def check_tokenizer(idx):
 def check_frontmatter(idx):
     """The two readers must agree on every field the library stores."""
     script = os.path.join(HERE, '_ts_frontmatter.mjs')
+    if UPDATING:
+        return
     if not os.path.isfile(TS_ENTRY):
-        sys.stderr.write('SKIP: the TypeScript build is missing.\n')
+        skip('the TypeScript build is missing.')
         return
 
     paths = []
@@ -272,8 +303,10 @@ def check_tools():
     a number and report a difference that no client would ever see.
     """
     script = os.path.join(HERE, '_ts_tools.mjs')
+    if UPDATING:
+        return
     if not os.path.isfile(TS_ENTRY):
-        sys.stderr.write('SKIP: the TypeScript build is missing.\n')
+        skip('the TypeScript build is missing.')
         return
 
     from server import Server
@@ -328,6 +361,23 @@ def main():
 
     if failures:
         sys.stderr.write('\n%d FAILURE(S)\n' % len(failures))
+        return 1
+    if UPDATING:
+        sys.stdout.write('\nGOLDEN FILE REWRITTEN — the TypeScript '
+                         'comparisons were not run.\n')
+        return 0
+    if skips:
+        # The gate did not run in full. Saying PASS here would claim a
+        # guarantee that was never checked -- and the whole point of
+        # this test is that the two implementations agree, which is
+        # only knowable if both were compared.
+        sys.stderr.write(
+            '\nAGREEMENT: INCOMPLETE — %d check(s) did not run:\n' % len(skips))
+        for s in skips:
+            sys.stderr.write('  - %s\n' % s)
+        sys.stderr.write(
+            'Build the TypeScript server (`npm run build` in mcp/) and\n'
+            'run this again. A skipped check is not a passing check.\n')
         return 1
     sys.stdout.write('\nAGREEMENT: PASS — the Python and TypeScript servers agree\n')
     return 0
