@@ -1,25 +1,17 @@
 {
  "add a skill to the library": {
-  "filtered_out": 19,
+  "filtered_out": 27,
   "ids": [
    "skill:skill-library-adder",
    "skill:skill-creator-plus",
-   "skill:skill-development",
-   "agent:skill-reviewer",
-   "skill:skill-creator",
-   "agent:agent-creator",
-   "skill:writing-skills"
+   "skill:figma-generate-library"
   ],
   "scores": [
    62.1222,
    32.351,
-   26.5809,
-   23.851,
-   23.351,
-   20.7299,
-   18.7566
+   15.9646
   ],
-  "total": 26,
+  "total": 30,
   "truncated": false
  },
  "add authentication to an api": {
@@ -38,7 +30,7 @@
   ],
   "scores": [
    12.763,
-   9.8903,
+   11.2224,
    9.3324,
    7.6026,
    7.6026,
@@ -52,111 +44,118 @@
   "truncated": true
  },
  "api and integration design": {
-  "filtered_out": 16,
+  "filtered_out": 21,
   "ids": [
    "skill:api-design",
    "skill:api-connector-builder",
-   "agent:database-reviewer",
-   "skill:mcp-server-patterns",
    "skill:x-api",
+   "skill:artifact-template-system-design",
    "skill:jira-integration"
   ],
   "scores": [
    44.3851,
-   27.9259,
-   20.1261,
-   18.4701,
+   18.3259,
    11.9259,
+   11.8366,
    11.3562
   ],
-  "total": 22,
+  "total": 26,
   "truncated": false
  },
  "api-design": {
-  "filtered_out": 7,
+  "filtered_out": 11,
   "ids": [
    "skill:api-design",
-   "skill:api-connector-builder",
-   "agent:database-reviewer",
-   "skill:mcp-server-patterns"
+   "skill:api-connector-builder"
   ],
   "scores": [
    50.3851,
-   24.8806,
-   20.1261,
-   18.4701
+   15.2806
   ],
-  "total": 11,
+  "total": 13,
   "truncated": false
  },
  "architecture and design patterns": {
-  "filtered_out": 13,
+  "filtered_out": 17,
   "ids": [
    "skill:architecture-decision-records",
    "skill:hexagonal-architecture",
-   "skill:design-system",
    "agent:architecture-critic",
-   "agent:architect",
+   "skill:design-system",
    "agent:code-architect",
-   "skill:blueprint",
-   "skill:intent-driven-development",
+   "agent:architect",
    "skill:uml-and-software-architecture-visualization",
-   "skill:django-patterns"
+   "skill:django-patterns",
+   "skill:quarkus-patterns",
+   "skill:springboot-patterns"
   ],
   "scores": [
    34.2382,
-   33.8643,
-   32.5045,
-   31.7382,
-   29.2055,
-   25.801,
-   22.25,
-   22.0,
+   21.8643,
+   21.5859,
+   20.5045,
+   17.2243,
+   17.2055,
    14.9438,
+   14.9096,
+   14.9096,
    14.9096
   ],
-  "total": 40,
+  "total": 45,
   "truncated": true
  },
  "authentication oauth jwt": {
   "filtered_out": 0,
-  "ids": [],
-  "scores": [],
-  "total": 0,
+  "ids": [
+   "skill:quarkus-security",
+   "skill:netlify-identity",
+   "skill:sign-in-with-vercel",
+   "skill:mixpanel-auth",
+   "skill:building-mcp-server-on-cloudflare"
+  ],
+  "scores": [
+   9.567,
+   8.7838,
+   8.7838,
+   8.5338,
+   8.5338
+  ],
+  "total": 5,
   "truncated": false
  },
  "aws lambda cold start": {
   "filtered_out": 0,
-  "ids": [],
-  "scores": [],
-  "total": 0,
+  "ids": [
+   "skill:catalyst-by-zoho"
+  ],
+  "scores": [
+   14.0811
+  ],
+  "total": 1,
   "truncated": false
  },
  "backend api framework": {
-  "filtered_out": 14,
+  "filtered_out": 24,
   "ids": [
    "skill:api-design",
-   "skill:api-connector-builder",
    "skill:backend-patterns",
-   "skill:mcp-server-patterns",
-   "agent:database-reviewer",
+   "skill:api-connector-builder",
    "skill:coding-standards"
   ],
   "scores": [
    33.8806,
-   24.8806,
    19.3441,
-   18.4701,
-   17.5,
+   15.2806,
    8.4987
   ],
-  "total": 20,
+  "total": 28,
   "truncated": false
  },
  "build a document from a template": {
-  "filtered_out": 7,
+  "filtered_out": 11,
   "ids": [
    "skill:document-builder",
+   "skill:twilio-content-template-builder",
    "skill:artifact-template-design-report",
    "skill:artifact-template-system-design",
    "skill:artifact-template-legal-memorandum",
@@ -164,11 +163,11 @@
    "skill:artifact-template-experiment-analysis",
    "skill:artifact-template-strategy-memorandum",
    "skill:artifact-template-investment-committee-memo",
-   "skill:twilio-content-template-builder",
    "skill:artifact-template-three-statement-forecast"
   ],
   "scores": [
    43.1859,
+   19.2262,
    17.9511,
    17.9511,
    17.9511,
@@ -176,90 +175,115 @@
    17.9511,
    17.9511,
    17.9511,
-   17.8149,
    16.6388
   ],
-  "total": 20,
+  "total": 22,
   "truncated": true
  },
  "build failed with no error message": {
-  "filtered_out": 0,
+  "filtered_out": 19,
   "ids": [
-   "skill:investigation-mode"
+   "agent:build-error-resolver",
+   "skill:twilio-sms-send-message",
+   "skill:twilio-whatsapp-send-message",
+   "skill:error-handling",
+   "agent:go-build-resolver",
+   "agent:cpp-build-resolver",
+   "agent:dart-build-resolver",
+   "agent:java-build-resolver",
+   "agent:rust-build-resolver",
+   "agent:swift-build-resolver"
   ],
   "scores": [
-   8.25
+   28.6781,
+   19.1941,
+   19.1941,
+   16.9871,
+   13.5731,
+   13.5731,
+   13.5731,
+   13.5731,
+   13.5731,
+   13.5731
   ],
-  "total": 1,
-  "truncated": false
+  "total": 42,
+  "truncated": true
  },
  "caveman mode lazy senior developer": {
   "filtered_out": 0,
   "ids": [
-   "skill:caveman-mode"
+   "skill:caveman-mode",
+   "skill:ponytail"
   ],
   "scores": [
-   51.0471
+   51.0471,
+   17.2054
   ],
-  "total": 1,
+  "total": 2,
   "truncated": false
  },
  "ci cd pipeline automation": {
-  "filtered_out": 3,
+  "filtered_out": 4,
   "ids": [
-   "skill:expo-cicd-workflows",
    "skill:deployments-cicd",
+   "skill:expo-cicd-workflows",
    "skill:circleci-config",
    "agent:deployment-expert",
+   "skill:circleci-cli",
    "skill:github-ops",
    "skill:render-cli",
+   "skill:circleci-builds",
    "skill:deployment-patterns"
   ],
   "scores": [
-   49.19,
-   48.0782,
-   36.3041,
-   36.2329,
+   40.8028,
+   32.0755,
+   24.3041,
+   24.2329,
+   14.3041,
    13.493,
    13.493,
+   12.8634,
    12.7329
   ],
-  "total": 10,
+  "total": 13,
   "truncated": false
  },
  "code refactoring large codebase": {
-  "filtered_out": 0,
+  "filtered_out": 10,
   "ids": [
    "skill:security-review",
-   "agent:security-reviewer",
-   "skill:security-scan",
-   "agent:security-auditor",
-   "skill:supply-chain",
-   "skill:threat-model",
-   "skill:deep-security-scan",
-   "skill:attack-path-analysis",
-   "agent:architect"
+   "skill:codebase-onboarding",
+   "skill:improve-codebase-architecture",
+   "skill:codebase-design",
+   "skill:figma-design-to-code",
+   "agent:code-explorer",
+   "agent:code-architect",
+   "agent:architect",
+   "skill:generate-snapshot",
+   "skill:codehealth-mcp"
   ],
   "scores": [
    25.25,
-   19.6408,
-   18.3908,
-   17.5,
-   16.25,
-   16.25,
-   16.25,
-   16.25,
-   10.5268
+   21.0486,
+   18.9078,
+   17.1245,
+   12.4875,
+   10.8466,
+   10.8466,
+   10.5268,
+   10.346,
+   9.8831
   ],
-  "total": 9,
-  "truncated": false
+  "total": 32,
+  "truncated": true
  },
  "code review and quality": {
-  "filtered_out": 39,
+  "filtered_out": 49,
   "ids": [
    "skill:ponytail-review",
-   "agent:code-reviewer",
    "skill:code-review",
+   "agent:code-reviewer",
    "skill:receiving-code-review",
    "skill:mattpocock-code-review",
    "skill:flutter-dart-code-review",
@@ -270,8 +294,8 @@
   ],
   "scores": [
    41.7952,
-   38.7217,
    29.2178,
+   28.4007,
    25.7571,
    25.7571,
    25.7571,
@@ -280,22 +304,22 @@
    16.6411,
    14.6544
   ],
-  "total": 53,
+  "total": 64,
   "truncated": true
  },
  "code-review": {
-  "filtered_out": 8,
+  "filtered_out": 18,
   "ids": [
    "skill:code-review",
    "skill:receiving-code-review",
    "skill:mattpocock-code-review",
    "skill:flutter-dart-code-review",
    "skill:requesting-code-review",
+   "agent:code-reviewer",
    "skill:review-agent",
    "skill:ponytail-review",
-   "agent:code-reviewer",
    "agent:java-reviewer",
-   "skill:orch-refine-code"
+   "agent:kotlin-reviewer"
   ],
   "scores": [
    25.7571,
@@ -303,13 +327,13 @@
    25.7571,
    25.7571,
    20.8178,
+   14.9401,
    13.3346,
    13.3346,
-   13.261,
    10.6369,
-   9.221
+   9.5176
   ],
-  "total": 40,
+  "total": 50,
   "truncated": true
  },
  "competition math olympiad proof": {
@@ -325,20 +349,32 @@
  },
  "core engineering practice standards": {
   "filtered_out": 0,
-  "ids": [],
-  "scores": [],
-  "total": 0,
+  "ids": [
+   "skill:cpp-coding-standards",
+   "skill:react-best-practices",
+   "agent:architecture-critic",
+   "skill:clickhouse-io",
+   "skill:react-performance"
+  ],
+  "scores": [
+   30.1126,
+   13.8034,
+   12.1293,
+   8.34,
+   8.09
+  ],
+  "total": 5,
   "truncated": false
  },
  "create a new skill": {
-  "filtered_out": 41,
+  "filtered_out": 49,
   "ids": [
    "skill:skill-creator-plus",
+   "skill:figma-create-new-file",
    "skill:writing-skills",
    "skill:skill-creator",
    "skill:skill-development",
    "agent:skill-reviewer",
-   "skill:figma-create-new-file",
    "agent:agent-creator",
    "skill:skill-scout",
    "skill:skill-library-adder",
@@ -346,277 +382,297 @@
   ],
   "scores": [
    37.8888,
-   35.8714,
-   34.8888,
-   34.8888,
-   32.9658,
    29.9887,
-   29.0377,
+   26.4278,
+   22.8888,
+   22.8888,
+   20.9658,
+   17.0377,
    12.8888,
    10.4658,
    9.774
   ],
-  "total": 51,
+  "total": 59,
   "truncated": false
  },
  "data database pipeline": {
-  "filtered_out": 5,
+  "filtered_out": 16,
   "ids": [
-   "skill:database-migrations",
-   "agent:database-reviewer",
    "skill:data-visualization",
    "skill:data-scraper-agent",
-   "skill:recsys-pipeline-architect",
-   "skill:data-throughput-accelerator",
    "skill:postgres-patterns",
-   "skill:d3-data-visualization",
-   "skill:threejs-data-visualization",
-   "skill:canvas2d-data-visualization"
+   "skill:recsys-pipeline-architect",
+   "skill:database-migrations",
+   "agent:database-reviewer",
+   "skill:data-throughput-accelerator",
+   "skill:prisma-database-setup",
+   "skill:uspto-database",
+   "skill:d3-data-visualization"
   ],
   "scores": [
-   36.8646,
-   34.9895,
    34.5004,
    34.5004,
-   32.8048,
-   31.5004,
    31.3568,
-   25.5004,
-   25.5004,
-   25.5004
+   22.9657,
+   21.8646,
+   19.9895,
+   19.5004,
+   18.4895,
+   17.1329,
+   15.9004
   ],
-  "total": 28,
+  "total": 30,
   "truncated": true
  },
  "data visualization charts": {
-  "filtered_out": 0,
+  "filtered_out": 3,
   "ids": [
    "skill:data-visualization",
    "skill:d3-data-visualization",
+   "skill:scrollytelling-and-parallax-data-visualization",
    "skill:threejs-data-visualization",
    "skill:canvas2d-data-visualization",
-   "skill:dashboards-and-real-time-visualization",
-   "skill:scrollytelling-and-parallax-data-visualization",
-   "skill:grammar-of-graphics-and-declarative-visualization",
-   "skill:statistical-and-uncertainty-visualization",
    "skill:typescript-data-visualization-engineering",
-   "skill:react-and-nextjs-data-visualization"
+   "skill:react-and-nextjs-data-visualization",
+   "skill:grammar-of-graphics-and-declarative-visualization",
+   "skill:dashboards-and-real-time-visualization",
+   "skill:gantt-chart-visualization"
   ],
   "scores": [
    57.6244,
-   53.0372,
-   48.6244,
-   48.6244,
-   37.5368,
+   43.4372,
    37.0372,
-   35.6309,
-   33.2558,
+   33.6244,
+   33.6244,
    32.6244,
-   28.3434
+   30.912,
+   23.1995,
+   22.5368,
+   22.1995
   ],
-  "total": 12,
+  "total": 17,
   "truncated": true
  },
  "database query optimization": {
-  "filtered_out": 4,
+  "filtered_out": 7,
   "ids": [
-   "agent:database-reviewer",
    "skill:postgres-patterns",
+   "agent:database-reviewer",
    "skill:database-migrations",
+   "skill:uspto-database",
+   "skill:pubmed-database",
    "skill:clickhouse-io",
-   "skill:jpa-patterns",
-   "skill:prisma-patterns",
+   "skill:neon-postgres-egress-optimizer",
    "skill:mysql-patterns",
-   "skill:redis-patterns",
-   "skill:neon-postgres-egress-optimizer"
+   "skill:supabase-postgres-best-practices"
   ],
   "scores": [
-   39.1262,
    36.6811,
-   30.9268,
-   27.6811,
-   23.9494,
-   23.9494,
-   20.2177,
-   16.25,
-   11.6811
+   24.1262,
+   15.9268,
+   13.5757,
+   13.5757,
+   12.6811,
+   11.6811,
+   10.6177,
+   10.094
   ],
-  "total": 13,
+  "total": 16,
   "truncated": false
  },
  "debug a failing test": {
-  "filtered_out": 3,
+  "filtered_out": 9,
   "ids": [
    "skill:debug-failing-test"
   ],
   "scores": [
    62.876
   ],
-  "total": 4,
+  "total": 10,
   "truncated": false
  },
  "debugging production incident": {
-  "filtered_out": 1,
+  "filtered_out": 6,
   "ids": [
    "skill:deployment-patterns",
-   "agent:deployment-expert",
-   "skill:deployments-cicd",
-   "skill:finishing-a-development-branch",
-   "skill:vercel-agent"
+   "skill:twilio-debugging-observability",
+   "skill:vercel-agent",
+   "skill:kubernetes-patterns"
   ],
   "scores": [
    28.3614,
-   20.8614,
-   16.25,
-   16.25,
-   9.9807
+   17.8913,
+   9.9807,
+   7.2439
   ],
-  "total": 6,
+  "total": 10,
   "truncated": false
  },
  "devops and cloud deployment": {
   "filtered_out": 0,
-  "ids": [],
-  "scores": [],
-  "total": 0,
+  "ids": [
+   "skill:building-mcp-server-on-cloudflare",
+   "skill:huggingface-llm-trainer"
+  ],
+  "scores": [
+   10.9653,
+   8.4817
+  ],
+  "total": 2,
   "truncated": false
  },
  "docker container deployment": {
   "filtered_out": 0,
   "ids": [
    "skill:render-docker",
-   "skill:docker-patterns"
+   "skill:docker-patterns",
+   "skill:deployment-patterns"
   ],
   "scores": [
    27.3608,
-   27.3608
+   27.3608,
+   19.3112
   ],
-  "total": 2,
+  "total": 3,
   "truncated": false
  },
  "document-builder": {
-  "filtered_out": 9,
+  "filtered_out": 12,
   "ids": [
    "skill:document-builder",
-   "agent:comfyui-workflow-builder",
-   "skill:article-writing",
-   "skill:competitive-report-structure"
+   "agent:comfyui-workflow-builder"
   ],
   "scores": [
    59.6117,
-   19.1054,
-   16.0,
-   16.0
+   19.1054
   ],
-  "total": 13,
+  "total": 14,
   "truncated": false
  },
  "explore the codebase agent": {
-  "filtered_out": 3,
+  "filtered_out": 16,
   "ids": [
    "skill:agent-development",
-   "agent:agent-creator",
-   "agent:agent-evaluator",
    "skill:security-review",
    "skill:moody-s-explore-mcp",
    "agent:Explore",
-   "skill:security-scan",
-   "agent:security-auditor",
-   "agent:security-reviewer",
-   "skill:supply-chain"
+   "agent:code-explorer",
+   "agent:agent-creator",
+   "agent:agent-evaluator",
+   "skill:security-scan"
   ],
   "scores": [
    34.8259,
-   26.3259,
-   26.3259,
    25.25,
    21.7384,
    20.7279,
-   18.7065,
-   17.5,
-   17.5,
-   16.25
+   13.576,
+   11.3259,
+   11.3259,
+   9.1065
   ],
-  "total": 19,
-  "truncated": true
+  "total": 24,
+  "truncated": false
  },
  "fix a failing build": {
-  "filtered_out": 3,
+  "filtered_out": 4,
   "ids": [
+   "skill:error-handling",
    "agent:react-build-resolver",
+   "skill:debug-failing-test",
    "agent:java-build-resolver",
    "agent:build-error-resolver",
-   "skill:build-run-debug",
-   "skill:error-handling",
-   "skill:systematic-debugging",
-   "skill:debug-failing-test",
    "skill:gh-fix-ci",
    "skill:orch-fix-defect",
-   "skill:circleci-builds"
+   "skill:build-run-debug",
+   "skill:circleci-builds",
+   "skill:chunk"
   ],
   "scores": [
-   35.5412,
-   31.9087,
-   31.9087,
-   31.4087,
    25.25,
-   22.25,
+   23.5412,
    20.3995,
+   19.9087,
+   19.9087,
    19.6298,
    19.6298,
-   14.6128
+   19.4087,
+   14.6128,
+   11.3345
   ],
-  "total": 14,
+  "total": 17,
   "truncated": true
  },
  "fix my latex document errors": {
-  "filtered_out": 2,
+  "filtered_out": 9,
   "ids": [
    "skill:latex-doctor",
-   "skill:document-builder",
-   "skill:article-writing",
-   "skill:competitive-report-structure"
+   "skill:document-builder"
   ],
   "scores": [
    42.7691,
-   39.6577,
-   16.0,
-   16.0
+   39.6577
   ],
-  "total": 6,
+  "total": 11,
   "truncated": false
  },
  "frontend ui accessibility": {
-  "filtered_out": 0,
+  "filtered_out": 1,
   "ids": [
-   "skill:frontend-a11y",
    "skill:accessibility",
+   "skill:game-ui-frontend",
+   "skill:frontend-a11y",
+   "skill:frontend-patterns",
+   "skill:frontend-app-builder",
+   "skill:frontend-design-direction",
+   "skill:frontend-testing-debugging",
+   "skill:frontend-design",
    "skill:accessibility-and-inclusive-visualization",
-   "agent:a11y-architect",
    "skill:impeccable"
   ],
   "scores": [
-   27.9482,
    25.124,
-   25.124,
-   16.6052,
+   24.1397,
+   23.1482,
+   19.9482,
+   19.9482,
+   19.9482,
+   19.9482,
+   15.6672,
+   15.524,
    11.3862
   ],
-  "total": 5,
-  "truncated": false
+  "total": 12,
+  "truncated": true
  },
  "git version control workflow": {
-  "filtered_out": 0,
+  "filtered_out": 5,
   "ids": [
+   "skill:git-workflow",
    "skill:workflow",
-   "skill:token-budget-advisor"
+   "agent:comfyui-workflow-builder",
+   "skill:github",
+   "skill:comfyui-image-workflows",
+   "skill:token-budget-advisor",
+   "skill:skill-creator-plus",
+   "skill:project-flow-ops",
+   "skill:ck",
+   "skill:skill-scout"
   ],
   "scores": [
+   27.042,
    20.1152,
-   9.1612
+   16.6765,
+   12.358,
+   11.6333,
+   9.1612,
+   9.1287,
+   7.793,
+   6.7916,
+   6.7605
   ],
-  "total": 2,
-  "truncated": false
+  "total": 17,
+  "truncated": true
  },
  "grpc streaming backpressure": {
   "filtered_out": 0,
@@ -633,14 +689,16 @@
   "truncated": false
  },
  "humanize this text make it sound less robotic": {
-  "filtered_out": 0,
+  "filtered_out": 6,
   "ids": [
-   "skill:humanizer"
+   "skill:humanizer",
+   "skill:make-interfaces-feel-better"
   ],
   "scores": [
-   62.9522
+   62.9522,
+   17.6852
   ],
-  "total": 1,
+  "total": 8,
   "truncated": false
  },
  "improve accessibility wcag": {
@@ -653,33 +711,41 @@
   ],
   "scores": [
    48.4723,
-   39.124,
-   34.1293,
-   26.531
+   27.124,
+   22.1293,
+   14.531
   ],
   "total": 5,
   "truncated": false
  },
  "improve performance of a slow query": {
-  "filtered_out": 1,
+  "filtered_out": 2,
   "ids": [
-   "skill:react-performance",
-   "agent:performance-optimizer",
-   "skill:swiftui-performance-audit",
-   "skill:android-performance",
    "skill:web-perf",
-   "skill:pylance-python-profiling"
+   "agent:performance-optimizer",
+   "skill:react-performance",
+   "skill:swiftui-performance-audit",
+   "skill:omniverse-usd-performance-tuning",
+   "skill:android-performance",
+   "skill:diagnosing-bugs",
+   "agent:database-reviewer",
+   "skill:skill-creator-plus",
+   "skill:investigation-mode"
   ],
   "scores": [
-   38.0867,
-   34.8399,
-   34.3399,
-   29.0867,
-   19.2717,
-   16.0
+   28.2717,
+   22.3726,
+   19.4867,
+   19.3399,
+   18.3399,
+   14.0867,
+   8.7748,
+   8.7394,
+   8.4929,
+   8.25
   ],
-  "total": 7,
-  "truncated": false
+  "total": 15,
+  "truncated": true
  },
  "it crashes when i open it": {
   "filtered_out": 0,
@@ -703,24 +769,26 @@
  },
  "kafka consumer group rebalancing": {
   "filtered_out": 0,
-  "ids": [],
-  "scores": [],
-  "total": 0,
+  "ids": [
+   "skill:vercel-queues"
+  ],
+  "scores": [
+   9.7502
+  ],
+  "total": 1,
   "truncated": false
  },
  "kubernetes cluster operations": {
   "filtered_out": 1,
   "ids": [
    "skill:kubernetes-patterns",
-   "skill:physical-ai-infrastructure-setup-and-resilient-scaling",
-   "agent:architect"
+   "skill:physical-ai-infrastructure-setup-and-resilient-scaling"
   ],
   "scores": [
    33.3931,
-   10.8343,
-   9.5
+   15.0586
   ],
-  "total": 4,
+  "total": 3,
   "truncated": false
  },
  "machine learning model training": {
@@ -731,7 +799,11 @@
    "skill:pytorch-patterns",
    "skill:huggingface-llm-trainer",
    "skill:ml-adoption-playbook",
-   "skill:transformers-js"
+   "skill:transformers-js",
+   "skill:voice-cloning-rvc",
+   "skill:text-to-video-local",
+   "skill:huggingface-vision-trainer",
+   "skill:uml-and-software-architecture-visualization"
   ],
   "scores": [
    18.8622,
@@ -739,9 +811,13 @@
    12.6164,
    12.6164,
    12.5119,
-   9.3972
+   11.266,
+   7.9651,
+   7.8606,
+   6.7192,
+   6.2123
   ],
-  "total": 6,
+  "total": 10,
   "truncated": false
  },
  "math-olympiad": {
@@ -756,22 +832,22 @@
   "truncated": false
  },
  "mcp-server-patterns": {
-  "filtered_out": 25,
+  "filtered_out": 32,
   "ids": [
    "skill:mcp-server-patterns",
    "skill:build-mcp-server",
    "skill:building-mcp-server-on-cloudflare"
   ],
   "scores": [
-   65.8356,
-   53.2481,
-   53.2481
+   67.8249,
+   41.2481,
+   41.2481
   ],
-  "total": 28,
+  "total": 35,
   "truncated": false
  },
  "migrate to a new framework": {
-  "filtered_out": 0,
+  "filtered_out": 2,
   "ids": [
    "skill:render-migrate-from-heroku",
    "skill:migrate-workflows",
@@ -796,18 +872,28 @@
    4.6514,
    4.6514
   ],
-  "total": 11,
+  "total": 13,
   "truncated": true
  },
  "my changes were not saved": {
   "filtered_out": 0,
   "ids": [
-   "skill:moody-s-rating-analysis"
+   "agent:version-delta-analyst",
+   "skill:moody-s-rating-analysis",
+   "skill:shopify-admin",
+   "skill:project-artifact",
+   "skill:shopify-use-shopify-cli",
+   "skill:intent-driven-development"
   ],
   "scores": [
-   7.0405
+   7.2704,
+   7.0405,
+   5.7704,
+   5.7704,
+   5.7704,
+   5.7704
   ],
-  "total": 1,
+  "total": 6,
   "truncated": false
  },
  "nothing showing on screen": {
@@ -830,34 +916,54 @@
  },
  "postgres index bloat vacuum": {
   "filtered_out": 0,
-  "ids": [],
-  "scores": [],
-  "total": 0,
+  "ids": [
+   "skill:postgres-patterns"
+  ],
+  "scores": [
+   19.4905
+  ],
+  "total": 1,
   "truncated": false
  },
  "prompt-optimizer": {
-  "filtered_out": 6,
+  "filtered_out": 2,
   "ids": [
-   "skill:prompt-optimizer",
-   "agent:harness-optimizer"
+   "skill:prompt-optimizer"
   ],
   "scores": [
-   46.6444,
-   24.2594
+   46.6444
   ],
-  "total": 8,
+  "total": 3,
   "truncated": false
  },
  "python testing patterns pytest": {
-  "filtered_out": 1,
+  "filtered_out": 8,
   "ids": [
-   "skill:python-testing"
+   "skill:python-testing",
+   "skill:python-patterns",
+   "skill:e2e-testing",
+   "skill:ai-regression-testing",
+   "skill:perl-testing",
+   "skill:rust-testing",
+   "skill:csharp-testing",
+   "skill:fsharp-testing",
+   "skill:golang-testing",
+   "skill:kotlin-testing"
   ],
   "scores": [
-   40.4939
+   40.4939,
+   23.6104,
+   16.0404,
+   16.0404,
+   16.0404,
+   16.0404,
+   16.0404,
+   16.0404,
+   16.0404,
+   16.0404
   ],
-  "total": 2,
-  "truncated": false
+  "total": 20,
+  "truncated": true
  },
  "quantum chromodynamics lattice simulation": {
   "filtered_out": 0,
@@ -867,128 +973,174 @@
   "truncated": false
  },
  "react component patterns": {
-  "filtered_out": 3,
+  "filtered_out": 5,
   "ids": [
    "skill:react-patterns",
    "skill:zoom-meeting-sdk-web-component-view",
+   "skill:react-and-nextjs-data-visualization",
+   "skill:react-best-practices",
    "agent:react-reviewer",
    "agent:react-build-resolver",
    "skill:react-testing",
-   "skill:react-and-nextjs-data-visualization",
    "skill:react-performance",
-   "skill:react-best-practices",
    "skill:swiftui-ui-patterns",
    "skill:vue-patterns"
   ],
   "scores": [
    27.2579,
    20.9415,
+   18.848,
+   18.848,
    18.5539,
    18.5539,
    18.0539,
    16.5877,
-   16.5877,
-   16.5877,
    12.9712,
    12.9712
   ],
-  "total": 19,
+  "total": 21,
   "truncated": true
  },
  "redis cache invalidation strategy": {
   "filtered_out": 0,
-  "ids": [],
-  "scores": [],
-  "total": 0,
+  "ids": [
+   "skill:runtime-cache",
+   "skill:redis-patterns",
+   "skill:render-keyvalue",
+   "skill:nextjs"
+  ],
+  "scores": [
+   29.422,
+   27.6289,
+   10.5349,
+   7.8306
+  ],
+  "total": 4,
   "truncated": false
  },
  "refactor legacy code": {
-  "filtered_out": 0,
-  "ids": [],
-  "scores": [],
-  "total": 0,
+  "filtered_out": 6,
+  "ids": [
+   "agent:legacy-analyst",
+   "skill:inherit-legacy-style",
+   "agent:refactor-cleaner",
+   "skill:orch-refine-code",
+   "agent:business-rules-extractor",
+   "skill:codehealth-mcp",
+   "skill:typer",
+   "skill:build-chatgpt-app",
+   "agent:tdd-guide"
+  ],
+  "scores": [
+   22.5097,
+   22.0097,
+   19.3857,
+   11.0739,
+   8.608,
+   8.3929,
+   6.7922,
+   6.7922,
+   6.4317
+  ],
+  "total": 15,
   "truncated": false
  },
  "research partner literature review": {
-  "filtered_out": 0,
+  "filtered_out": 4,
   "ids": [
    "skill:research-partner",
    "skill:literature-review"
   ],
   "scores": [
-   42.8115,
+   44.4906,
    38.9321
   ],
-  "total": 2,
+  "total": 6,
   "truncated": false
  },
  "rest graphql api endpoint": {
-  "filtered_out": 0,
+  "filtered_out": 24,
   "ids": [
    "skill:api-design",
+   "skill:build-zoom-rest-api-app",
    "skill:api-connector-builder",
-   "skill:mcp-server-patterns",
-   "agent:database-reviewer"
+   "skill:vercel-api",
+   "skill:replay-qa-api",
+   "skill:ensembl-skill",
+   "skill:uniprot-skill"
   ],
   "scores": [
    37.9419,
-   24.8806,
-   18.4701,
-   17.5
+   24.2377,
+   15.2806,
+   12.9419,
+   12.9419,
+   9.8477,
+   9.8477
   ],
-  "total": 4,
+  "total": 31,
   "truncated": false
  },
  "review code i did not write": {
-  "filtered_out": 3,
+  "filtered_out": 86,
   "ids": [
    "skill:code-review",
+   "skill:api-design",
    "agent:code-reviewer",
+   "skill:receiving-code-review",
+   "skill:mattpocock-code-review",
+   "skill:flutter-dart-code-review",
    "agent:code-explorer",
    "agent:code-architect",
-   "skill:codebase-onboarding",
-   "skill:coding-standards",
-   "skill:api-design",
-   "skill:python-patterns",
-   "agent:planner",
-   "skill:receiving-code-review"
+   "skill:ponytail-review",
+   "skill:codebase-onboarding"
   ],
   "scores": [
    44.7571,
-   35.261,
-   28.9225,
-   28.9225,
-   27.6021,
-   27.1893,
-   25.25,
-   24.1408,
-   23.5,
-   22.4481
+   26.5345,
+   24.9401,
+   22.4481,
+   19.7571,
+   19.7571,
+   16.9225,
+   16.9225,
+   16.0256,
+   15.6021
   ],
-  "total": 17,
+  "total": 104,
   "truncated": true
  },
  "security review vulnerability": {
-  "filtered_out": 0,
+  "filtered_out": 5,
   "ids": [
    "skill:security-review",
    "skill:vulnerability-writeup",
    "agent:security-reviewer",
    "skill:propose-security-hardening",
-   "skill:triage-finding"
+   "skill:security-scan",
+   "skill:security-bounty-hunter",
+   "skill:security-diff-scan",
+   "skill:code-review",
+   "skill:flutter-dart-code-review",
+   "agent:code-reviewer"
   ],
   "scores": [
    26.3816,
    25.624,
    22.3408,
    17.6431,
-   8.9034
+   15.3804,
+   15.3804,
+   14.7847,
+   14.1903,
+   14.1903,
+   13.7674
   ],
-  "total": 5,
-  "truncated": false
+  "total": 28,
+  "truncated": true
  },
  "security-review": {
-  "filtered_out": 4,
+  "filtered_out": 5,
   "ids": [
    "skill:security-review",
    "agent:security-reviewer",
@@ -996,10 +1148,10 @@
    "skill:code-review",
    "skill:flutter-dart-code-review",
    "agent:java-reviewer",
-   "agent:php-reviewer",
-   "agent:vue-reviewer",
    "agent:code-reviewer",
-   "agent:react-reviewer"
+   "agent:fastapi-reviewer",
+   "agent:network-config-reviewer",
+   "agent:php-reviewer"
   ],
   "scores": [
    26.3816,
@@ -1008,12 +1160,12 @@
    14.1903,
    14.1903,
    11.4927,
-   8.6942,
-   8.6942,
-   8.6942,
+   10.3733,
+   10.3733,
+   10.3733,
    8.6942
   ],
-  "total": 22,
+  "total": 23,
   "truncated": true
  },
  "set up continuous integration": {
@@ -1022,15 +1174,21 @@
    "skill:continuous-learning",
    "skill:continuous-agent-loop",
    "skill:continuous-learning-v2",
+   "skill:mcp-integration",
+   "skill:twilio-debugging-observability",
+   "skill:twilio-marketing-promotions-advisor",
    "skill:autonomous-agent-harness"
   ],
   "scores": [
    22.6275,
    22.6275,
    16.9706,
+   15.3713,
+   6.2352,
+   6.2352,
    5.6569
   ],
-  "total": 4,
+  "total": 7,
   "truncated": false
  },
  "ship a release": {
@@ -1041,20 +1199,16 @@
   "truncated": false
  },
  "silent failure hunter agent": {
-  "filtered_out": 2,
+  "filtered_out": 6,
   "ids": [
    "agent:silent-failure-hunter",
-   "skill:agent-development",
-   "agent:agent-creator",
-   "agent:agent-evaluator"
+   "skill:agent-development"
   ],
   "scores": [
    86.7552,
-   34.8259,
-   26.3259,
-   26.3259
+   34.8259
   ],
-  "total": 6,
+  "total": 8,
   "truncated": false
  },
  "tdd-workflow": {
@@ -1086,22 +1240,32 @@
  },
  "terraform module state locking": {
   "filtered_out": 0,
-  "ids": [],
-  "scores": [],
-  "total": 0,
+  "ids": [
+   "skill:brand-discovery"
+  ],
+  "scores": [
+   6.49
+  ],
+  "total": 1,
   "truncated": false
  },
  "testing and qa automation": {
   "filtered_out": 0,
   "ids": [
    "skill:browser-qa",
-   "skill:game-playtest"
+   "skill:frontend-testing-debugging",
+   "skill:testing-data-visualizations",
+   "skill:game-playtest",
+   "skill:windows-desktop-e2e"
   ],
   "scores": [
    21.2422,
-   8.677
+   18.3046,
+   18.3046,
+   8.677,
+   7.7966
   ],
-  "total": 2,
+  "total": 5,
   "truncated": false
  },
  "the deploy never finishes": {
@@ -1146,26 +1310,80 @@
  "typescript type safety": {
   "filtered_out": 0,
   "ids": [
-   "agent:typescript-reviewer"
+   "agent:typescript-reviewer",
+   "skill:typescript-data-visualization-engineering",
+   "agent:reviewer",
+   "agent:fsharp-reviewer",
+   "agent:maintainer",
+   "agent:build-error-resolver",
+   "agent:agent-sdk-verifier-ts",
+   "skill:error-handling",
+   "skill:nestjs-patterns",
+   "skill:prisma-patterns"
   ],
   "scores": [
-   29.7635
+   29.7635,
+   25.0986,
+   9.1256,
+   9.1256,
+   9.0724,
+   9.0724,
+   9.0724,
+   7.8224,
+   7.8224,
+   7.8224
   ],
-  "total": 1,
-  "truncated": false
+  "total": 21,
+  "truncated": true
  },
  "useEffect react hook dependency array": {
-  "filtered_out": 0,
-  "ids": [],
-  "scores": [],
-  "total": 0,
-  "truncated": false
+  "filtered_out": 43,
+  "ids": [
+   "skill:hook-development",
+   "agent:react-reviewer",
+   "skill:react-testing",
+   "skill:react-patterns",
+   "skill:biostudies-arrayexpress-skill",
+   "skill:react-and-nextjs-data-visualization",
+   "skill:react-performance",
+   "skill:react-three-fiber-game",
+   "skill:zoom-video-sdk-react-native",
+   "skill:zoom-meeting-sdk-react-native"
+  ],
+  "scores": [
+   20.7386,
+   20.6236,
+   18.1368,
+   18.1368,
+   16.7404,
+   15.1564,
+   15.1564,
+   15.1564,
+   15.1564,
+   15.1564
+  ],
+  "total": 75,
+  "truncated": true
  },
  "webpack code splitting lazy load": {
   "filtered_out": 0,
-  "ids": [],
-  "scores": [],
-  "total": 0,
+  "ids": [
+   "skill:sandbox-sdk",
+   "skill:ponytail-audit",
+   "skill:ponytail-review",
+   "skill:workers-best-practices",
+   "skill:ck",
+   "skill:figma-swiftui"
+  ],
+  "scores": [
+   6.8769,
+   6.6269,
+   6.6269,
+   6.6269,
+   4.8325,
+   4.8325
+  ],
+  "total": 6,
   "truncated": false
  },
  "websocket reconnection backoff": {
@@ -1176,49 +1394,51 @@
   "truncated": false
  },
  "write a new feature": {
-  "filtered_out": 3,
+  "filtered_out": 5,
   "ids": [
-   "agent:planner",
-   "agent:code-architect",
    "skill:api-design",
    "skill:plan-orchestrate",
-   "skill:coding-standards",
-   "skill:react-patterns",
-   "skill:python-patterns",
-   "skill:backend-patterns",
    "skill:orch-add-feature",
-   "skill:orch-change-feature"
+   "skill:orch-change-feature",
+   "agent:planner",
+   "agent:code-architect",
+   "skill:react-patterns",
+   "agent:tdd-guide",
+   "skill:coding-standards",
+   "skill:python-patterns"
   ],
   "scores": [
-   27.4241,
-   27.4241,
    25.25,
    25.0,
-   22.25,
-   22.0,
-   22.0,
-   22.0,
    18.8113,
-   18.8113
+   18.8113,
+   15.4241,
+   15.4241,
+   12.0458,
+   10.379,
+   10.25,
+   10.0
   ],
-  "total": 22,
+  "total": 28,
   "truncated": true
  },
  "writing technical documentation": {
   "filtered_out": 0,
   "ids": [
    "skill:documentation-lookup",
-   "agent:docs-lookup",
    "agent:comment-analyzer",
-   "skill:search-company-knowledge"
+   "agent:docs-lookup",
+   "skill:search-company-knowledge",
+   "skill:geistdocs"
   ],
   "scores": [
    20.6637,
-   13.7212,
    10.3726,
-   8.8726
+   8.9212,
+   8.8726,
+   7.6309
   ],
-  "total": 4,
+  "total": 5,
   "truncated": false
  },
  "zzzzqqqq nonexistent gibberish token": {

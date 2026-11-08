@@ -72,6 +72,13 @@ python3 "$LIBRARY_ROOT/mcp/tests/test_skills_extension.py"
 step "running the provenance gate"
 python3 "$LIBRARY_ROOT/mcp/tests/test_provenance.py"
 
+step "running the search rules gate"
+# The ranking gate below measures the ranking; this one states the
+# rules the ranking is supposed to follow and checks each of them
+# directly, so a rule can stop working even when the ranking does
+# not visibly change.
+python3 "$LIBRARY_ROOT/mcp/tests/test_search_rules.py"
+
 step "checking the search ranking"
 # The ranking gate is the only regression check on *order*, so it
 # belongs here and not only under `.verify_all.py`.
@@ -83,6 +90,7 @@ step "proving the gates can fail"
 bash "$LIBRARY_ROOT/mcp/scripts/break_check_policy.sh"
 bash "$LIBRARY_ROOT/mcp/scripts/break_check_skills.sh"
 bash "$LIBRARY_ROOT/mcp/scripts/break_check_provenance.sh"
+bash "$LIBRARY_ROOT/mcp/scripts/break_check_search.sh"
 
 echo
 echo "REBUILD: PASS"

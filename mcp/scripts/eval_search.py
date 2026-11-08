@@ -47,9 +47,16 @@ def main():
     m = measure(data, detail=detail)
 
     print()
-    print('rank 1    : %2d / %d' % (m['top1'], m['measured']))
-    print('rank <= 3 : %2d / %d' % (m['top3'], m['measured']))
-    print('rank <=10 : %2d / %d' % (m['top10'], m['measured']))
+    print('the training set (the ranking was tuned against these)')
+    print('  rank 1    : %2d / %d' % (m['top1'], m['measured']))
+    print('  rank <= 3 : %2d / %d' % (m['top3'], m['measured']))
+    print('  rank <=10 : %2d / %d' % (m['top10'], m['measured']))
+    print()
+    print('the validation set (held out -- never tuned against)')
+    print('  rank 1    : %2d / %d' % (m['val_top1'], m['val_measured']))
+    print('  rank <= 3 : %2d / %d' % (m['val_top3'], m['val_measured']))
+    print('  rank <=10 : %2d / %d' % (m['val_top10'], m['val_measured']))
+    print()
     print('negatives : %d leaked' % m['negatives'])
     print('results per query: median %d, max %d' % (
         m['median_results'], m['max_results']))
@@ -58,6 +65,12 @@ def main():
               'publish -- %s' % (
                   len(m['skipped']),
                   ', '.join('%s (for %r)' % (p[1], p[0]) for p in m['skipped'])))
+    if m['val_skipped']:
+        print('skipped   : %d validation label(s) name a skill this tree '
+              'does not publish -- %s' % (
+                  len(m['val_skipped']),
+                  ', '.join('%s (for %r)' % (p[1], p[0])
+                            for p in m['val_skipped'])))
     if m['failures']:
         print()
         print('failures:')

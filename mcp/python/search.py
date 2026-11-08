@@ -83,6 +83,9 @@ import protocol   # noqa: E402
 DEFAULT_LIMIT = 10
 MAX_LIMIT = 50
 RELEVANCE_FLOOR = 0.25
+# The discount applied to a description match that was found through
+# the inflection rule rather than an exact token. See `_inflections`.
+MORPH_DISCOUNT = 0.6
 
 WEIGHT_NAME_EXACT = 3.0
 WEIGHT_NAME_PARTIAL = 1.5
@@ -146,7 +149,44 @@ WEIGHT_TASK_HEAD_FIRST = WEIGHT_TASK
 # while evicting nothing; the content branch is left alone, because a
 # content match says the query named the row's object, not that it
 # asked for that specific task.
-TASK_DEMOTE = 3.0
+# A task row's *first* entry is its documented first choice; the rest
+# are alternatives. The row's note says so in prose -- "`api-design`
+# covers resource naming, ...", "Use the build resolver for the
+# language" -- but the scorer cannot read prose, so the order was lost
+# and the row's members were ranked only by whatever their names
+# happened to score.
+#
+# The row's later members are therefore demoted, by a *fraction* of the
+# row's bonus, scaled by how deep they sit in the row. The fraction
+# and the cap were measured over the labelled query set; see
+# `mcp/scripts/eval_search.py`.
+#
+# The row's order is the row's curation in *both* branches -- whether
+# the query named the row's verb or only its object. "write SQL"
+# names the row's object ("sql") but not its verb ("write"), so the
+# content branch fires -- and without the demotion
+# `database-reviewer` won: the agent is tier 1 while
+# `postgres-patterns` is tier 2, so the tier bias and the agent bonus
+# together put it ahead of the skills the row had been asked for.
+TASK_DEMOTE_FRACTION = 0.6
+# The demotion does not keep growing with depth. A row's third or
+# fourth member is a real alternative, not a worse version of the
+# first, and an unbounded demotion would push it out of the results
+# entirely rather than down the list.
+TASK_DEMOTE_MAX_DEPTH = 3
+# The demotion is also capped in absolute terms.
+#
+# A pure fraction of the bonus is not enough on its own. The strict
+# bonus is 25.0, so a depth-3 member of a long row would give up
+# 25.0 * 0.6 * 3 = 45.0 -- more than the whole bonus, which put the
+# row's agents at a *negative* score. The row "Fix a failing build"
+# lists `error-handling` first and the `build-*-resolver` agents
+# fourth, fifth and sixth, and they are exactly what the query wants:
+# the agents fell out of the top ten entirely.
+#
+# The cap says the demotion is a nudge, not a ban. A row's later
+# members stay reachable; the row's first choice leads.
+TASK_DEMOTE_MAX = 15.0
 TIER_BIAS = {1: 1.0, 2: 0.25, 3: 0.0}
 AGENT_BIAS = 0.5
 
@@ -248,6 +288,52 @@ def _phrase_tokens_match(phrase, q_tokens):
         return False
     q_set = set(q_tokens)
     return all(t in q_set for t in p_toks)
+
+
+_MORPH_CACHE = {}
+
+
+def _inflections(tok):
+    """The inflected forms of a token -- what a description may use.
+
+    English spells the same word several ways, and a description that
+    says "drafting" does not contain the word "draft". Without this,
+    "triage my inbox and draft the replies" missed
+    `email-ops`, whose description says "mailbox triage, drafting,
+    ...", and "review my code for security problems" missed
+    `security-review` for the same reason.
+
+    The rule is deliberately narrow: it adds only the suffixes English
+    actually inflects. It is NOT a prefix rule. "late" does not match
+    "latency" and "plant" does not match "plantation", because a
+    prefix rule matches any word that happens to start the same way,
+    and those are coincidences of spelling rather than inflections.
+
+    The TypeScript side has the same function, and the agreement test
+    compares the two on every query.
+    """
+    out = set()
+    if tok.endswith('y') and len(tok) > 3:
+        out.add(tok[:-1] + 'ies')
+    if tok.endswith(('s', 'x', 'z', 'ch', 'sh')) and len(tok) > 3:
+        out.add(tok + 'es')
+    if len(tok) > 2:
+        out.add(tok + 's')
+    if len(tok) > 4:
+        out.add(tok + 'ing')
+        if tok.endswith('e'):
+            out.add(tok[:-1] + 'ing')
+    out.discard(tok)
+    return out
+
+
+def _inflections_for(tok):
+    """`_inflections`, cached. The same token comes up in every query."""
+    v = _MORPH_CACHE.get(tok)
+    if v is None:
+        v = _inflections(tok)
+        _MORPH_CACHE[tok] = v
+    return v
 
 
 class SearchIndex:
@@ -468,12 +554,35 @@ class SearchIndex:
                 matched.add(t)
                 token_hits.add(t)
                 name_exact_hit = True
-            elif any(t in nt for nt in name_tokens if len(nt) > len(t)):
+            elif any(nt.startswith(t) for nt in name_tokens if len(nt) > len(t)):
+                # The token must be a *prefix* of a name token, not a
+                # fragment somewhere inside it.
+                #
+                # The old rule accepted the token anywhere in the name
+                # token, and that matched words by accident: "home" in
+                # "homelab", "late" in "template", "translate", and
+                # "sql" in "mysql". "write SQL" ranked `mysql-patterns`
+                # first because "sql" was found inside "mysql" -- a
+                # coincidence of spelling, not evidence -- and
+                # "bake sourdough bread at home" matched every
+                # `homelab-*` skill on the fragment "home".
+                #
+                # A prefix is still a partial match: "docker" is a
+                # prefix of "dockerfile", "kuber" of "kubernetes", and
+                # both are what a caller means when they type them.
                 score += WEIGHT_NAME_PARTIAL * idf
                 matched.add(t)
                 token_hits.add(t)
             if t in desc_tokens:
                 score += WEIGHT_DESC * idf
+                matched.add(t)
+                token_hits.add(t)
+            elif any(dt in _inflections_for(t) for dt in desc_tokens):
+                # The description uses an inflected form of the query
+                # token -- "drafting" for "draft". The match is worth
+                # less than an exact one, because it is a guess about
+                # the spelling rather than the spelling itself.
+                score += WEIGHT_DESC * idf * MORPH_DISCOUNT
                 matched.add(t)
                 token_hits.add(t)
 
@@ -536,6 +645,29 @@ class SearchIndex:
                     break
                 bonus = self._task_content_matches(task, q_tokens, heads, e)
                 if bonus:
+                    # A content match: the query named the row's object,
+                    # not the row's verb, so the row has NOT accounted for
+                    # the verb. Nothing is suppressed.
+                    #
+                    # The row's *order* still counts, though. The table
+                    # lists a row's members in priority order -- its
+                    # skills first, then its agents -- and that order is
+                    # the row's curation even when the query named only
+                    # the row's object. Without this, "write SQL" ranked
+                    # `database-reviewer` first: the agent is tier 1
+                    # while `mysql-patterns` is tier 2, so the tier bias
+                    # and the agent bonus together put it ahead of the
+                    # skills the row had been asked for.
+                    #
+                    # The demotion is the same gradient the strict branch
+                    # uses, and it is gentle: a row's own alternatives
+                    # stay reachable, but the row's first choice leads.
+                    pos = self.task_positions.get((e['name'], task))
+                    if pos is not None and pos > 0:
+                        depth = min(pos, TASK_DEMOTE_MAX_DEPTH)
+                        demote = min(bonus * TASK_DEMOTE_FRACTION * depth,
+                                     TASK_DEMOTE_MAX)
+                        bonus = bonus - demote
                     score += bonus
                     matched.add(task)
                     structured = True
@@ -558,15 +690,27 @@ class SearchIndex:
         so it is demoted -- the row's first choice is what the row
         recommends, and the scorer cannot read the prose that says so.
 
-        Only the strict branch uses this. A content match means the
-        query named the row's object ("write a REST API" reaches "Build
-        an API"), not that it asked for that specific task, so the
-        row's members stay on equal footing there.
+        The demotion is a *fraction* of the row's bonus, scaled by the
+        member's depth in the row. A flat amount was tried first and
+        it did not work: the row "Write SQL / optimise queries" lists
+        `postgres-patterns`, `mysql-patterns` and then the agent
+        `database-reviewer`, and a flat 3.0 was not enough to stop the
+        agent winning "write SQL queries" -- the agent is tier 1 and
+        gets the agent bonus, so it led by 0.299.
+
+        Scaling by depth is what makes the demotion match the table.
+        The row's first member is its recommendation and keeps the
+        full bonus. The second is an alternative and gives up a third
+        of the bonus. The third gives up more, and the depth is capped
+        so that a row's later members stay reachable rather than being
+        pushed out of the results altogether.
         """
         pos = self.task_positions.get((e['name'], task))
         if pos is None or pos == 0:
             return base
-        return base - TASK_DEMOTE
+        depth = min(pos, TASK_DEMOTE_MAX_DEPTH)
+        demote = min(base * TASK_DEMOTE_FRACTION * depth, TASK_DEMOTE_MAX)
+        return base - demote
 
     def search(self, query, limit=DEFAULT_LIMIT, kind=None, tier=None,
                domain=None, source=None, license=None, verdict=None,
@@ -630,8 +774,65 @@ class SearchIndex:
                 needed = max(1, -(-len(cov_tokens) * 2 // 3))
                 if len(cov_tokens) >= 2:
                     needed = max(2, needed)
-                hits = sum(1 for t in cov_tokens if t in token_hits)
+                # The demand is capped at two tokens.
+                #
+                # Two thirds of the query's tokens is the right *shape*
+                # -- a query that names a subject should be answered by
+                # an entry that covers it -- but it is the wrong
+                # *magnitude* once the query is longer than the
+                # sentence that names the subject. "stop my prose from
+                # sounding like a machine wrote it" has five
+                # discriminating tokens, so the rule demanded four,
+                # and `humanizer` -- which matches "sounding" and
+                # "wrote" -- was thrown away for want of two more
+                # words that no skill's description contains.
+                #
+                # Two is the number the rule already insisted on when
+                # the query had two or more tokens. Beyond that, the
+                # demand grew with the query's length, and length is
+                # evidence of nothing.
+                needed = min(needed, 2)
+                # The hits are counted over *every* query token, not
+                # only the ones that survived the generic-token
+                # filter.
+                #
+                # The filter drops the words that appear in too many
+                # descriptions -- "audit", "draft", "review". That is
+                # right for deciding *how many* tokens the rule should
+                # demand, but wrong for deciding which tokens count as
+                # evidence: the filtered word is still evidence when
+                # the entry matched it. "audit my site against WCAG
+                # 2.2" leaves {site, against, wcag} after the filter
+                # and demands two of them; `accessibility` matches
+                # "wcag" and "audit", but "audit" had been discarded,
+                # so the rule demanded "site" and "against" -- words
+                # no skill's description contains -- and threw the
+                # right answer away.
+                hits = sum(1 for t in set(q_tokens) if t in token_hits)
                 if hits < needed:
+                    continue
+                # The evidence rule.
+                #
+                # An entry that matched only words which carry no
+                # information about *which* entry it is, matched
+                # nothing real. "my cat knocked over a plant" matched
+                # `plant-care` on the word "plant" -- and "plant" is
+                # the query's subject, but the *coverage* words are
+                # the words that identify the entry, and "plant"
+                # identifies none of them.
+                #
+                # The check has two halves. The entry must have
+                # matched at least one word that appears in the
+                # corpus at all -- otherwise every word it matched is
+                # a coincidence. And it must have matched at least
+                # one of the *coverage* words, or at least two words
+                # overall: one word in the corpus is not enough on
+                # its own, because "write" appears in a few dozen
+                # descriptions and matching it says nothing.
+                in_corpus = [t for t in token_hits if self.df.get(t, 0) > 0]
+                cov_in_corpus = [t for t in cov_tokens
+                                 if t in token_hits and self.df.get(t, 0) > 0]
+                if not cov_in_corpus and len(in_corpus) < 2:
                     continue
             scored.append((s, e, matched))
 

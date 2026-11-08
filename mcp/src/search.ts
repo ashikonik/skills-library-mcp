@@ -72,6 +72,11 @@ import type {
 export const DEFAULT_LIMIT = 10;
 export const MAX_LIMIT = 50;
 export const RELEVANCE_FLOOR = 0.25;
+/**
+ * The discount applied to a description match that was found through
+ * the inflection rule rather than an exact token. See `inflections`.
+ */
+export const MORPH_DISCOUNT = 0.6;
 
 /**
  * A token is "generic" when it appears in more than this fraction of
@@ -159,16 +164,46 @@ export const WEIGHT_TASK_HEAD_FIRST = WEIGHT_TASK;
  * and the row's members were ranked only by whatever their names
  * happened to score.
  *
- * A strict match therefore demotes the row's later members by this
- * amount. Demoting rather than promoting matters: the relevance floor
- * is a fraction of the *top* score, so raising the ceiling can evict a
- * weaker but relevant entry from the bottom of the list. Measured over
- * the labelled query set, demoting 3.0 lifts rank-1 and rank-3 counts
- * while evicting nothing; the content branch is left alone, because a
- * content match says the query named the row's object, not that it
- * asked for that specific task.
+ * The row's later members are therefore demoted, by a *fraction* of the
+ * row's bonus, scaled by how deep they sit in the row. The fraction
+ * and the cap were measured over the labelled query set; see
+ * `mcp/scripts/eval_search.py`.
+ *
+ * Demoting rather than promoting matters: the relevance floor is a
+ * fraction of the *top* score, so raising the ceiling can evict a
+ * weaker but relevant entry from the bottom of the list.
+ *
+ * The row's order is the row's curation in *both* branches -- whether
+ * the query named the row's verb or only its object. "write SQL"
+ * names the row's object ("sql") but not its verb ("write"), so the
+ * content branch fires -- and without the demotion
+ * `database-reviewer` won: the agent is tier 1 while
+ * `postgres-patterns` is tier 2, so the tier bias and the agent bonus
+ * together put it ahead of the skills the row had been asked for.
  */
-export const TASK_DEMOTE = 3.0;
+export const TASK_DEMOTE_FRACTION = 0.6;
+/**
+ * The demotion does not keep growing with depth. A row's third or
+ * fourth member is a real alternative, not a worse version of the
+ * first, and an unbounded demotion would push it out of the results
+ * entirely rather than down the list.
+ */
+export const TASK_DEMOTE_MAX_DEPTH = 3;
+/**
+ * The demotion is also capped in absolute terms.
+ *
+ * A pure fraction of the bonus is not enough on its own. The strict
+ * bonus is 25.0, so a depth-3 member of a long row would give up
+ * 25.0 * 0.6 * 3 = 45.0 -- more than the whole bonus, which put the
+ * row's agents at a *negative* score. The row "Fix a failing build"
+ * lists `error-handling` first and the `build-*-resolver` agents
+ * fourth, fifth and sixth, and they are exactly what the query wants:
+ * the agents fell out of the top ten entirely.
+ *
+ * The cap says the demotion is a nudge, not a ban. A row's later
+ * members stay reachable; the row's first choice leads.
+ */
+export const TASK_DEMOTE_MAX = 15.0;
 export const TIER_BIAS: Record<number, number> = { 1: 1.0, 2: 0.25, 3: 0.0 };
 export const AGENT_BIAS = 0.5;
 
@@ -304,6 +339,53 @@ function phraseTokensMatch(phrase: string, qTokens: string[]): boolean {
   return pTokens.every((t) => qSet.has(t));
 }
 
+/**
+ * The inflected forms of a token -- what a description may use.
+ *
+ * English spells the same word several ways, and a description that
+ * says "drafting" does not contain the word "draft". Without this,
+ * "triage my inbox and draft the replies" missed `email-ops`, whose
+ * description says "mailbox triage, drafting, ...", and "review my
+ * code for security problems" missed `security-review` for the same
+ * reason.
+ *
+ * The rule is deliberately narrow: it adds only the suffixes English
+ * actually inflects. It is NOT a prefix rule. "late" does not match
+ * "latency" and "plant" does not match "plantation", because a prefix
+ * rule matches any word that happens to start the same way, and those
+ * are coincidences of spelling rather than inflections.
+ *
+ * The Python side has the same function, and the agreement test
+ * compares the two on every query.
+ */
+export function inflections(tok: string): string[] {
+  const out: string[] = [];
+  if (tok.endsWith('y') && tok.length > 3) out.push(tok.slice(0, -1) + 'ies');
+  if (
+    (tok.endsWith('s') || tok.endsWith('x') || tok.endsWith('z') ||
+     tok.endsWith('ch') || tok.endsWith('sh')) && tok.length > 3
+  ) {
+    out.push(tok + 'es');
+  }
+  if (tok.length > 2) out.push(tok + 's');
+  if (tok.length > 4) {
+    out.push(tok + 'ing');
+    if (tok.endsWith('e')) out.push(tok.slice(0, -1) + 'ing');
+  }
+  return out.filter((f) => f !== tok);
+}
+
+const morphCache = new Map<string, string[]>();
+
+/** `inflections`, cached. The same token comes up in every query. */
+export function inflectionsFor(tok: string): string[] {
+  const hit = morphCache.get(tok);
+  if (hit) return hit;
+  const v = inflections(tok);
+  morphCache.set(tok, v);
+  return v;
+}
+
 export interface SearchOptions {
   limit?: number;
   kind?: 'skill' | 'agent';
@@ -436,15 +518,27 @@ export class SearchIndex {
    * demoted -- the row's first choice is what the row recommends, and
    * the scorer cannot read the prose that says so.
    *
-   * Only the strict branch uses this. A content match means the query
-   * named the row's object ("write a REST API" reaches "Build an
-   * API"), not that it asked for that specific task, so the row's
-   * members stay on equal footing there.
+   * The demotion is a *fraction* of the row's bonus, scaled by the
+   * member's depth in the row. A flat amount was tried first and it
+   * did not work: the row "Write SQL / optimise queries" lists
+   * `postgres-patterns`, `mysql-patterns` and then the agent
+   * `database-reviewer`, and a flat 3.0 was not enough to stop the
+   * agent winning "write SQL queries" -- the agent is tier 1 and gets
+   * the agent bonus, so it led by 0.299.
+   *
+   * Scaling by depth is what makes the demotion match the table. The
+   * row's first member is its recommendation and keeps the full bonus.
+   * The second is an alternative and gives up a third of the bonus.
+   * The third gives up more, and the depth is capped so that a row's
+   * later members stay reachable rather than being pushed out of the
+   * results altogether.
    */
   private rowBonus(base: number, e: Entry, task: string): number {
     const pos = this.taskPositions.get(`${e.name}|${task}`);
     if (pos === undefined || pos === 0) return base;
-    return base - TASK_DEMOTE;
+    const depth = Math.min(pos, TASK_DEMOTE_MAX_DEPTH);
+    const demote = Math.min(base * TASK_DEMOTE_FRACTION * depth, TASK_DEMOTE_MAX);
+    return base - demote;
   }
 
   private taskContentMatches(
@@ -584,13 +678,35 @@ export class SearchIndex {
         matched.add(t);
         tokenHits.add(t);
         nameExactHit = true;
-      } else if (nameTokens.some((nt) => nt.length > t.length && nt.includes(t))) {
+      } else if (nameTokens.some((nt) => nt.length > t.length && nt.startsWith(t))) {
+        // The token must be a *prefix* of a name token, not a fragment
+        // somewhere inside it.
+        //
+        // The old rule accepted the token anywhere in the name token,
+        // and that matched words by accident: "home" in "homelab",
+        // "late" in "template", "translate", and "sql" in "mysql".
+        // "write SQL" ranked `mysql-patterns` first because "sql" was
+        // found inside "mysql" -- a coincidence of spelling, not
+        // evidence -- and "bake sourdough bread at home" matched every
+        // `homelab-*` skill on the fragment "home".
+        //
+        // A prefix is still a partial match: "docker" is a prefix of
+        // "dockerfile", "kuber" of "kubernetes", and both are what a
+        // caller means when they type them.
         score += WEIGHT_NAME_PARTIAL * idf;
         matched.add(t);
         tokenHits.add(t);
       }
       if (descTokens.has(t)) {
         score += WEIGHT_DESC * idf;
+        matched.add(t);
+        tokenHits.add(t);
+      } else if (inflectionsFor(t).some((f) => descTokens.has(f))) {
+        // The description uses an inflected form of the query token --
+        // "drafting" for "draft". The match is worth less than an exact
+        // one, because it is a guess about the spelling rather than the
+        // spelling itself.
+        score += WEIGHT_DESC * idf * MORPH_DISCOUNT;
         matched.add(t);
         tokenHits.add(t);
       }
@@ -661,8 +777,31 @@ export class SearchIndex {
           structured = true;
           break;
         }
-        const bonus = this.taskContentMatches(task, qTokens, heads, e);
+        let bonus = this.taskContentMatches(task, qTokens, heads, e);
         if (bonus > 0) {
+          // A content match: the query named the row's object, not the
+          // row's verb, so the row has NOT accounted for the verb.
+          // Nothing is suppressed.
+          //
+          // The row's *order* still counts, though. The table lists a
+          // row's members in priority order -- its skills first, then
+          // its agents -- and that order is the row's curation even
+          // when the query named only the row's object. Without this,
+          // "write SQL" ranked `database-reviewer` first: the agent is
+          // tier 1 while `mysql-patterns` is tier 2, so the tier bias
+          // and the agent bonus together put it ahead of the skills
+          // the row had been asked for.
+          //
+          // The demotion is the same gradient the strict branch uses,
+          // and it is gentle: a row's own alternatives stay reachable,
+          // but the row's first choice leads.
+          const pos = this.taskPositions.get(`${e.name}|${task}`);
+          if (pos !== undefined && pos > 0) {
+            const depth = Math.min(pos, TASK_DEMOTE_MAX_DEPTH);
+            const demote = Math.min(bonus * TASK_DEMOTE_FRACTION * depth,
+                                    TASK_DEMOTE_MAX);
+            bonus = bonus - demote;
+          }
           score += bonus;
           matched.add(task);
           structured = true;
@@ -743,9 +882,61 @@ export class SearchIndex {
       if (!structured) {
         let needed = Math.ceil((covTokens.length * 2) / 3);
         if (covTokens.length >= 2) needed = Math.max(2, needed);
+        // The demand is capped at two tokens.
+        //
+        // Two thirds of the query's tokens is the right *shape* -- a
+        // query that names a subject should be answered by an entry
+        // that covers it -- but it is the wrong *magnitude* once the
+        // query is longer than the sentence that names the subject.
+        // "stop my prose from sounding like a machine wrote it" has
+        // five discriminating tokens, so the rule demanded four, and
+        // `humanizer` -- which matches "sounding" and "wrote" -- was
+        // thrown away for want of two more words that no skill's
+        // description contains.
+        //
+        // Two is the number the rule already insisted on when the
+        // query had two or more tokens. Beyond that, the demand grew
+        // with the query's length, and length is evidence of nothing.
+        needed = Math.min(needed, 2);
+        // The hits are counted over *every* query token, not only the
+        // ones that survived the generic-token filter.
+        //
+        // The filter drops the words that appear in too many
+        // descriptions -- "audit", "draft", "review". That is right for
+        // deciding *how many* tokens the rule should demand, but wrong
+        // for deciding which tokens count as evidence: the filtered
+        // word is still evidence when the entry matched it. "audit my
+        // site against WCAG 2.2" leaves {site, against, wcag} after
+        // the filter and demands two of them; `accessibility` matches
+        // "wcag" and "audit", but "audit" had been discarded, so the
+        // rule demanded "site" and "against" -- words no skill's
+        // description contains -- and threw the right answer away.
         let hits = 0;
-        for (const t of covTokens) if (tokenHits.has(t)) hits++;
+        for (const t of new Set(qTokens)) if (tokenHits.has(t)) hits++;
         if (hits < needed) continue;
+        // The evidence rule.
+        //
+        // An entry that matched only words which carry no information
+        // about *which* entry it is, matched nothing real. "my cat
+        // knocked over a plant" matched `plant-care` on the word
+        // "plant" -- and "plant" is the query's subject, but the
+        // *coverage* words are the words that identify the entry, and
+        // "plant" identifies none of them.
+        //
+        // The check has two halves. The entry must have matched at
+        // least one word that appears in the corpus at all --
+        // otherwise every word it matched is a coincidence. And it
+        // must have matched at least one of the *coverage* words, or
+        // at least two words overall: one word in the corpus is not
+        // enough on its own, because "write" appears in a few dozen
+        // descriptions and matching it says nothing.
+        const inCorpus: string[] = [];
+        for (const t of tokenHits) if ((this.df.get(t) ?? 0) > 0) inCorpus.push(t);
+        let covInCorpus = 0;
+        for (const t of covTokens) {
+          if (tokenHits.has(t) && (this.df.get(t) ?? 0) > 0) covInCorpus++;
+        }
+        if (covInCorpus === 0 && inCorpus.length < 2) continue;
       }
       scored.push([s, e, matched]);
     }
