@@ -262,6 +262,56 @@ def test_search(idx):
           r['results'] and 'frontmatter' in r['results'][0])
 
 
+def test_search_counts(idx):
+    """The four count fields have to tell one story.
+
+    `total_matched`, `filtered_out`, `returned` and `truncated` are
+    four numbers a caller reads together. Before `filtered_out`
+    existed, the relevance floor silently dropped entries: a query
+    reported 52 matches, returned 37, and said `truncated: false` --
+    so the caller could not tell that 15 had been dropped and that the
+    match set was bigger than the page.
+    """
+    queries = ['test', 'api', 'documentation', 'write', 'database',
+               'deploy', 'review', 'security']
+    coherent = True
+    truncated_ok = True
+    for q in queries:
+        for limit in (1, 10, 50, 500):
+            r = idx.search(q, limit=limit)
+            label = '%r limit=%d' % (q, limit)
+            kept = r['total_matched'] - r['filtered_out']
+
+            if r['filtered_out'] < 0 or r['returned'] < 0 \
+                    or r['total_matched'] < 0:
+                coherent = False
+            if r['returned'] > kept:
+                coherent = False
+            # `truncated` means "there is more to come", not "the page
+            # is full".
+            if r['truncated'] != (kept > r['returned']):
+                truncated_ok = False
+
+    check('search: the four counts agree with each other', coherent)
+    check('search: truncated means there is more to come', truncated_ok)
+
+    r = idx.search('test', limit=500)
+    if r['filtered_out'] > 0:
+        check('search: the note names the relevance floor',
+              'relevance floor' in r['note'], r['note'])
+        check('search: the note names how many were dropped',
+              str(r['filtered_out']) in r['note'], r['note'])
+    else:
+        check('search: a query with nothing dropped has no floor note',
+              'relevance floor' not in r['note'], r['note'])
+
+    r = idx.search('zzzzqqqq nonexistent gibberish token', limit=10)
+    check('search: a query with no match reports coherent zeroes',
+          r['total_matched'] == 0 and r['filtered_out'] == 0
+          and r['returned'] == 0 and r['truncated'] is False
+          and r['note'] == '', str(r))
+
+
 def test_search_rules(idx):
     """The two rules that filter the scored entries.
 
@@ -778,6 +828,7 @@ def main():
     test_postings(idx)
     test_bundles(idx)
     test_search(idx)
+    test_search_counts(idx)
     test_search_rules(idx)
     test_task_curation(idx)
     test_server()

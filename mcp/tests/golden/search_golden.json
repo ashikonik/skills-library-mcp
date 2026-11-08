@@ -1,5 +1,6 @@
 {
  "add a skill to the library": {
+  "filtered_out": 19,
   "ids": [
    "skill:skill-library-adder",
    "skill:skill-creator-plus",
@@ -18,9 +19,11 @@
    20.7274,
    18.7533
   ],
-  "total": 26
+  "total": 26,
+  "truncated": false
  },
  "add authentication to an api": {
+  "filtered_out": 0,
   "ids": [
    "skill:twilio-security-api-auth",
    "skill:box-content-api",
@@ -45,9 +48,11 @@
    6.3476,
    6.3476
   ],
-  "total": 15
+  "total": 15,
+  "truncated": true
  },
  "api and integration design": {
+  "filtered_out": 16,
   "ids": [
    "skill:api-design",
    "skill:api-connector-builder",
@@ -64,9 +69,11 @@
    11.914,
    11.3463
   ],
-  "total": 22
+  "total": 22,
+  "truncated": false
  },
  "api-design": {
+  "filtered_out": 7,
   "ids": [
    "skill:api-design",
    "skill:api-connector-builder",
@@ -79,9 +86,11 @@
    20.1237,
    18.4678
   ],
-  "total": 11
+  "total": 11,
+  "truncated": false
  },
  "architecture and design patterns": {
+  "filtered_out": 13,
   "ids": [
    "skill:architecture-decision-records",
    "skill:hexagonal-architecture",
@@ -106,19 +115,25 @@
    14.9313,
    14.8951
   ],
-  "total": 40
+  "total": 40,
+  "truncated": true
  },
  "authentication oauth jwt": {
+  "filtered_out": 0,
   "ids": [],
   "scores": [],
-  "total": 0
+  "total": 0,
+  "truncated": false
  },
  "aws lambda cold start": {
+  "filtered_out": 0,
   "ids": [],
   "scores": [],
-  "total": 0
+  "total": 0,
+  "truncated": false
  },
  "backend api framework": {
+  "filtered_out": 14,
   "ids": [
    "skill:api-design",
    "skill:api-connector-builder",
@@ -135,9 +150,11 @@
    17.5,
    8.4935
   ],
-  "total": 20
+  "total": 20,
+  "truncated": false
  },
  "build a document from a template": {
+  "filtered_out": 7,
   "ids": [
    "skill:document-builder",
    "skill:artifact-template-design-report",
@@ -162,27 +179,33 @@
    17.8011,
    16.6262
   ],
-  "total": 20
+  "total": 20,
+  "truncated": true
  },
  "build failed with no error message": {
+  "filtered_out": 0,
   "ids": [
    "skill:investigation-mode"
   ],
   "scores": [
    8.25
   ],
-  "total": 1
+  "total": 1,
+  "truncated": false
  },
  "caveman mode lazy senior developer": {
+  "filtered_out": 0,
   "ids": [
    "skill:caveman-mode"
   ],
   "scores": [
    51.0262
   ],
-  "total": 1
+  "total": 1,
+  "truncated": false
  },
  "ci cd pipeline automation": {
+  "filtered_out": 3,
   "ids": [
    "skill:expo-cicd-workflows",
    "skill:deployments-cicd",
@@ -201,9 +224,11 @@
    13.4852,
    12.7251
   ],
-  "total": 10
+  "total": 10,
+  "truncated": false
  },
  "code refactoring large codebase": {
+  "filtered_out": 0,
   "ids": [
    "skill:security-review",
    "agent:security-reviewer",
@@ -226,9 +251,11 @@
    16.25,
    10.5216
   ],
-  "total": 9
+  "total": 9,
+  "truncated": false
  },
  "code review and quality": {
+  "filtered_out": 39,
   "ids": [
    "skill:ponytail-review",
    "agent:code-reviewer",
@@ -253,9 +280,11 @@
    16.6284,
    14.642
   ],
-  "total": 53
+  "total": 53,
+  "truncated": true
  },
  "code-review": {
+  "filtered_out": 11,
   "ids": [
    "skill:code-review",
    "skill:receiving-code-review",
@@ -280,23 +309,29 @@
    10.6284,
    9.2115
   ],
-  "total": 40
+  "total": 40,
+  "truncated": true
  },
  "competition math olympiad proof": {
+  "filtered_out": 0,
   "ids": [
    "skill:math-olympiad"
   ],
   "scores": [
    70.8948
   ],
-  "total": 1
+  "total": 1,
+  "truncated": false
  },
  "core engineering practice standards": {
+  "filtered_out": 0,
   "ids": [],
   "scores": [],
-  "total": 0
+  "total": 0,
+  "truncated": false
  },
  "create a new skill": {
+  "filtered_out": 41,
   "ids": [
    "skill:skill-creator-plus",
    "skill:writing-skills",
@@ -321,9 +356,11 @@
    10.4544,
    9.7627
   ],
-  "total": 51
+  "total": 51,
+  "truncated": false
  },
  "data database pipeline": {
+  "filtered_out": 5,
   "ids": [
    "skill:database-migrations",
    "agent:database-reviewer",
@@ -348,9 +385,11 @@
    25.4909,
    25.4909
   ],
-  "total": 28
+  "total": 28,
+  "truncated": true
  },
  "data visualization charts": {
+  "filtered_out": 0,
   "ids": [
    "skill:data-visualization",
    "skill:d3-data-visualization",
@@ -375,9 +414,11 @@
    32.6045,
    28.3261
   ],
-  "total": 12
+  "total": 12,
+  "truncated": true
  },
  "database query optimization": {
+  "filtered_out": 4,
   "ids": [
    "agent:database-reviewer",
    "skill:postgres-patterns",
@@ -400,18 +441,22 @@
    16.25,
    11.6734
   ],
-  "total": 13
+  "total": 13,
+  "truncated": false
  },
  "debug a failing test": {
+  "filtered_out": 3,
   "ids": [
    "skill:debug-failing-test"
   ],
   "scores": [
    62.845
   ],
-  "total": 4
+  "total": 4,
+  "truncated": false
  },
  "debugging production incident": {
+  "filtered_out": 1,
   "ids": [
    "skill:deployment-patterns",
    "agent:deployment-expert",
@@ -426,14 +471,18 @@
    16.25,
    9.9756
   ],
-  "total": 6
+  "total": 6,
+  "truncated": false
  },
  "devops and cloud deployment": {
+  "filtered_out": 0,
   "ids": [],
   "scores": [],
-  "total": 0
+  "total": 0,
+  "truncated": false
  },
  "docker container deployment": {
+  "filtered_out": 0,
   "ids": [
    "skill:render-docker",
    "skill:docker-patterns"
@@ -442,9 +491,11 @@
    27.3477,
    27.3477
   ],
-  "total": 2
+  "total": 2,
+  "truncated": false
  },
  "document-builder": {
+  "filtered_out": 9,
   "ids": [
    "skill:document-builder",
    "agent:comfyui-workflow-builder",
@@ -457,9 +508,11 @@
    16.0,
    16.0
   ],
-  "total": 13
+  "total": 13,
+  "truncated": false
  },
  "explore the codebase agent": {
+  "filtered_out": 3,
   "ids": [
    "skill:agent-development",
    "agent:agent-creator",
@@ -484,9 +537,11 @@
    17.5,
    16.25
   ],
-  "total": 19
+  "total": 19,
+  "truncated": true
  },
  "fix a failing build": {
+  "filtered_out": 3,
   "ids": [
    "agent:react-build-resolver",
    "agent:java-build-resolver",
@@ -511,9 +566,11 @@
    19.6169,
    14.6016
   ],
-  "total": 14
+  "total": 14,
+  "truncated": true
  },
  "fix my latex document errors": {
+  "filtered_out": 2,
   "ids": [
    "skill:latex-doctor",
    "skill:document-builder",
@@ -526,9 +583,11 @@
    16.0,
    16.0
   ],
-  "total": 6
+  "total": 6,
+  "truncated": false
  },
  "frontend ui accessibility": {
+  "filtered_out": 0,
   "ids": [
    "skill:frontend-a11y",
    "skill:accessibility",
@@ -543,9 +602,11 @@
    16.6001,
    11.3785
   ],
-  "total": 5
+  "total": 5,
+  "truncated": false
  },
  "git version control workflow": {
+  "filtered_out": 0,
   "ids": [
    "skill:workflow",
    "skill:token-budget-advisor"
@@ -554,28 +615,36 @@
    20.1052,
    9.156
   ],
-  "total": 2
+  "total": 2,
+  "truncated": false
  },
  "grpc streaming backpressure": {
+  "filtered_out": 0,
   "ids": [],
   "scores": [],
-  "total": 0
+  "total": 0,
+  "truncated": false
  },
  "how to bake sourdough bread at home": {
+  "filtered_out": 0,
   "ids": [],
   "scores": [],
-  "total": 0
+  "total": 0,
+  "truncated": false
  },
  "humanize this text make it sound less robotic": {
+  "filtered_out": 0,
   "ids": [
    "skill:humanizer"
   ],
   "scores": [
    62.9353
   ],
-  "total": 1
+  "total": 1,
+  "truncated": false
  },
  "improve accessibility wcag": {
+  "filtered_out": 1,
   "ids": [
    "skill:accessibility",
    "skill:accessibility-and-inclusive-visualization",
@@ -588,9 +657,11 @@
    34.124,
    26.5284
   ],
-  "total": 5
+  "total": 5,
+  "truncated": false
  },
  "improve performance of a slow query": {
+  "filtered_out": 1,
   "ids": [
    "skill:react-performance",
    "agent:performance-optimizer",
@@ -607,9 +678,11 @@
    19.2691,
    16.0
   ],
-  "total": 7
+  "total": 7,
+  "truncated": false
  },
  "it crashes when i open it": {
+  "filtered_out": 0,
   "ids": [
    "agent:pytorch-build-resolver",
    "skill:test-triage"
@@ -618,19 +691,25 @@
    7.8456,
    6.5956
   ],
-  "total": 2
+  "total": 2,
+  "truncated": false
  },
  "it hangs on startup": {
+  "filtered_out": 0,
   "ids": [],
   "scores": [],
-  "total": 0
+  "total": 0,
+  "truncated": false
  },
  "kafka consumer group rebalancing": {
+  "filtered_out": 0,
   "ids": [],
   "scores": [],
-  "total": 0
+  "total": 0,
+  "truncated": false
  },
  "kubernetes cluster operations": {
+  "filtered_out": 1,
   "ids": [
    "skill:kubernetes-patterns",
    "skill:physical-ai-infrastructure-setup-and-resilient-scaling",
@@ -641,9 +720,11 @@
    10.8291,
    9.5
   ],
-  "total": 4
+  "total": 4,
+  "truncated": false
  },
  "machine learning model training": {
+  "filtered_out": 0,
   "ids": [
    "agent:mle-reviewer",
    "skill:mle-workflow",
@@ -660,18 +741,22 @@
    12.5042,
    9.3919
   ],
-  "total": 6
+  "total": 6,
+  "truncated": false
  },
  "math-olympiad": {
+  "filtered_out": 0,
   "ids": [
    "skill:math-olympiad"
   ],
   "scores": [
    57.9158
   ],
-  "total": 1
+  "total": 1,
+  "truncated": false
  },
  "mcp-server-patterns": {
+  "filtered_out": 25,
   "ids": [
    "skill:mcp-server-patterns",
    "skill:build-mcp-server",
@@ -682,9 +767,11 @@
    53.2279,
    53.2279
   ],
-  "total": 28
+  "total": 28,
+  "truncated": false
  },
  "migrate to a new framework": {
+  "filtered_out": 0,
   "ids": [
    "skill:render-migrate-from-heroku",
    "skill:migrate-workflows",
@@ -709,37 +796,47 @@
    4.6488,
    4.6488
   ],
-  "total": 11
+  "total": 11,
+  "truncated": true
  },
  "my changes were not saved": {
+  "filtered_out": 0,
   "ids": [
    "skill:moody-s-rating-analysis"
   ],
   "scores": [
    7.0379
   ],
-  "total": 1
+  "total": 1,
+  "truncated": false
  },
  "nothing showing on screen": {
+  "filtered_out": 0,
   "ids": [
    "skill:agent-browser-verify"
   ],
   "scores": [
    8.0
   ],
-  "total": 1
+  "total": 1,
+  "truncated": false
  },
  "numpy vectorized computation": {
+  "filtered_out": 0,
   "ids": [],
   "scores": [],
-  "total": 0
+  "total": 0,
+  "truncated": false
  },
  "postgres index bloat vacuum": {
+  "filtered_out": 0,
   "ids": [],
   "scores": [],
-  "total": 0
+  "total": 0,
+  "truncated": false
  },
  "prompt-optimizer": {
+  "filtered_out": 6,
   "ids": [
    "skill:prompt-optimizer",
    "agent:harness-optimizer"
@@ -748,23 +845,29 @@
    46.6261,
    24.2516
   ],
-  "total": 8
+  "total": 8,
+  "truncated": false
  },
  "python testing patterns pytest": {
+  "filtered_out": 1,
   "ids": [
    "skill:python-testing"
   ],
   "scores": [
    40.4709
   ],
-  "total": 2
+  "total": 2,
+  "truncated": false
  },
  "quantum chromodynamics lattice simulation": {
+  "filtered_out": 0,
   "ids": [],
   "scores": [],
-  "total": 0
+  "total": 0,
+  "truncated": false
  },
  "react component patterns": {
+  "filtered_out": 3,
   "ids": [
    "skill:react-patterns",
    "skill:zoom-meeting-sdk-web-component-view",
@@ -789,19 +892,25 @@
    12.9592,
    12.9592
   ],
-  "total": 19
+  "total": 19,
+  "truncated": true
  },
  "redis cache invalidation strategy": {
+  "filtered_out": 0,
   "ids": [],
   "scores": [],
-  "total": 0
+  "total": 0,
+  "truncated": false
  },
  "refactor legacy code": {
+  "filtered_out": 0,
   "ids": [],
   "scores": [],
-  "total": 0
+  "total": 0,
+  "truncated": false
  },
  "research partner literature review": {
+  "filtered_out": 0,
   "ids": [
    "skill:research-partner",
    "skill:literature-review"
@@ -810,9 +919,11 @@
    42.7908,
    38.9117
   ],
-  "total": 2
+  "total": 2,
+  "truncated": false
  },
  "rest graphql api endpoint": {
+  "filtered_out": 0,
   "ids": [
    "skill:api-design",
    "skill:api-connector-builder",
@@ -825,9 +936,11 @@
    18.4678,
    17.5
   ],
-  "total": 4
+  "total": 4,
+  "truncated": false
  },
  "review code i did not write": {
+  "filtered_out": 3,
   "ids": [
    "skill:code-review",
    "agent:code-reviewer",
@@ -852,9 +965,11 @@
    23.5,
    22.4493
   ],
-  "total": 17
+  "total": 17,
+  "truncated": true
  },
  "security review vulnerability": {
+  "filtered_out": 0,
   "ids": [
    "skill:security-review",
    "skill:vulnerability-writeup",
@@ -869,9 +984,11 @@
    17.6305,
    8.8983
   ],
-  "total": 5
+  "total": 5,
+  "truncated": false
  },
  "security-review": {
+  "filtered_out": 4,
   "ids": [
    "skill:security-review",
    "agent:security-reviewer",
@@ -896,9 +1013,11 @@
    8.688,
    8.688
   ],
-  "total": 22
+  "total": 22,
+  "truncated": true
  },
  "set up continuous integration": {
+  "filtered_out": 0,
   "ids": [
    "skill:continuous-learning",
    "skill:continuous-agent-loop",
@@ -911,14 +1030,18 @@
    16.9627,
    5.6542
   ],
-  "total": 4
+  "total": 4,
+  "truncated": false
  },
  "ship a release": {
+  "filtered_out": 0,
   "ids": [],
   "scores": [],
-  "total": 0
+  "total": 0,
+  "truncated": false
  },
  "silent failure hunter agent": {
+  "filtered_out": 2,
   "ids": [
    "agent:silent-failure-hunter",
    "skill:agent-development",
@@ -931,9 +1054,11 @@
    26.3162,
    26.3162
   ],
-  "total": 6
+  "total": 6,
+  "truncated": false
  },
  "tdd-workflow": {
+  "filtered_out": 6,
   "ids": [
    "skill:tdd-workflow",
    "skill:workflow",
@@ -956,14 +1081,18 @@
    13.2306,
    8.9365
   ],
-  "total": 15
+  "total": 15,
+  "truncated": false
  },
  "terraform module state locking": {
+  "filtered_out": 0,
   "ids": [],
   "scores": [],
-  "total": 0
+  "total": 0,
+  "truncated": false
  },
  "testing and qa automation": {
+  "filtered_out": 0,
   "ids": [
    "skill:browser-qa",
    "skill:game-playtest"
@@ -972,18 +1101,22 @@
    21.2293,
    8.6718
   ],
-  "total": 2
+  "total": 2,
+  "truncated": false
  },
  "the deploy never finishes": {
+  "filtered_out": 0,
   "ids": [
    "skill:investigation-mode"
   ],
   "scores": [
    12.2608
   ],
-  "total": 1
+  "total": 1,
+  "truncated": false
  },
  "the page is stuck": {
+  "filtered_out": 0,
   "ids": [
    "skill:investigation-mode",
    "skill:agent-browser-verify",
@@ -996,42 +1129,54 @@
    6.191,
    5.941
   ],
-  "total": 4
+  "total": 4,
+  "truncated": false
  },
  "the screen is blank": {
+  "filtered_out": 0,
   "ids": [
    "skill:agent-browser-verify"
   ],
   "scores": [
    8.0
   ],
-  "total": 1
+  "total": 1,
+  "truncated": false
  },
  "typescript type safety": {
+  "filtered_out": 0,
   "ids": [
    "agent:typescript-reviewer"
   ],
   "scores": [
    29.7442
   ],
-  "total": 1
+  "total": 1,
+  "truncated": false
  },
  "useEffect react hook dependency array": {
+  "filtered_out": 0,
   "ids": [],
   "scores": [],
-  "total": 0
+  "total": 0,
+  "truncated": false
  },
  "webpack code splitting lazy load": {
+  "filtered_out": 0,
   "ids": [],
   "scores": [],
-  "total": 0
+  "total": 0,
+  "truncated": false
  },
  "websocket reconnection backoff": {
+  "filtered_out": 0,
   "ids": [],
   "scores": [],
-  "total": 0
+  "total": 0,
+  "truncated": false
  },
  "write a new feature": {
+  "filtered_out": 3,
   "ids": [
    "agent:planner",
    "agent:code-architect",
@@ -1056,9 +1201,11 @@
    18.7984,
    18.7984
   ],
-  "total": 22
+  "total": 22,
+  "truncated": true
  },
  "writing technical documentation": {
+  "filtered_out": 0,
   "ids": [
    "skill:documentation-lookup",
    "agent:docs-lookup",
@@ -1071,11 +1218,14 @@
    10.3674,
    8.8674
   ],
-  "total": 4
+  "total": 4,
+  "truncated": false
  },
  "zzzzqqqq nonexistent gibberish token": {
+  "filtered_out": 0,
   "ids": [],
   "scores": [],
-  "total": 0
+  "total": 0,
+  "truncated": false
  }
 }

@@ -300,7 +300,9 @@ runs.
     {
       "injectSteps": [
         {
-          "ephemeralMessage": "Remember to check for lint errors before proposing changes."
+          "systemMessage": {
+            "systemMessage": "Remember to check for lint errors before proposing changes."
+          }
         }
       ],
       "terminationBehavior": ""
@@ -317,8 +319,8 @@ runs.
             collapsible "System Message" row, and the model sees only the
             `systemMessage` text (leave it `""` to send the model nothing).
         *   `{"userMessage": "..."}` (plain string)
-        *   `{"ephemeralMessage": "..."}` (plain string; transient message
-            dropped after the current turn)
+        *   `{"ephemeralMessage": "..."}` *(deprecated — use `systemMessage`
+            instead; converted to a hidden system message)*
         *   `{"errorMessage": {"userMessage": "..."}}` (shows an error message
             to the user without sending it to the model. Marks the turn as
             errored with a non-zero exit code in non-interactive `-p` mode, and

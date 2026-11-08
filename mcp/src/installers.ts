@@ -106,8 +106,12 @@ export function checkTarget(harness: Harness, target: string, projectRoot?: stri
   const resolved = resolve(target);
   const allowed = bases.some((b) => {
     if (harness === 'agentsmd') {
-      // agentsmd writes one file, not a directory.
-      return resolve(b) === resolved || isInside(resolve(b, '..'), resolved);
+      // agentsmd writes one file, not a directory. The only path it
+      // may write is that file -- not anything else under the project
+      // root. The Python implementation has always been this strict;
+      // this was looser, and the two implementations disagreed about
+      // what the whitelist meant.
+      return resolve(b) === resolved;
     }
     return isInside(b, resolved) || resolve(b) === resolved;
   });

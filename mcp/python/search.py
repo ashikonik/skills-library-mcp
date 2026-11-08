@@ -539,8 +539,9 @@ class SearchIndex:
                domain=None, include_body=False):
         q_tokens = tokenize(query)
         if not q_tokens:
-            return {'query': query, 'total_matched': 0, 'returned': 0,
-                    'truncated': False, 'note': '', 'results': []}
+            return {'query': query, 'total_matched': 0, 'filtered_out': 0,
+                    'returned': 0, 'truncated': False, 'note': '',
+                    'results': []}
         q_bigrams = bigrams(q_tokens)
         query_lower = ' '.join((query or '').lower().split())
         # The query's head nouns -- what it is *about*, as opposed to the
@@ -604,18 +605,33 @@ class SearchIndex:
             t[1]['name'],
         ))
 
+        # The number of entries that matched, before the relevance
+        # floor. This is the size of the match set: the entries that
+        # passed scoring and the coverage rule. It is *not* the number
+        # of results, because the relevance floor then drops the
+        # entries whose score is under a quarter of the best one.
         total = len(scored)
         if not scored:
-            return {'query': query, 'total_matched': 0, 'returned': 0,
-                    'truncated': False, 'note': '', 'results': []}
+            return {'query': query, 'total_matched': 0, 'filtered_out': 0,
+                    'returned': 0, 'truncated': False, 'note': '',
+                    'results': []}
 
         top = scored[0][0]
         floor = top * RELEVANCE_FLOOR
-        scored = [t for t in scored if t[0] >= floor]
+        kept = [t for t in scored if t[0] >= floor]
+
+        # The entries the relevance floor dropped. Reporting this is
+        # what makes the four counts tell one story: `total_matched` is
+        # the match set, `filtered_out` is what the floor removed from
+        # it, and `returned` is what came back. Before this field
+        # existed, the floor silently hid entries -- a query reported
+        # 52 matches and returned 37 with `truncated: false`, so the
+        # caller could not tell that 15 had been dropped.
+        filtered_out = total - len(kept)
 
         limit = max(1, min(int(limit or DEFAULT_LIMIT), MAX_LIMIT))
-        truncated = len(scored) > limit
-        shown = scored[:limit]
+        truncated = len(kept) > limit
+        shown = kept[:limit]
 
         results = []
         for s, e, matched in shown:
@@ -638,10 +654,14 @@ class SearchIndex:
         note = ''
         if truncated:
             note = ('Showing %d of %d matches. Refine the query to narrow it '
-                    'down.' % (limit, len(scored)))
+                    'down.' % (limit, len(kept)))
+        elif filtered_out > 0:
+            note = ('Showing %d of %d matches; %d were below the relevance '
+                    'floor.' % (len(kept), total, filtered_out))
         return {
             'query': query,
             'total_matched': total,
+            'filtered_out': filtered_out,
             'returned': len(results),
             'truncated': truncated,
             'note': note,

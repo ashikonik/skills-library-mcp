@@ -654,6 +654,7 @@ export class SearchIndex {
       return {
         query,
         total_matched: 0,
+        filtered_out: 0,
         returned: 0,
         truncated: false,
         note: '',
@@ -730,11 +731,18 @@ export class SearchIndex {
       return codepointCompare(a[1].name, b[1].name);
     });
 
+    // The number of entries that matched, before the relevance floor.
+    //
+    // This is the size of the match set: the entries that passed
+    // scoring and the coverage rule. It is *not* the number of
+    // results, because the relevance floor then drops the entries
+    // whose score is under a quarter of the best one.
     const total = scored.length;
     if (total === 0) {
       return {
         query,
         total_matched: 0,
+        filtered_out: 0,
         returned: 0,
         truncated: false,
         note: '',
@@ -745,6 +753,15 @@ export class SearchIndex {
     const top = scored[0][0];
     const floor = top * RELEVANCE_FLOOR;
     const kept = scored.filter((t) => t[0] >= floor);
+
+    // The entries the relevance floor dropped. Reporting this is what
+    // makes the four counts tell one story: `total_matched` is the
+    // match set, `filtered_out` is what the floor removed from it, and
+    // `returned` is what came back. Before this field existed, the
+    // floor silently hid entries -- a query reported 52 matches and
+    // returned 37 with `truncated: false`, so the caller could not
+    // tell that 15 had been dropped.
+    const filteredOut = total - kept.length;
 
     const limit = Math.max(1, Math.min(Math.trunc(limit0) || DEFAULT_LIMIT, MAX_LIMIT));
     const truncated = kept.length > limit;
@@ -770,10 +787,13 @@ export class SearchIndex {
     let note = '';
     if (truncated) {
       note = `Showing ${limit} of ${kept.length} matches. Refine the query to narrow it down.`;
+    } else if (filteredOut > 0) {
+      note = `Showing ${kept.length} of ${total} matches; ${filteredOut} were below the relevance floor.`;
     }
     return {
       query,
       total_matched: total,
+      filtered_out: filteredOut,
       returned: results.length,
       truncated,
       note,

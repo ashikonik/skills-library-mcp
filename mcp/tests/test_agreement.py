@@ -92,6 +92,12 @@ def python_results(idx, queries):
             'ids': [x['id'] for x in r['results']],
             'scores': [x['score'] for x in r['results']],
             'total': r['total_matched'],
+            # The count of the entries the relevance floor dropped.
+            # It is part of the response, so the two implementations
+            # have to agree on it: a divergence here is the same class
+            # of bug as a divergence in the ids.
+            'filtered_out': r['filtered_out'],
+            'truncated': r['truncated'],
         }
     return out
 
@@ -164,8 +170,20 @@ def check_search(idx):
             fail('score mismatch for %r\n  python: %s\n  ts    : %s'
                  % (q, py[q]['scores'][:5], ts[q]['scores'][:5]))
             mismatched += 1
+        elif py[q]['total'] != ts[q]['total']:
+            fail('total mismatch for %r\n  python: %s\n  ts    : %s'
+                 % (q, py[q]['total'], ts[q]['total']))
+            mismatched += 1
+        elif py[q]['filtered_out'] != ts[q]['filtered_out']:
+            fail('filtered_out mismatch for %r\n  python: %s\n  ts    : %s'
+                 % (q, py[q]['filtered_out'], ts[q]['filtered_out']))
+            mismatched += 1
+        elif py[q]['truncated'] != ts[q]['truncated']:
+            fail('truncated mismatch for %r\n  python: %s\n  ts    : %s'
+                 % (q, py[q]['truncated'], ts[q]['truncated']))
+            mismatched += 1
     if mismatched == 0:
-        ok('search: %d queries produce identical id lists and scores'
+        ok('search: %d queries produce identical id lists, scores and counts'
            % len(GOLDEN_QUERIES))
 
     # The three no-match queries must return nothing, in both.

@@ -197,7 +197,10 @@ export interface SearchResult {
 
 export interface SearchResponse {
   query: string;
+  /** The size of the match set: entries that passed scoring and coverage. */
   total_matched: number;
+  /** How many of the matched entries the relevance floor dropped. */
+  filtered_out: number;
   returned: number;
   truncated: boolean;
   note: string;

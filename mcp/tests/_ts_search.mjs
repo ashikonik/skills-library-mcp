@@ -1,7 +1,7 @@
 // Drives the TypeScript search from the Python agreement test.
 //
 // Reads a JSON array of queries on argv[2] and writes a JSON object of
-// {query: {ids, scores, total}} on stdout.
+// {query: {ids, scores, total, filtered_out, truncated}} on stdout.
 import { loadIndex } from '../dist/index-loader.js';
 import { SearchIndex } from '../dist/search.js';
 
@@ -14,6 +14,8 @@ for (const q of queries) {
     ids: r.results.map((x) => x.id),
     scores: r.results.map((x) => x.score),
     total: r.total_matched,
+    filtered_out: r.filtered_out,
+    truncated: r.truncated,
   };
 }
 process.stdout.write(JSON.stringify(out));

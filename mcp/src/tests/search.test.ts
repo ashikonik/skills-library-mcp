@@ -156,6 +156,70 @@ test('the limit is capped at 50', () => {
   assert.ok(idx.search('api', { limit: 500 }).results.length <= 50);
 });
 
+// ------------------------------------------------- the four count fields
+//
+// `total_matched`, `filtered_out`, `returned` and `truncated` have to
+// tell one story. Before `filtered_out` existed, the relevance floor
+// silently dropped entries: a query reported 52 matches, returned 37,
+// and said `truncated: false` -- so the caller could not tell that 15
+// had been dropped and that the match set was bigger than the page.
+test('the four counts agree with each other', () => {
+  const queries = ['test', 'api', 'documentation', 'write', 'database',
+                   'deploy', 'review', 'security'];
+  for (const q of queries) {
+    for (const limit of [1, 10, 50, 500]) {
+      const r = idx.search(q, { limit });
+      const label = `${JSON.stringify(q)} limit=${limit}`;
+
+      assert.ok(r.total_matched >= 0, `${label}: total_matched is negative`);
+      assert.ok(r.filtered_out >= 0, `${label}: filtered_out is negative`);
+      assert.ok(r.returned >= 0, `${label}: returned is negative`);
+
+      // The match set is the kept entries plus the ones the floor
+      // dropped. The kept entries are the ones on this page plus the
+      // ones the page could not hold.
+      const kept = r.total_matched - r.filtered_out;
+      assert.ok(
+        r.returned <= kept,
+        `${label}: returned ${r.returned} exceeds the ${kept} kept entries`,
+      );
+
+      // `truncated` means "there is more to come", not "the page is
+      // full". With a limit of 500 the page holds everything the floor
+      // kept, so nothing is truncated.
+      assert.equal(
+        r.truncated,
+        kept > r.returned,
+        `${label}: truncated does not match the number of results`,
+      );
+    }
+  }
+});
+
+test('the note names the number of results when entries were dropped', () => {
+  // A query whose match set is larger than the page must say so.
+  const r = idx.search('test', { limit: 500 });
+  if (r.filtered_out > 0) {
+    assert.match(r.note, /relevance floor/,
+      'the note must name the relevance floor when it drops entries');
+    assert.match(r.note, new RegExp(String(r.filtered_out)),
+      'the note must name how many entries were dropped');
+  }
+  if (r.truncated) {
+    assert.match(r.note, /of \d+ matches/,
+      'the note must name the size of the match set when the page is short');
+  }
+});
+
+test('a query with no match reports a coherent set of zeroes', () => {
+  const r = idx.search('zzzzqqqq nonexistent gibberish token', { limit: 10 });
+  assert.equal(r.total_matched, 0);
+  assert.equal(r.filtered_out, 0);
+  assert.equal(r.returned, 0);
+  assert.equal(r.truncated, false);
+  assert.equal(r.note, '');
+});
+
 // ------------------------------------------------------- the filter rules
 test('the coverage rule requires the distinctive tokens, not the generic ones', () => {
   // "write" is generic; "documentation" is the subject. The rule must
