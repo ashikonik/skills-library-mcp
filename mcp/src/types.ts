@@ -281,7 +281,15 @@ export interface LibraryIndex {
     fields: string[];
     tokenizer_version: number;
     stopwords: string[];
-    postings: Record<string, Record<string, string[]>>;
+    /**
+     * The postings are field-aware: one bucket per indexed field, and
+     * within a field one bucket per kind. `postings[field][kind][token]`
+     * lists the entries that carry the token in that field.
+     *
+     * The fields are exactly the ones `fields` advertises -- the two
+     * are built from one declaration, so they cannot drift.
+     */
+    postings: Record<string, Record<string, Record<string, string[]>>>;
   };
 }
 

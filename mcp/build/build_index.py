@@ -916,14 +916,83 @@ def build():
         })
 
     # --------------------------------------------------------------- postings
-    postings = {}
+    #
+    # The postings are *field-aware*: one bucket per indexed field, and
+    # within a field one bucket per kind. The shape mirrors the fields
+    # the scorer actually reads, so an entry can be found by the
+    # prompt signal it declares or the task row that names it -- not
+    # only by the two words in its name and description.
+    #
+    # The field list below is the same list that is published as
+    # `search.fields`, and the postings are built from it rather than
+    # beside it. That is deliberate: the two used to drift. The index
+    # advertised `name`, `description`, `prompt_signals`, `domain` and
+    # `tasks`, while the postings held only the first two -- so a
+    # caller who trusted the advertised list would look for a token in a
+    # bucket that did not exist, and find nothing. Building the
+    # postings from the advertised list means the advertisement cannot
+    # name a field the postings do not cover.
+    SEARCH_FIELDS = ['name', 'description', 'prompt_signals', 'domain',
+                      'tasks']
+    postings = {f: {} for f in SEARCH_FIELDS}
+
+    # The task rows an entry belongs to. The table is the authority on
+    # which entries a row names, so the mapping is read off the rows
+    # rather than recomputed.
+    task_rows_of = {}
+    for t in tasks:
+        for s in t['skills']:
+            task_rows_of.setdefault(('skill', s), []).append(t['task'])
+        for a in t['agents']:
+            task_rows_of.setdefault(('agent', a), []).append(t['task'])
+
+    def field_tokens(field, rec):
+        """The tokens one entry contributes to one field's postings.
+
+        Each field is tokenised the way the scorer matches it, so the
+        postings answer the question the scorer asks:
+          * `name` and `description` -- the entry's own words;
+          * `prompt_signals` -- the curated activation phrases and
+            their `all_of`/`any_of` alternatives;
+          * `domain` -- the entry's domain, which the filter matches
+            exactly but a query names in its own words;
+          * `tasks` -- the task rows that name the entry, which is how
+            a query that describes a *task* rather than a subject finds
+            it.
+        """
+        if field == 'name':
+            return rec['tokens']['name']
+        if field == 'description':
+            return rec['tokens']['desc']
+        if field == 'prompt_signals':
+            ps = rec.get('frontmatter', {}).get('prompt_signals') or {}
+            out = []
+            for p in ps.get('phrases') or []:
+                out.extend(tokenize(p))
+            for row in ps.get('all_of') or []:
+                for alt in row:
+                    out.extend(tokenize(alt))
+            for alt in ps.get('any_of') or []:
+                out.extend(tokenize(alt))
+            return out
+        if field == 'domain':
+            return tokenize(rec.get('domain') or '')
+        if field == 'tasks':
+            out = []
+            for task in task_rows_of.get((rec['kind'], rec['name']), []):
+                out.extend(tokenize(task))
+            return out
+        return []
+
     for rec in skill_records + agent_records:
-        bucket = postings.setdefault(rec['kind'], {})
-        for t in set(rec['tokens']['name'] + rec['tokens']['desc']):
-            bucket.setdefault(t, []).append(rec['id'])
-    for kind in postings:
-        for t in postings[kind]:
-            postings[kind][t].sort()
+        for field in SEARCH_FIELDS:
+            bucket = postings[field].setdefault(rec['kind'], {})
+            for t in set(field_tokens(field, rec)):
+                bucket.setdefault(t, []).append(rec['id'])
+    for field in postings:
+        for kind in postings[field]:
+            for t in postings[field][kind]:
+                postings[field][kind][t].sort()
 
     by_tier = {1: 0, 2: 0, 3: 0}
     for rec in skill_records:
@@ -1001,7 +1070,10 @@ def build():
             for e in excluded
         ],
         'search': {
-            'fields': ['name', 'description', 'prompt_signals', 'domain', 'tasks'],
+            # The same list the postings were built from. The two are
+            # one declaration, so the advertised fields and the indexed
+            # fields cannot drift apart.
+            'fields': SEARCH_FIELDS,
             'tokenizer_version': 2,
             'stopwords': sorted(STOPWORDS),
             'postings': postings,

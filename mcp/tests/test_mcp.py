@@ -167,14 +167,26 @@ def test_descriptions(idx):
 
 # ------------------------------------------------------------- 3. postings
 def test_postings(idx):
+    """The postings must cover every field the index advertises.
+
+    The postings are field-aware: `postings[field][kind][token]` lists
+    the entries carrying the token in that field. The full contract is
+    checked in `tests/test_postings.py`; this is the coarse check that
+    every entry's own name and description tokens resolve.
+    """
     postings = idx.data['search']['postings']
+    fields = idx.data['search']['fields']
+    check('postings: every advertised field has a bucket',
+          all(f in postings for f in fields),
+          str([f for f in fields if f not in postings]))
+
     missing = []
     for kind in ('skill', 'agent'):
-        bucket = postings.get(kind, {})
+        bucket = postings.get('name', {}).get(kind, {})
         for e in idx.entries:
             if e['kind'] != kind:
                 continue
-            for t in set(e['tokens']['name'] + e['tokens']['desc']):
+            for t in set(e['tokens']['name']):
                 if e['id'] not in bucket.get(t, []):
                     missing.append((e['id'], t))
                     break

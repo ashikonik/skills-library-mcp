@@ -19,16 +19,18 @@
  16. mcp/tests/test_provenance.py  the licence and redistribution verdict
  17. mcp/tests/test_search_rules.py  the search rules, one by one
  18. mcp/tests/test_filter_validation.py  the search filters are checked
- 19. mcp/scripts/break_check_policy.sh  the policy gate can actually fail
- 20. mcp/scripts/break_check_skills.sh  the Skills gate can actually fail
- 21. mcp/scripts/break_check_provenance.sh  the provenance gate can actually fail
- 22. mcp/scripts/break_check_search.sh  the search gate can actually fail
- 23. mcp/scripts/break_check_filters.sh  the filter gate can actually fail
+ 19. mcp/tests/test_postings.py  the postings cover every advertised field
+ 20. mcp/scripts/break_check_policy.sh  the policy gate can actually fail
+ 21. mcp/scripts/break_check_skills.sh  the Skills gate can actually fail
+ 22. mcp/scripts/break_check_provenance.sh  the provenance gate can actually fail
+ 23. mcp/scripts/break_check_search.sh  the search gate can actually fail
+ 24. mcp/scripts/break_check_filters.sh  the filter gate can actually fail
+ 25. mcp/scripts/break_check_postings.sh  the postings gate can actually fail
 
 And, in addition: the protocol revision parity -- the two
 implementations of the revision, compared directly.
 
-The last thirteen need the MCP index. If `mcp/data/index.json` is missing
+The last fourteen need the MCP index. If `mcp/data/index.json` is missing
 they are skipped with a message rather than failed -- a fresh clone
 without a built index should not report a false failure -- but the
 skipped steps are named in the output, so a green run never hides them.
@@ -89,12 +91,14 @@ STEPS = [
     ('MCP provenance', 'mcp/tests/test_provenance.py'),
     ('search rules', 'mcp/tests/test_search_rules.py'),
     ('filter validation', 'mcp/tests/test_filter_validation.py'),
+    ('postings fields', 'mcp/tests/test_postings.py'),
     ('search ranking', 'mcp/scripts/eval_search.py'),
     ('policy gate can fail', 'mcp/scripts/break_check_policy.sh'),
     ('Skills gate can fail', 'mcp/scripts/break_check_skills.sh'),
     ('provenance gate can fail', 'mcp/scripts/break_check_provenance.sh'),
     ('search gate can fail', 'mcp/scripts/break_check_search.sh'),
     ('filter gate can fail', 'mcp/scripts/break_check_filters.sh'),
+    ('postings gate can fail', 'mcp/scripts/break_check_postings.sh'),
     ('published tree in sync', 'mcp/tests/test_published_tree.py'),
 ]
 
@@ -126,6 +130,7 @@ NEEDS_INDEX = {
     'mcp/tests/test_provenance.py',
     'mcp/tests/test_search_rules.py',
     'mcp/tests/test_filter_validation.py',
+    'mcp/tests/test_postings.py',
     'mcp/scripts/eval_search.py',
     # The break-checks run the policy and Skills gates, and both of
     # those need the index.
@@ -134,6 +139,7 @@ NEEDS_INDEX = {
     'mcp/scripts/break_check_provenance.sh',
     'mcp/scripts/break_check_search.sh',
     'mcp/scripts/break_check_filters.sh',
+    'mcp/scripts/break_check_postings.sh',
 }
 INDEX = os.path.join(BASE, 'mcp', 'data', 'index.json')
 

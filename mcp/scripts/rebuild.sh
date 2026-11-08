@@ -85,6 +85,14 @@ step "running the filter validation gate"
 # filter the same way -- including the wording of the error.
 python3 "$LIBRARY_ROOT/mcp/tests/test_filter_validation.py"
 
+step "running the postings gate"
+# The index advertises which fields are searchable, and carries a
+# postings index for them. The two used to disagree -- the index
+# advertised five fields and the postings held two -- so this gate
+# checks that every advertised field has a bucket and that the
+# buckets resolve.
+python3 "$LIBRARY_ROOT/mcp/tests/test_postings.py"
+
 step "checking the search ranking"
 # The ranking gate is the only regression check on *order*, so it
 # belongs here and not only under `.verify_all.py`.
@@ -98,6 +106,7 @@ bash "$LIBRARY_ROOT/mcp/scripts/break_check_skills.sh"
 bash "$LIBRARY_ROOT/mcp/scripts/break_check_provenance.sh"
 bash "$LIBRARY_ROOT/mcp/scripts/break_check_search.sh"
 bash "$LIBRARY_ROOT/mcp/scripts/break_check_filters.sh"
+bash "$LIBRARY_ROOT/mcp/scripts/break_check_postings.sh"
 
 echo
 echo "REBUILD: PASS"
