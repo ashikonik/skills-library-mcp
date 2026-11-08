@@ -136,6 +136,40 @@ export interface Tokens {
   name_bigrams: string[];
 }
 
+/**
+ * Who owns an entry, under what licence, and may it be redistributed.
+ *
+ * The answer matters before an install, not after: a caller that
+ * intends to share what it built should know which parts of the
+ * library it may hand on. `verdict` is the decision:
+ *
+ *   `redistributable`       free to share.
+ *   `included-with-terms`   shareable, but the terms say how.
+ *   `fixture`               a test input. Never published.
+ *   `personal`              a local file. Never published.
+ *   `unknown`               no provenance record. Not a licence.
+ */
+export interface Provenance {
+  owner: string;
+  license: string;
+  license_source: string;
+  verdict: string;
+  reason: string;
+  repository: string;
+  url: string;
+  container: string;
+}
+
+/** The provenance of every entry, counted. */
+export interface ProvenanceSummary {
+  /** The entries with no provenance record. It should be empty. */
+  missing: string[];
+  /** Set when the provenance table could not be read. */
+  error: string | null;
+  by_verdict: Record<string, number>;
+  by_license: Record<string, number>;
+}
+
 export interface SkillRecord {
   id: string;
   kind: 'skill';
@@ -157,6 +191,8 @@ export interface SkillRecord {
   tokens: Tokens;
   /** The Skills extension's view of this skill. */
   skills: SkillManifest;
+  /** Who owns it, under what licence, and may it be redistributed. */
+  provenance: Provenance;
 }
 
 export interface AgentRecord {
@@ -176,6 +212,8 @@ export interface AgentRecord {
   frontmatter: AgentFrontmatter;
   bundle: Bundle;
   tokens: Tokens;
+  /** Who owns it, under what licence, and may it be redistributed. */
+  provenance: Provenance;
 }
 
 export type Entry = SkillRecord | AgentRecord;
@@ -236,6 +274,8 @@ export interface LibraryIndex {
   task_index_notes: { rows: number; dropped: unknown[] };
   skills: SkillRecord[];
   agents: AgentRecord[];
+  /** The provenance of every entry, counted. */
+  provenance: ProvenanceSummary;
   held_aside: HeldAside[];
   search: {
     fields: string[];
@@ -258,6 +298,16 @@ export interface SearchResult {
   matched_on: string[];
   path: string;
   frontmatter?: unknown;
+  /**
+   * Who owns this, under what licence, and may it be redistributed.
+   *
+   * Three fields rather than the whole provenance object: a search
+   * result is a summary, and these are the three a caller filters on.
+   * `get_skill` and `get_agent` carry the rest.
+   */
+  owner: string;
+  license: string;
+  verdict: string;
 }
 
 export interface SearchResponse {

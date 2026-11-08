@@ -16,13 +16,15 @@
  13. mcp/scripts/eval_search.py  the ranking, against a labelled query set
  14. mcp/tests/test_skills_extension.py  the Skills extension, and its parity
  15. mcp/tests/test_policy.py   the policy layer, and its parity
- 16. mcp/scripts/break_check_policy.sh  the policy gate can actually fail
- 17. mcp/scripts/break_check_skills.sh  the Skills gate can actually fail
+ 16. mcp/tests/test_provenance.py  the licence and redistribution verdict
+ 17. mcp/scripts/break_check_policy.sh  the policy gate can actually fail
+ 18. mcp/scripts/break_check_skills.sh  the Skills gate can actually fail
+ 19. mcp/scripts/break_check_provenance.sh  the provenance gate can actually fail
 
 And, in addition: the protocol revision parity -- the two
 implementations of the revision, compared directly.
 
-The last eight need the MCP index. If `mcp/data/index.json` is missing
+The last nine need the MCP index. If `mcp/data/index.json` is missing
 they are skipped with a message rather than failed -- a fresh clone
 without a built index should not report a false failure -- but the
 skipped steps are named in the output, so a green run never hides them.
@@ -80,9 +82,11 @@ STEPS = [
     ('MCP protocol parity', 'mcp/tests/test_protocol_parity.py'),
     ('MCP skills extension', 'mcp/tests/test_skills_extension.py'),
     ('MCP policy layer', 'mcp/tests/test_policy.py'),
+    ('MCP provenance', 'mcp/tests/test_provenance.py'),
     ('search ranking', 'mcp/scripts/eval_search.py'),
     ('policy gate can fail', 'mcp/scripts/break_check_policy.sh'),
     ('Skills gate can fail', 'mcp/scripts/break_check_skills.sh'),
+    ('provenance gate can fail', 'mcp/scripts/break_check_provenance.sh'),
     ('published tree in sync', 'mcp/tests/test_published_tree.py'),
 ]
 
@@ -111,11 +115,13 @@ NEEDS_INDEX = {
     'mcp/tests/test_protocol_parity.py',
     'mcp/tests/test_skills_extension.py',
     'mcp/tests/test_policy.py',
+    'mcp/tests/test_provenance.py',
     'mcp/scripts/eval_search.py',
     # The break-checks run the policy and Skills gates, and both of
     # those need the index.
     'mcp/scripts/break_check_policy.sh',
     'mcp/scripts/break_check_skills.sh',
+    'mcp/scripts/break_check_provenance.sh',
 }
 INDEX = os.path.join(BASE, 'mcp', 'data', 'index.json')
 

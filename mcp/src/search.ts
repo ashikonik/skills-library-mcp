@@ -311,6 +311,21 @@ export interface SearchOptions {
   domain?: string;
   include_body?: boolean;
   /**
+   * The container the entry came from -- the plugin, the collection,
+   * the local project.
+   *
+   * It is the broadest of the three filters: it says where a thing
+   * came from, not what it may be used for.
+   */
+  source?: string;
+  /** The licence. Matched case-insensitively, exactly. */
+  license?: string;
+  /**
+   * The redistribution verdict: `redistributable`,
+   * `included-with-terms`, `fixture`, `personal` or `unknown`.
+   */
+  verdict?: string;
+  /**
    * The pagination cursor: the id of the entry the previous page
    * ended on.
    *
@@ -695,6 +710,13 @@ export class SearchIndex {
       if (opts.kind && e.kind !== opts.kind) continue;
       if (opts.tier !== undefined && opts.tier !== null && e.tier !== opts.tier) continue;
       if (opts.domain && e.domain !== opts.domain) continue;
+      // The provenance filters. A caller who needs to know what may
+      // be redistributed asks for it here, rather than filtering the
+      // results afterwards.
+      const prov = e.provenance;
+      if (opts.source && prov.container !== opts.source) continue;
+      if (opts.license && prov.license.toLowerCase() !== opts.license.toLowerCase()) continue;
+      if (opts.verdict && prov.verdict !== opts.verdict) continue;
       const [s, matched, tokenHits, structured] = this.scoreEntry(
         e, qTokens, qBigrams, queryLower, heads);
       if (s <= 0) continue;
@@ -817,6 +839,9 @@ export class SearchIndex {
         score: round4(s),
         matched_on: matched,
         path: e.path,
+        owner: e.provenance.owner,
+        license: e.provenance.license,
+        verdict: e.provenance.verdict,
       };
       if (opts.include_body) r.frontmatter = e.frontmatter;
       return r;

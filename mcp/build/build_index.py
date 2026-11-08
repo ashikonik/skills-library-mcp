@@ -38,12 +38,86 @@ from tasks import TASKS                                 # noqa: E402
 import conformance                                      # noqa: E402
 
 OUT = os.path.join(BASE, 'mcp', 'data', 'index.json')
+PROVENANCE = os.path.join(BASE, 'mcp', 'data', 'provenance.json')
 
 try:
     import yaml
     HAVE_YAML = True
 except ImportError:
     HAVE_YAML = False
+
+
+# ------------------------------------------------------------------ provenance
+#
+# The provenance table answers a question the rest of the index cannot:
+# may this entry be redistributed? It is written by `provenance.py`,
+# which resolves the owner and the licence of every entry the library
+# holds.
+#
+# It is joined into the index here so a caller can ask the question
+# *before* installing something, rather than discovering the answer
+# afterwards in `CREDITS.md`.
+#
+# The join key is `(kind, name)`. It is unique -- the table holds one
+# record per entry -- and it is complete: every entry in the index has
+# a record. A missing record is not patched over: it is reported, and
+# the entry is marked as having no known provenance, because a guess
+# about a licence is worse than an admission that there is none.
+def load_provenance():
+    """The provenance table, keyed by `(kind, name)`.
+
+    A missing file is not an error: the library can be scanned before
+    the provenance table has been resolved, and an index with no
+    provenance is still an index. It is reported by `build()` so the
+    gap is visible rather than silent.
+    """
+    if not os.path.isfile(PROVENANCE):
+        return {}, 'the provenance table is missing (%s). Run ' \
+               '`python3 mcp/build/provenance.py` to resolve it.' % PROVENANCE
+    with open(PROVENANCE, encoding='utf-8') as fh:
+        rows = json.load(fh)
+
+    table = {}
+    for row in rows:
+        key = (row.get('kind', ''), row.get('name', ''))
+        if key in table:
+            # A duplicate would make the join ambiguous. It is not
+            # patched over: the caller is told, because a table that
+            # disagrees with itself is a bug in the table's builder.
+            return {}, 'the provenance table has two records for %s/%s.' % key
+        table[key] = row
+    return table, None
+
+
+def provenance_fields(row):
+    """The provenance fields the index carries, for one entry.
+
+    Only the fields a caller can act on: who owns it, under what
+    licence, and whether it may be redistributed. The `source` field
+    is deliberately not carried -- it is an absolute path on the
+    machine that scanned the library, and the index is portable.
+    """
+    if not row:
+        return {
+            'owner': '',
+            'license': '',
+            'license_source': '',
+            'verdict': 'unknown',
+            'reason': 'this entry has no provenance record',
+            'repository': '',
+            'url': '',
+            'container': '',
+        }
+    return {
+        'owner': row.get('owner') or '',
+        'license': row.get('license') or '',
+        'license_source': row.get('license_source') or '',
+        'verdict': row.get('verdict') or 'unknown',
+        'reason': row.get('reason') or '',
+        'repository': row.get('repository') or '',
+        'url': row.get('url') or '',
+        'container': row.get('container') or '',
+    }
 
 
 # ------------------------------------------------------------------ helpers
@@ -569,6 +643,13 @@ def build():
     agents = lib['agents']
     excluded = lib['excluded_agents']
 
+    # The provenance table, joined by `(kind, name)`. See
+    # `load_provenance` for why a gap is reported rather than patched.
+    provenance, provenance_error = load_provenance()
+    if provenance_error:
+        print('  WARNING: %s' % provenance_error)
+    missing_provenance = []
+
     skill_names = [s['name'] for s in skills]
     agent_names = [a['name'] for a in agents]
     tier_of, domain_of = assign_tiers(skill_names, agent_names)
@@ -621,6 +702,10 @@ def build():
         name_tokens = tokenize(name)
         desc_tokens = tokenize(desc)
 
+        prov_row = provenance.get(('skill', name))
+        if prov_row is None:
+            missing_provenance.append('skill/%s' % name)
+
         skill_records.append({
             'id': 'skill:%s' % name,
             'kind': 'skill',
@@ -643,6 +728,9 @@ def build():
             'domain': domain_of.get(name, ''),
             'frontmatter': front,
             'bundle': bundle,
+            # Who owns this, under what licence, and may it be
+            # redistributed. See `provenance_fields`.
+            'provenance': provenance_fields(prov_row),
             'tokens': {
                 'name': name_tokens,
                 'desc': desc_tokens,
@@ -718,6 +806,10 @@ def build():
         if mode_v is None and raw:
             mode_v = regex_field(raw, 'mode')
 
+        prov_row = provenance.get(('agent', name))
+        if prov_row is None:
+            missing_provenance.append('agent/%s' % name)
+
         agent_records.append({
             'id': 'agent:%s' % name,
             'kind': 'agent',
@@ -734,6 +826,9 @@ def build():
             'ensemble': a.get('ensemble', ''),
             'tier': tier_of[('agent', name)],
             'domain': '',
+            # Who owns this, under what licence, and may it be
+            # redistributed. See `provenance_fields`.
+            'provenance': provenance_fields(prov_row),
             'frontmatter': {
                 'name': meta.get('name', name) if meta else name,
                 'description': desc,
@@ -834,6 +929,30 @@ def build():
     for rec in skill_records:
         by_tier[rec['tier']] += 1
 
+    # ------------------------------------------------------ the provenance summary
+    #
+    # The counts a caller needs to reason about redistribution without
+    # walking every entry: how many are free to share, how many come
+    # with terms, and how many have no verdict at all.
+    verdict_counts = {}
+    license_counts = {}
+    for rec in skill_records + agent_records:
+        prov = rec['provenance']
+        verdict_counts[prov['verdict']] = verdict_counts.get(prov['verdict'], 0) + 1
+        lic = prov['license'] or '(none stated)'
+        license_counts[lic] = license_counts.get(lic, 0) + 1
+
+    provenance_summary = {
+        # The entries with no provenance record. It should be empty; if
+        # it is not, the scan and the provenance table disagree, and
+        # that is worth saying out loud.
+        'missing': sorted(missing_provenance),
+        'error': provenance_error,
+        'by_verdict': dict(sorted(verdict_counts.items())),
+        'by_license': dict(sorted(license_counts.items(),
+                                   key=lambda kv: (-kv[1], kv[0]))),
+    }
+
     index = {
         'schema_version': 1,
         'generated_at': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
@@ -872,6 +991,9 @@ def build():
         },
         'skills': skill_records,
         'agents': agent_records,
+        # The provenance summary, so a caller can ask "may I share
+        # this?" without walking every entry.
+        'provenance': provenance_summary,
         'held_aside': [
             {'name': e['name'], 'orchestrator': e.get('orchestrator', ''),
              'reason': e.get('reason', ''), 'path': e.get('path', ''),
@@ -909,6 +1031,11 @@ def main():
     print('  domains        : %d' % len(index['domains']))
     print('  tasks          : %d (%d refs dropped)'
           % (len(index['tasks']), len(index['task_index_notes']['dropped'])))
+    prov = index['provenance']
+    print('  provenance     : %s' % (prov['by_verdict'] or '(none)'))
+    if prov['missing']:
+        print('  WARNING: %d entries have no provenance record: %s'
+              % (len(prov['missing']), ', '.join(prov['missing'][:10])))
     print('  size           : %.1f KB' % (size / 1024))
     return 0
 

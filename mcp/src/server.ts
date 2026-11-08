@@ -208,6 +208,18 @@ export function createServer(deps: Deps): McpServer {
         kind: z.enum(['skill', 'agent']).optional(),
         tier: z.union([z.literal(1), z.literal(2), z.literal(3)]).optional(),
         domain: z.string().optional(),
+        // The provenance filters. A caller that needs to know what may
+        // be redistributed asks for it here, rather than filtering the
+        // results afterwards.
+        source: z.string().optional(),
+        license: z.string().optional(),
+        verdict: z.enum([
+          'redistributable',
+          'included-with-terms',
+          'fixture',
+          'personal',
+          'unknown',
+        ]).optional(),
         include_body: z.boolean().default(false),
         // The pagination cursor. Under `2026-07-28` it appears in the
         // published schema too; the zod schema cannot change with the
@@ -222,7 +234,7 @@ export function createServer(deps: Deps): McpServer {
         openWorldHint: false,
       },
     },
-    async ({ query, limit, kind, tier, domain, include_body, cursor }) => {
+    async ({ query, limit, kind, tier, domain, source, license, verdict, include_body, cursor }) => {
       // The cursor is a `2026-07-28` feature. On the older revision it
       // is not in the published schema, and a client that sends one
       // anyway is speaking a dialect this server does not serve -- the
@@ -237,6 +249,9 @@ export function createServer(deps: Deps): McpServer {
         kind,
         tier,
         domain,
+        source,
+        license,
+        verdict,
         include_body,
         cursor: decoded?.after,
       });
@@ -301,6 +316,9 @@ export function createServer(deps: Deps): McpServer {
         domain: s.domain,
         path: s.path,
         frontmatter: s.frontmatter,
+        // The whole provenance record: who owns it, under what
+        // licence, and whether it may be redistributed.
+        provenance: s.provenance,
         bundle: {
           file_count: s.bundle.file_count,
           total_bytes: s.bundle.total_bytes,
@@ -376,6 +394,9 @@ export function createServer(deps: Deps): McpServer {
         ensemble: a.ensemble,
         path: a.path,
         frontmatter: a.frontmatter,
+        // The whole provenance record: who owns it, under what
+        // licence, and whether it may be redistributed.
+        provenance: a.provenance,
         body,
       });
     },
@@ -466,11 +487,12 @@ export function createServer(deps: Deps): McpServer {
       title: 'List library',
       description:
         `Lists the library's structure: its domains, tiers, the ${nPacks} hand-authored ` +
-        'packs, the task-type index, or overall statistics. ' +
+        'packs, the task-type index, the provenance of every entry, or overall ' +
+        'statistics. ' +
         'Not covered by search_library, which ranks entries by relevance to a query.',
       inputSchema: {
         section: z
-          .enum(['domains', 'tiers', 'packs', 'tasks', 'stats'])
+          .enum(['domains', 'tiers', 'packs', 'tasks', 'stats', 'provenance'])
           .default('stats'),
       },
       annotations: {
@@ -506,6 +528,16 @@ export function createServer(deps: Deps): McpServer {
             note:
               `The ${nPacks} hand-authored packs are the highest-quality material in the ` +
               'library and the first thing to reach for.',
+          });
+        case 'provenance':
+          return asText({
+            ...index.provenance,
+            note:
+              'The redistribution verdict per entry. `redistributable` may be shared ' +
+              'freely; `included-with-terms` may be shared, but its terms say how; ' +
+              '`fixture` and `personal` are never published. ' +
+              'Use the `verdict`, `license` and `source` filters on search_library to ' +
+              'find the entries of one kind.',
           });
         case 'tasks':
           return asText(

@@ -93,6 +93,14 @@ TOOLS = [
                 'kind': {'type': 'string', 'enum': ['skill', 'agent']},
                 'tier': {'type': 'integer', 'enum': [1, 2, 3]},
                 'domain': {'type': 'string'},
+                # The provenance filters. A caller that needs to know
+                # what may be redistributed asks for it here, rather
+                # than filtering the results afterwards.
+                'source': {'type': 'string'},
+                'license': {'type': 'string'},
+                'verdict': {'type': 'string',
+                            'enum': ['redistributable', 'included-with-terms',
+                                     'fixture', 'personal', 'unknown']},
                 'include_body': {'type': 'boolean', 'default': False},
             },
             'required': ['query'],
@@ -167,15 +175,16 @@ TOOLS = [
         'title': 'List library',
         'description': (
             "Lists the library's structure: its domains, tiers, the "
-            + PACKS_TOKEN + ' hand-authored packs, the task-type index, or '
-            'overall statistics. '
+            + PACKS_TOKEN + ' hand-authored packs, the task-type index, the '
+            'provenance of every entry, or overall statistics. '
             'Not covered by search_library, which ranks entries by relevance '
             'to a query.'),
         'inputSchema': {
             'type': 'object',
             'properties': {
                 'section': {'type': 'string',
-                            'enum': ['domains', 'tiers', 'packs', 'tasks', 'stats'],
+                            'enum': ['domains', 'tiers', 'packs', 'tasks',
+                                     'stats', 'provenance'],
                             'default': 'stats'},
             },
         },
@@ -586,6 +595,9 @@ class Server:
             kind=args.get('kind'),
             tier=args.get('tier'),
             domain=args.get('domain'),
+            source=args.get('source'),
+            license=args.get('license'),
+            verdict=args.get('verdict'),
             include_body=args.get('include_body', False),
             cursor=cursor,
         )
@@ -625,6 +637,9 @@ class Server:
             'domain': s['domain'],
             'path': s['path'],
             'frontmatter': s['frontmatter'],
+            # The whole provenance record: who owns it, under what
+            # licence, and whether it may be redistributed.
+            'provenance': s.get('provenance', {}),
             'bundle': {
                 'file_count': s['bundle']['file_count'],
                 'total_bytes': s['bundle']['total_bytes'],
@@ -684,6 +699,9 @@ class Server:
             'ensemble': a.get('ensemble', ''),
             'path': a['path'],
             'frontmatter': a['frontmatter'],
+            # The whole provenance record: who owns it, under what
+            # licence, and whether it may be redistributed.
+            'provenance': a.get('provenance', {}),
             'body': body,
         }
 
@@ -762,6 +780,15 @@ class Server:
             return [{'task': t['task'], 'skills': t['skills'],
                      'agents': t['agents'], 'notes': t.get('notes', '')}
                     for t in idx['tasks']]
+        if section == 'provenance':
+            out = dict(idx.get('provenance', {}))
+            out['note'] = (
+                'The redistribution verdict per entry. `redistributable` may '
+                'be shared freely; `included-with-terms` may be shared, but '
+                'its terms say how; `fixture` and `personal` are never '
+                'published. Use the `verdict`, `license` and `source` '
+                'filters on search_library to find the entries of one kind.')
+            return out
         return {
             'schema_version': idx['schema_version'],
             'generated_at': idx['generated_at'],

@@ -1,6 +1,6 @@
 # Skills & Agents Library — with a local MCP server
 
-**1024 skills** and **114 agents** in one library, plus a local
+**1027 skills** and **114 agents** in one library, plus a local
 MCP server that lets any coding agent find them.
 
 The library is the content: markdown instruction files with YAML frontmatter —
@@ -26,7 +26,7 @@ Then, in a fresh session:
 
 | Path | What it is |
 |---|---|
-| `skills/<name>/` | 1024 skills — `SKILL.md` plus every supporting file |
+| `skills/<name>/` | 1027 skills — `SKILL.md` plus every supporting file |
 | `agents/<name>.md` | 114 standalone agent definitions |
 | `agents/_agent-specific/` | 14 pipeline-internal agents, with a README explaining each |
 | `mcp/` | **The MCP server** — two implementations, one specification |
@@ -174,7 +174,7 @@ is redistributed on those terms. [`CREDITS.md`](CREDITS.md) attributes every
 entry to its real upstream owner; [`NOTICE`](NOTICE) records what was left out
 and why.
 
-135 entries are here under terms that **do not** grant redistribution,
+138 entries are here under terms that **do not** grant redistribution,
 at the repository owner's instruction. `NOTICE` lists them in full and quotes
 the upstream terms, so the position is explicit rather than implied.
 

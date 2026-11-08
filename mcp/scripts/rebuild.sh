@@ -69,6 +69,9 @@ python3 "$LIBRARY_ROOT/mcp/tests/test_policy.py"
 step "running the Skills extension gate"
 python3 "$LIBRARY_ROOT/mcp/tests/test_skills_extension.py"
 
+step "running the provenance gate"
+python3 "$LIBRARY_ROOT/mcp/tests/test_provenance.py"
+
 step "checking the search ranking"
 # The ranking gate is the only regression check on *order*, so it
 # belongs here and not only under `.verify_all.py`.
@@ -79,6 +82,7 @@ step "proving the gates can fail"
 # breaks the code the gate guards and requires the gate to notice.
 bash "$LIBRARY_ROOT/mcp/scripts/break_check_policy.sh"
 bash "$LIBRARY_ROOT/mcp/scripts/break_check_skills.sh"
+bash "$LIBRARY_ROOT/mcp/scripts/break_check_provenance.sh"
 
 echo
 echo "REBUILD: PASS"

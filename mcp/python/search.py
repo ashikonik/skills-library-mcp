@@ -569,7 +569,8 @@ class SearchIndex:
         return base - TASK_DEMOTE
 
     def search(self, query, limit=DEFAULT_LIMIT, kind=None, tier=None,
-               domain=None, include_body=False, cursor=None):
+               domain=None, source=None, license=None, verdict=None,
+               include_body=False, cursor=None):
         q_tokens = tokenize(query)
         if not q_tokens:
             return {'query': query, 'total_matched': 0, 'filtered_out': 0,
@@ -590,6 +591,16 @@ class SearchIndex:
             if tier is not None and e.get('tier') != tier:
                 continue
             if domain and e.get('domain') != domain:
+                continue
+            # The provenance filters. A caller who needs to know what
+            # may be redistributed asks for it here, rather than
+            # filtering the results afterwards.
+            prov = e.get('provenance') or {}
+            if source and prov.get('container') != source:
+                continue
+            if license and (prov.get('license') or '').lower() != license.lower():
+                continue
+            if verdict and prov.get('verdict') != verdict:
                 continue
             s, matched, token_hits, structured = self.score_entry(
                 e, q_tokens, q_bigrams, query_lower, heads)
@@ -695,6 +706,7 @@ class SearchIndex:
 
         results = []
         for s, e, matched in shown:
+            prov = e.get('provenance') or {}
             r = {
                 'id': e['id'],
                 'kind': e['kind'],
@@ -706,6 +718,9 @@ class SearchIndex:
                 'score': round(s, 4),
                 'matched_on': matched,
                 'path': e.get('path', ''),
+                'owner': prov.get('owner', ''),
+                'license': prov.get('license', ''),
+                'verdict': prov.get('verdict', 'unknown'),
             }
             if include_body:
                 r['frontmatter'] = e.get('frontmatter', {})
