@@ -20,6 +20,7 @@ It is built by copying, so the local working directory is untouched.
 """
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -27,7 +28,12 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 BASE = os.path.dirname(os.path.dirname(HERE))
 sys.path.insert(0, HERE)
+sys.path.insert(0, os.path.join(BASE, 'mcp', 'python'))
 from provenance import resolve  # noqa: E402
+from evalranking import measure as measure_ranking  # noqa: E402
+
+# A backticked name in a task row's note.
+BACKTICK = re.compile(r'`([^`]+)`')
 
 SRC = BASE
 
@@ -151,8 +157,65 @@ DOC_COUNT_FILES = [
 ]
 
 
+def count_noted_rows(root, index):
+    """How many task rows name an entry their own lists omit.
+
+    Read from the *source* table (`mcp/build/tasks.py`), because the
+    builder promotes the named entries to the front of the row -- so the
+    built index no longer shows which rows had them.
+
+    The *entry names* come from the index, so a row whose note names an
+    entry this tree does not publish does not count: in the published
+    tree the note's entry is filtered out, and there is nothing left to
+    promote.
+    """
+    table = os.path.join(root, 'mcp', 'build', 'tasks.py')
+    if not os.path.isfile(table):
+        return 0
+    namespace = {}
+    try:
+        with open(table, encoding='utf-8') as fh:
+            exec(compile(fh.read(), table, 'exec'), namespace)
+    except Exception as e:                      # noqa: BLE001
+        print('  the task table could not be read (%s)' % e)
+        return 0
+    rows = namespace.get('TASKS') or []
+    entry_names = {e.get('name') for e in
+                   (index.get('skills') or []) + (index.get('agents') or [])}
+
+    n = 0
+    for row in rows:
+        if len(row) < 4:
+            continue
+        _name, skills, agents, note = row[0], row[1], row[2], row[3]
+        named = set()
+        for raw in BACKTICK.findall(note or ''):
+            # an entry name is a bare identifier: no spaces, dots or slashes
+            if not re.fullmatch(r'[A-Za-z0-9_-]+', raw):
+                continue
+            if raw in entry_names:
+                named.add(raw)
+        own = set(skills or []) | set(agents or [])
+        if named - own:
+            n += 1
+    return n
+
+
 def doc_counts(root):
-    """The counts the documentation states, read from the index."""
+    """The counts the documentation states, read from the index.
+
+    Every number the documentation quotes is filled in from here, so a
+    number cannot drift away from the library it describes. The
+    documents used to carry their own copies of these figures, and
+    they went stale -- the task-table row count, the tier counts, the
+    vocabulary size and the ranking figures all drifted as the library
+    changed, and nobody noticed because the numbers were prose.
+
+    The ranking figures are not in the index: they are the result of
+    running the search over the labelled query set. So they are
+    *measured* here, against this tree's own index, rather than copied
+    from a previous run.
+    """
     index_path = os.path.join(root, 'mcp', 'data', 'index.json')
     if not os.path.isfile(index_path):
         return None
@@ -164,13 +227,77 @@ def doc_counts(root):
     n_total = n_skills + n_agents
     by_tier = (index.get('counts') or {}).get('by_tier') or {}
     n_tier1 = by_tier.get('1', by_tier.get(1, 0))
+    n_tier2 = by_tier.get('2', by_tier.get(2, 0))
+    n_tier3 = by_tier.get('3', by_tier.get(3, 0))
 
-    return {
+    # The tier counts for skills alone. Tiers 2 and 3 hold no agents, so
+    # the two sets agree there; tier 1 does not, and the tier table in
+    # the architecture guide is about skills.
+    skill_by_tier = (index.get('counts') or {}).get('skill_by_tier') or by_tier
+    n_skill_tier1 = skill_by_tier.get('1', skill_by_tier.get(1, 0))
+    n_skill_tier2 = skill_by_tier.get('2', skill_by_tier.get(2, 0))
+    n_skill_tier3 = skill_by_tier.get('3', skill_by_tier.get(3, 0))
+    n_tasks = len(index.get('tasks') or [])
+    n_domains = len(index.get('domains') or {})
+
+    # The rows whose *note* names an entry their own lists omit.
+    #
+    # This is a fact about the *source* task table, not about the index:
+    # the builder promotes the named entries to the front of the row, so
+    # by the time a row reaches the index there is nothing left to
+    # detect. It is read from the table instead.
+    #
+    # The documentation used to say "Nine of the 73 rows", and the table
+    # had been edited since -- so the number was already wrong before
+    # this was computed. Now it cannot be wrong again.
+    n_noted_rows = count_noted_rows(root, index)
+
+    # The vocabulary: every token the corpus's name and description
+    # fields produce. This is the set the cross-implementation gate
+    # pushes through both tokenizers, so it is the number the gate
+    # actually covers.
+    vocab = set()
+    for e in (index.get('skills') or []) + (index.get('agents') or []):
+        tokens = e.get('tokens') or {}
+        vocab.update(tokens.get('name') or [])
+        vocab.update(tokens.get('desc') or [])
+
+    subs = {
         '{n_skills}': str(n_skills),
         '{n_agents}': str(n_agents),
         '{n_total}': '{:,}'.format(n_total),
         '{n_tier1}': str(n_tier1),
+        '{n_tier2}': str(n_tier2),
+        '{n_tier3}': str(n_tier3),
+        '{n_skill_tier1}': str(n_skill_tier1),
+        '{n_skill_tier2}': str(n_skill_tier2),
+        '{n_skill_tier3}': str(n_skill_tier3),
+        '{n_tasks}': str(n_tasks),
+        '{n_domains}': str(n_domains),
+        '{n_vocab}': '{:,}'.format(len(vocab)),
+        '{n_noted_rows}': str(n_noted_rows),
     }
+
+    # The ranking figures, measured against this tree's own index.
+    #
+    # A failure here is not fatal to the build: the measurement is
+    # also a gate in its own right, and it reports its own failures.
+    # Here, a failure just means the documents cannot quote a ranking
+    # figure, so the tokens are left unfilled rather than filled with
+    # a stale one.
+    try:
+        m = measure_ranking(index)
+    except Exception as e:                      # noqa: BLE001
+        print('  the ranking figures could not be measured (%s); the '
+              'documents will not quote them' % e)
+        return subs
+    subs.update({
+        '{eval_rank1}': '%d / %d' % (m['top1'], m['measured']),
+        '{eval_top3}': '%d / %d' % (m['top3'], m['measured']),
+        '{eval_top10}': '%d / %d' % (m['top10'], m['measured']),
+        '{n_queries}': str(m['measured']),
+    })
+    return subs
 
 
 def fill_doc_counts(root):

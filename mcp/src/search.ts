@@ -264,8 +264,14 @@ export function scoreKey(score: number): number {
  * `str`. JS's `<` compares UTF-16 code units, which orders astral
  * characters differently -- library names are ASCII today, but the
  * tie-break must not silently change if that stops being true.
+ *
+ * Exported so the parity test can drive it against Python's own
+ * comparator. The tokenizer only ever emits `[a-z0-9]` tokens, so the
+ * astral case cannot arise from a real search -- but a tie-break that
+ * silently changes its ordering rule is the kind of thing that gets
+ * discovered a year later, in a diff nobody reads.
  */
-function codepointCompare(a: string, b: string): number {
+export function codepointCompare(a: string, b: string): number {
   const ac = Array.from(a);
   const bc = Array.from(b);
   const n = Math.min(ac.length, bc.length);
@@ -378,9 +384,9 @@ export class SearchIndex {
     // primary entry is its first *skill*. An agent in the agents
     // column is an additional specialist the note points at --
     // "`database-reviewer` is PostgreSQL-specific: query
-    // optimisation, schema design, security." -- and 51 of the 73
-    // rows list one. So the agent positions start after the skill
-    // positions, and only the first skill holds position 0.
+    // optimisation, schema design, security." -- and most rows list
+    // one. So the agent positions start after the skill positions, and
+    // only the first skill holds position 0.
     //
     // The key joins the name and the row with a separator that cannot
     // occur in either, so "a" + "bc" and "ab" + "c" stay distinct.

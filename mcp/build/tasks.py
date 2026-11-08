@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The task-type table, extracted verbatim from `.build_guide.py`.
 
-Section 2 of the routing guide is a task -> skill/agent lookup: 73 rows of
+Section 2 of the routing guide is a task -> skill/agent lookup: rows of
 "Write new code", "Fix a failing build", "Review a diff". Those rows are
 hand-written, and they are a better router for a task-shaped query ("fix a
 failing build") than any automatic score over descriptions.

@@ -197,6 +197,37 @@ def score_key(score):
     return int(math.trunc(score * SCORE_SCALE))
 
 
+def codepoint_compare(a, b):
+    """Compare two strings by unicode code point.
+
+    Python's `str` already compares by code point, so this is the
+    identity on ordering -- but it is named, exported and used
+    explicitly so that the two implementations state the same rule in
+    the same place. The TypeScript side cannot say the same thing: JS's
+    `<` compares UTF-16 code units, which orders astral characters
+    differently, so it needs an explicit comparator (`codepointCompare`
+    in `mcp/src/search.ts`).
+
+    Library names are ASCII today, and the tokenizer only ever emits
+    `[a-z0-9]` tokens, so the astral case cannot arise from a real
+    search. It is spelled out anyway: a tie-break that silently changes
+    its ordering rule is the kind of thing that gets discovered a year
+    later, in a diff nobody reads.
+    """
+    return (a > b) - (a < b)
+
+
+def _code_point_key(s):
+    """The sort key for a code-point ordering.
+
+    Python's `str` comparison is already a code-point comparison, so
+    the key is the string itself. It is wrapped in a function so that
+    the rule is named at the call site rather than implied by which
+    `sorted` overload happens to be used.
+    """
+    return s
+
+
 def _phrase_tokens_match(phrase, q_tokens):
     """Do all of the phrase's content words appear in the query?
 
@@ -267,9 +298,9 @@ class SearchIndex:
         # primary entry is its first *skill*. An agent in the agents
         # column is an additional specialist the note points at --
         # "`database-reviewer` is PostgreSQL-specific: query
-        # optimisation, schema design, security." -- and 51 of the 73
-        # rows list one. So the agent positions start after the skill
-        # positions, and only the first skill holds position 0.
+        # optimisation, schema design, security." -- and most rows list
+        # one. So the agent positions start after the skill positions,
+        # and only the first skill holds position 0.
         self.task_positions = {}
         for t in self.tasks:
             skills = t.get('skills') or []
@@ -514,7 +545,7 @@ class SearchIndex:
         if e['kind'] == 'agent':
             score += AGENT_BIAS
 
-        return score, sorted(matched), token_hits, structured
+        return score, sorted(matched, key=_code_point_key), token_hits, structured
 
     # -------------------------------------------------------------- search
     def _row_bonus(self, base, e, task):
@@ -604,6 +635,10 @@ class SearchIndex:
             len(t[1]['name']),
             t[1]['name'],
         ))
+        # The name tie-break above sorts by code point, because Python's
+        # `str` comparison is a code-point comparison. The TypeScript
+        # side has to say so explicitly -- see `codepoint_compare`
+        # above and `codepointCompare` in `mcp/src/search.ts`.
 
         # The number of entries that matched, before the relevance
         # floor. This is the size of the match set: the entries that

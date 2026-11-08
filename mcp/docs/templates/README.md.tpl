@@ -55,7 +55,7 @@ implementation of the same specification, and a gate test requires
 both to produce **identical** answers:
 
 - 74 queries → identical id lists and identical scores
-- 5,741 vocabulary tokens → identical tokenizer output
+- {n_vocab} vocabulary tokens → identical tokenizer output
 - {n_total} documents → identical `name`, `description`, `tools`, `model`
 - 8 tools → identical names, titles, descriptions, annotations, order
 
@@ -120,7 +120,7 @@ check the link on disk, uninstall, check it is gone. It points `HOME`
 at a temporary tree, so it never touches the real harness directories.
 
 `eval_search.py` is the regression harness for the *ranking*. It runs
-the real engine over 34 labelled queries — each naming the skill that
+the real engine over {n_queries} labelled queries — each naming the skill that
 should win, and any that must not outrank it — plus 11 negatives that
 must return nothing, and exits non-zero if the wanted skill falls out
 of the top ten or a negative leaks. `--detail` prints every query with

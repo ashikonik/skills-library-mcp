@@ -110,7 +110,7 @@ Two rules cut the noise before the limits apply:
   A common word like "write" carries no information about which entry
   the query wants, so requiring it filters on luck rather than
   relevance.
-- **Task rows.** A hand-written row of the 73-row task index fires when
+- **Task rows.** A hand-written row of the {n_tasks}-row task index fires when
   the query has 60 % of the row's tokens, or the row's *content* (its
   verb dropped). A content match counts for more when the token is the
   query's **head** — what the query is *about*, not the context it
@@ -129,7 +129,7 @@ now preserved:
 
 1. **The order.** The index keeps each row's order rather than sorting
    it, so position 0 is the row's primary entry.
-2. **The note.** Nine of the 73 rows name an entry their own lists omit
+2. **The note.** {n_noted_rows} of the {n_tasks} rows name an entry their own lists omit
    — "use `architect`", "pair with `silent-failure-hunter`" — and in
    every case the note is the only place that preference is written
    down. Those entries are promoted to the front of their row.
@@ -240,10 +240,10 @@ packs, the task-type index, or overall statistics. Not covered by
 | Section | Returns |
 |---|---|
 | `stats` | counts, tier distribution, domain and task counts, index metadata |
-| `domains` | all 38 domains with their skill lists and tier |
+| `domains` | all {n_domains} domains with their skill lists and tier |
 | `tiers` | tier-1 skills (the 7 packs), tier-1 agents, the tier distribution |
 | `packs` | the seven hand-authored packs |
-| `tasks` | the 74-row task-type index |
+| `tasks` | the {n_tasks}-row task-type index |
 
 ---
 

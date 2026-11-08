@@ -45,8 +45,8 @@ across both implementations:
 | Check | Scope |
 |---|---|
 | search | 74 queries → identical id lists **and identical scores**, in identical order |
-| tokenizer | 5,741 vocabulary tokens → identical output |
-| head tokens | 5,741 vocabulary tokens → identical head-noun sets |
+| tokenizer | {n_vocab} vocabulary tokens → identical output |
+| head tokens | {n_vocab} vocabulary tokens → identical head-noun sets |
 | frontmatter | {n_total} documents → identical `name`, `description`, `tools`, `model` |
 | tool surface | 8 tools → identical names, titles, descriptions, annotations, order |
 
@@ -148,7 +148,7 @@ both queries fired the row, and the API builder outranked the skill
 that was actually about authentication.
 
 `head_tokens` lives in the shared tokenizer, so both servers compute
-it identically — the cross-implementation gate pushes all 5741 corpus
+it identically — the cross-implementation gate pushes all {n_vocab} corpus
 vocabulary tokens through both and compares.
 
 ### 3. The table's own curation
@@ -168,7 +168,7 @@ ranking, and both are now preserved:
 
 1. **The order.** The builder sorted each row's lists, so position 0
    carried no meaning. It now keeps the order the table chose.
-2. **The note.** Nine of the 73 rows name an entry their own lists
+2. **The note.** {n_noted_rows} of the {n_tasks} rows name an entry their own lists
    omit — "use `architect`", "pair with `silent-failure-hunter`",
    "prefer `skill-creator-plus`" — and in every case the note is the
    *only* place that preference is written down. Those entries are
@@ -191,9 +191,9 @@ equal footing there.
 ### Measured, not felt
 
 ```
-rank 1    : 20 / 34
-rank <= 3 : 28 / 34
-rank <=10 : 34 / 34
+rank 1    : {eval_rank1}
+rank <= 3 : {eval_top3}
+rank <=10 : {eval_top10}
 negatives : 0 leaked
 ```
 
@@ -211,7 +211,7 @@ mcp/
 │   ├── build_index.py     the index builder
 │   ├── domains.py         the 38 DOMAINS name-lists
 │   ├── tiering.py         assign_tiers() -- the only place tiers are computed
-│   └── tasks.py           the 73-row task-type index
+│   └── tasks.py           the {n_tasks}-row task-type index
 ├── data/
 │   └── index.json         the generated artifact (gitignored)
 ├── src/                   TypeScript server
@@ -363,10 +363,12 @@ numbers are computed.
 | Tier | What | Count |
 |---|---|---|
 | 1 | the seven hand-authored packs + all {n_agents} agents | {n_tier1} |
-| 2 | skills whose *first* matching domain is one of the ten core domains | 269 |
-| 3 | everything else | 701 |
+| 2 | skills whose *first* matching domain is one of the ten core domains | {n_skill_tier2} |
+| 3 | everything else | {n_skill_tier3} |
 
-Tier 2 uses **first-match-wins**, not any-match — any-match gives 291.
+Tier 2 uses **first-match-wins**, not any-match — any-match gives a
+different number, and the two disagree about which domain a skill
+belongs to.
 First-match-wins guarantees the index's domain is exactly the domain
 the routing guide prints, so the index and the guide can never disagree.
 

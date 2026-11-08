@@ -130,9 +130,9 @@ def norm_tools(v):
     """Normalise the `tools:` field to a JSON array.
 
     Three shapes are in use across the library: a YAML list, a comma string
-    and a space-separated string. 73 agents differ between the regex parser
-    (which yields the literal text `["Read", "Grep"]`) and YAML (which
-    yields a real list). The index normalises once, here.
+    and a space-separated string. Dozens of agents differ between the
+    regex parser (which yields the literal text `["Read", "Grep"]`) and
+    YAML (which yields a real list). The index normalises once, here.
     """
     if v is None:
         return []
@@ -338,7 +338,7 @@ def head_tokens(text):
 def task_content_sets(task):
     """The content-token sets of a task row, one per alternative.
 
-    The 73 rows are all written "<verb> <object>" -- "Build an API",
+    The rows are all written "<verb> <object>" -- "Build an API",
     "Fix a failing build", "Write tests". The verb says *that* something
     happens; the object says *what*. A query that names the object is
     asking for that task, whatever verb it happens to use: "write a
@@ -418,8 +418,8 @@ def promote_named(note, names, own_kind, other_kind):
     The task table's note is prose written by a human, and it often says
     exactly which entry to use -- "Prefer the hand-authored
     `skill-creator-plus` pack", "use `architect`", "Pair with
-    `silent-failure-hunter`". Nine of the 73 rows name an entry their
-    own lists omit, and in each case the note is the *only* place that
+    `silent-failure-hunter`". Several rows name an entry their own
+    lists omit, and in each case the note is the *only* place that
     curation is written down. Dropping it loses the instruction
     entirely: "create a skill" would keep ranking `skill-creator` above
     the `skill-creator-plus` pack the note says to prefer.
@@ -627,9 +627,9 @@ def build():
                 dropped.append({'task': task, 'ref': x, 'kind': 'agent'})
         # The note is prose, but it carries curation the lists do not:
         # "Prefer the hand-authored `skill-creator-plus` pack", "use
-        # `architect`". Nine of the 73 rows name an entry their lists
-        # omit, and in every case the note is saying *this is the one to
-        # use*. Those names are promoted to the front of the row.
+        # `architect`". Several rows name an entry their lists omit, and
+        # in every case the note is saying *this is the one to use*.
+        # Those names are promoted to the front of the row.
         s_keep = promote_named(note, s_keep, known_skills, known_agents)
         a_keep = promote_named(note, a_keep, known_agents, known_skills)
         tasks.append({

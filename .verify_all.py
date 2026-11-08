@@ -63,6 +63,8 @@ STEPS = [
     ('MCP server and tools', 'mcp/tests/test_mcp.py'),
     ('MCP cross-implementation', 'mcp/tests/test_agreement.py'),
     ('MCP installer parity', 'mcp/tests/test_installer_parity.py'),
+    ('MCP sort parity', 'mcp/tests/test_sort_parity.py'),
+    ('documentation counts', 'mcp/tests/test_doc_counts.py'),
     ('MCP protocol', 'mcp/tests/test_jsonrpc.py'),
     ('search ranking', 'mcp/scripts/eval_search.py'),
     ('published tree in sync', 'mcp/tests/test_published_tree.py'),
@@ -87,6 +89,8 @@ NEEDS_INDEX = {
     'mcp/tests/test_mcp.py',
     'mcp/tests/test_agreement.py',
     'mcp/tests/test_installer_parity.py',
+    'mcp/tests/test_sort_parity.py',
+    'mcp/tests/test_doc_counts.py',
     'mcp/tests/test_jsonrpc.py',
     'mcp/scripts/eval_search.py',
 }
