@@ -15,14 +15,21 @@
  12. mcp/tests/test_jsonrpc.py   the protocol, against both servers
  13. mcp/scripts/eval_search.py  the ranking, against a labelled query set
  14. mcp/tests/test_skills_extension.py  the Skills extension, and its parity
+ 15. mcp/tests/test_policy.py   the policy layer, and its parity
+ 16. mcp/scripts/break_check_policy.sh  the policy gate can actually fail
+ 17. mcp/scripts/break_check_skills.sh  the Skills gate can actually fail
 
 And, in addition: the protocol revision parity -- the two
 implementations of the revision, compared directly.
 
-The last four need the MCP index. If `mcp/data/index.json` is missing
+The last eight need the MCP index. If `mcp/data/index.json` is missing
 they are skipped with a message rather than failed -- a fresh clone
 without a built index should not report a false failure -- but the
 skipped steps are named in the output, so a green run never hides them.
+
+The two break-checks prove that the gates above can fail. Each one
+breaks the code a gate guards and requires the gate to notice; a gate
+that passes on broken code is not a gate.
 
 **A skip is not a pass.** The exit code distinguishes two kinds of
 skip. The machine-scanning steps are skipped *by design* in a published
@@ -72,7 +79,10 @@ STEPS = [
     ('MCP protocol', 'mcp/tests/test_jsonrpc.py'),
     ('MCP protocol parity', 'mcp/tests/test_protocol_parity.py'),
     ('MCP skills extension', 'mcp/tests/test_skills_extension.py'),
+    ('MCP policy layer', 'mcp/tests/test_policy.py'),
     ('search ranking', 'mcp/scripts/eval_search.py'),
+    ('policy gate can fail', 'mcp/scripts/break_check_policy.sh'),
+    ('Skills gate can fail', 'mcp/scripts/break_check_skills.sh'),
     ('published tree in sync', 'mcp/tests/test_published_tree.py'),
 ]
 
@@ -100,7 +110,12 @@ NEEDS_INDEX = {
     'mcp/tests/test_jsonrpc.py',
     'mcp/tests/test_protocol_parity.py',
     'mcp/tests/test_skills_extension.py',
+    'mcp/tests/test_policy.py',
     'mcp/scripts/eval_search.py',
+    # The break-checks run the policy and Skills gates, and both of
+    # those need the index.
+    'mcp/scripts/break_check_policy.sh',
+    'mcp/scripts/break_check_skills.sh',
 }
 INDEX = os.path.join(BASE, 'mcp', 'data', 'index.json')
 
@@ -127,7 +142,9 @@ for label, script in STEPS:
         unexpected_skips.append(label)
         print()
         continue
-    r = subprocess.run([sys.executable, script], capture_output=True, text=True)
+    # A `.sh` step is a shell script; everything else is Python.
+    argv = ['bash', script] if script.endswith('.sh') else [sys.executable, script]
+    r = subprocess.run(argv, capture_output=True, text=True)
     sys.stdout.write(r.stdout)
     if r.stderr.strip():
         sys.stdout.write('--- stderr ---\n' + r.stderr[-1500:])

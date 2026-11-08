@@ -14,8 +14,8 @@
  */
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
-import { readFileSync, existsSync, statSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { readFileSync, existsSync, statSync, lstatSync } from 'node:fs';
+import { join, resolve, dirname } from 'node:path';
 import { SearchIndex } from './search.js';
 import type { LibraryIndex, Entry, SkillRecord, AgentRecord } from './types.js';
 import { libraryRoot } from './index-loader.js';
@@ -25,11 +25,15 @@ import {
   uninstallTarget,
   uninstallSkillPath,
   agentTargetPath,
+  skillTargetPath,
+  checkTarget,
   type Mode,
 } from './installers.js';
 import type { Harness } from './frontmatter.js';
 import { installRevisionHandlers, installRevisionResultFields, installSkillsExtension, RevisionState } from './revision.js';
 import { decodeCursor, cursorMatches, type Cursor } from './protocol.js';
+import { defaultPolicy, describePolicy, loadPolicy, permit, refusalFields, type Policy } from './policy.js';
+import { recordInstall, forgetInstall, recordsFor } from './manifest.js';
 
 export const DEFAULT_BUNDLE_BYTES = 200_000;
 export const MAX_BUNDLE_BYTES = 2_000_000;
@@ -84,10 +88,70 @@ function resolveEntry(index: LibraryIndex, id: string): Entry | undefined {
   return [...index.skills, ...index.agents].find((e) => e.name === id);
 }
 
+/**
+ * Would this install replace something that is already there?
+ *
+ * The fact the policy needs. It is true when the caller asked to
+ * overwrite *and* there is something to overwrite -- a request to
+ * replace nothing is not a replacement.
+ */
+function overwriteRequested(
+  index: LibraryIndex,
+  harness: Harness,
+  ids: string[] | undefined,
+  tier: number | undefined,
+  mode: Mode,
+  projectRoot: string,
+): boolean {
+  let wanted = ids ?? [];
+  if (wanted.length === 0) {
+    if (tier === undefined) return false;
+    wanted = index.skills.filter((s) => s.tier === tier).map((s) => s.id);
+  }
+  for (const id of wanted) {
+    const e = resolveEntry(index, id);
+    if (!e || e.kind !== 'skill') continue;
+    let path: string;
+    try {
+      path = skillTargetPath(harness, e.name, projectRoot);
+    } catch {
+      continue;
+    }
+    const link = mode === 'symlink' ? dirname(path) : path;
+    if (existsSync(link) || isSymlinkPath(link)) return true;
+  }
+  return false;
+}
+
+/** Is `p` a symlink? `existsSync` follows a link; `lstat` sees it. */
+function isSymlinkPath(p: string): boolean {
+  try {
+    return lstatSync(p).isSymbolicLink();
+  } catch {
+    return false;
+  }
+}
+
 export function createServer(deps: Deps): McpServer {
   const index = deps.index;
   const search = new SearchIndex(index);
   const root = libraryRoot();
+
+  // The policy in force, and the error from loading it, if any.
+  //
+  // A malformed policy file is an error, not a silent fall back to the
+  // defaults: the file was written to say something, and ignoring it
+  // would make the server's behaviour depend on a typo. The error is
+  // carried so `policy_get` can report it.
+  const projectRoot = process.env.SKILLS_LIBRARY_PROJECT ?? process.cwd();
+  let policy: Policy = defaultPolicy();
+  let policyError: string | null = null;
+  try {
+    policy = loadPolicy(projectRoot);
+  } catch (e) {
+    policy = defaultPolicy();
+    policyError = e instanceof Error ? e.message : String(e);
+  }
 
   // The library's size, as the index reports it.
   //
@@ -510,6 +574,31 @@ export function createServer(deps: Deps): McpServer {
       }
 
       let wanted = ids ?? [];
+      // The policy, before any of it happens. A dry run and a write
+      // are different operations: a plan writes nothing, so it needs
+      // no authorisation -- refusing it would make the tool useless,
+      // since the plan is how a caller finds out what a write would
+      // do.
+      const refusal = permit(
+        apply ? 'install.skills' : 'install.skills.plan',
+        {
+          apply,
+          overwrite,
+          args: {
+            overwrite_requested: overwriteRequested(
+              index,
+              harness as Harness,
+              ids,
+              tier,
+              mode as Mode,
+              projectRoot,
+            ),
+          },
+        },
+        policy,
+      );
+      if (refusal) return asText(refusalFields(refusal));
+
       if (wanted.length === 0) {
         // A tier install. Tier 3 holds 701 skills, so the batch is
         // capped the way an explicit id list is -- and the truncation
@@ -560,6 +649,23 @@ export function createServer(deps: Deps): McpServer {
       const note = apply
         ? `${written} written, ${skipped} skipped.`
         : `Dry run — nothing was written. ${targets.length} target(s) planned.`;
+      // Every write is recorded, so a later uninstall knows what this
+      // server put there -- and only that. A write that was refused is
+      // not recorded: nothing was written.
+      if (apply) {
+        for (const t of targets) {
+          if (t.status !== 'written') continue;
+          const err = recordInstall(
+            projectRoot,
+            harness,
+            t.kind,
+            t.name,
+            t.path,
+            t.action,
+          );
+          if (err) errors.push(err);
+        }
+      }
       return asText({
         harness,
         mode,
@@ -599,6 +705,14 @@ export function createServer(deps: Deps): McpServer {
     async ({ harness, ids, mode, apply, overwrite }) => {
       const targets = [];
       const errors: string[] = [];
+
+      const refusal = permit(
+        apply ? 'install.agents' : 'install.agents.plan',
+        { apply, overwrite },
+        policy,
+      );
+      if (refusal) return asText(refusalFields(refusal));
+
       for (const id of ids) {
         const e = resolveEntry(index, id);
         if (!e || e.kind !== 'agent') {
@@ -628,6 +742,20 @@ export function createServer(deps: Deps): McpServer {
       const note = apply
         ? `${written} written, ${skipped} skipped.`
         : `Dry run — nothing was written. ${targets.length} target(s) planned.`;
+      if (apply) {
+        for (const t of targets) {
+          if (t.status !== 'written') continue;
+          const err = recordInstall(
+            projectRoot,
+            harness,
+            t.kind,
+            t.name,
+            t.path,
+            t.action,
+          );
+          if (err) errors.push(err);
+        }
+      }
       return asText({
         harness,
         mode,
@@ -663,6 +791,13 @@ export function createServer(deps: Deps): McpServer {
       },
     },
     async ({ harness, names, apply }) => {
+      const refusal = permit(
+        apply ? 'uninstall.skills' : 'uninstall.skills.plan',
+        { apply },
+        policy,
+      );
+      if (refusal) return asText(refusalFields(refusal));
+
       const targets = [];
       for (const name of names) {
         const { path, error } = uninstallSkillPath(harness as Harness, name);
@@ -679,6 +814,125 @@ export function createServer(deps: Deps): McpServer {
         : `Dry run — nothing was removed. ${targets.length} target(s) planned.`;
       return asText({ harness, apply, targets, removed, note });
     },
+  );
+
+  // ------------------------------------------------- 9. uninstall_agents
+  server.registerTool(
+    'uninstall_agents',
+    {
+      title: 'Uninstall agents',
+      description:
+        'Removes agents this server installed from a harness. Refuses to remove a ' +
+        'file that is not one of ours, so it cannot destroy something else. Dry run ' +
+        'unless apply is true. Not covered by install_agents, which installs rather ' +
+        'than removes.',
+      inputSchema: {
+        harness: z.enum(['claude-code', 'opencode', 'agentsmd']),
+        names: z.array(z.string().min(1)).min(1).max(50),
+        apply: z.boolean().default(false),
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    async ({ harness, names, apply }) => {
+      const refusal = permit(
+        apply ? 'uninstall.agents' : 'uninstall.agents.plan',
+        { apply },
+        policy,
+      );
+      if (refusal) return asText(refusalFields(refusal));
+
+      // The manifest is the gate. A file that this server did not
+      // write is refused with the `not_ours` wall rather than removed:
+      // the harness's agent directory holds other people's agents too,
+      // and this tool has no way to know which are which except by
+      // having written them.
+      const { records, error: manifestError } = recordsFor(projectRoot, harness, 'agent');
+      const targets = [];
+      for (const name of names) {
+        let target: string;
+        try {
+          target = agentTargetPath(harness as Harness, name, projectRoot);
+        } catch (e) {
+          targets.push({
+            name,
+            path: '',
+            status: 'error' as const,
+            reason: e instanceof Error ? e.message : String(e),
+          });
+          continue;
+        }
+        // The whitelist still applies to a removal: this server does
+        // not delete files it was never allowed to write.
+        const wall = checkTarget(harness as Harness, target, projectRoot);
+        if (wall) {
+          targets.push({
+            name,
+            path: target,
+            status: 'error' as const,
+            wall: wall.wall,
+            reason: wall.message,
+          });
+          continue;
+        }
+        if (manifestError) {
+          targets.push({
+            name,
+            path: target,
+            status: 'error' as const,
+            reason: manifestError,
+          });
+          continue;
+        }
+        const ours = records.filter((r) => r.path === target);
+        if (ours.length === 0) {
+          targets.push({
+            name,
+            path: target,
+            status: 'error' as const,
+            wall: 'not_ours',
+            reason:
+              `Refusing to remove ${target}: it is not a file this server ` +
+              'installed, so removing it could destroy something else. Remove ' +
+              'it yourself if you are sure.',
+          });
+          continue;
+        }
+        const r = uninstallTarget(target, apply, root);
+        if (r.status === 'removed') forgetInstall(projectRoot, target);
+        targets.push({ name, path: target, ...r });
+      }
+      const removed = targets.filter((t) => t.status === 'removed').length;
+      const note = apply
+        ? `${removed} removed.`
+        : `Dry run — nothing was removed. ${targets.length} target(s) planned.`;
+      return asText({ harness, apply, targets, removed, note });
+    },
+  );
+
+  // ------------------------------------------------------ 10. policy_get
+  server.registerTool(
+    'policy_get',
+    {
+      title: 'Get the policy',
+      description:
+        'Reports the safety rules this server enforces: every rule, its verdict, ' +
+        'and why. A project may tighten the policy by denying rule ids in ' +
+        '.skills-library/policy.json; the report says which rules the project file ' +
+        'tightened. Read-only.',
+      inputSchema: {},
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    async () => asText(describePolicy(policy, policyError)),
   );
 
   // ------------------------------------------------------- the revision

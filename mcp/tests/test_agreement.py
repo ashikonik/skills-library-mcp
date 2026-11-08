@@ -361,9 +361,10 @@ def check_tools():
 
     expected = {'search_library', 'get_skill', 'get_agent', 'get_skill_bundle',
                 'list_library', 'install_skills', 'install_agents',
-                'uninstall_skills'}
+                'uninstall_skills', 'uninstall_agents', 'policy_get'}
     if set(py_names) != expected:
-        fail('the tool set is not the expected 8: %s' % sorted(py_names))
+        fail('the tool set is not the expected %d: %s'
+             % (len(expected), sorted(py_names)))
     for t in py_tools:
         if len(t['name']) > 17:
             fail('tool name %r is longer than 17 characters' % t['name'])

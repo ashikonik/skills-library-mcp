@@ -36,9 +36,13 @@ from search import load_index, DEFAULT_LIMIT, MAX_LIMIT   # noqa: E402
 from installers import (                            # noqa: E402
     install_skill, install_agent, uninstall_target,
     skill_target_path, uninstall_skill_path,
+    agent_target_path, check_target,
 )
 import protocol                                  # noqa: E402
 import skills_extension                          # noqa: E402
+import policy                                    # noqa: E402
+import policy_rules                              # noqa: E402
+import manifest                                  # noqa: E402
 
 DEFAULT_BUNDLE_BYTES = 200_000
 MAX_BUNDLE_BYTES = 2_000_000
@@ -255,6 +259,43 @@ TOOLS = [
         'annotations': {'readOnlyHint': False, 'destructiveHint': True,
                         'idempotentHint': True, 'openWorldHint': False},
     },
+    {
+        'name': 'uninstall_agents',
+        'title': 'Uninstall agents',
+        'description': (
+            'Removes agents this server installed from a harness. Refuses to '
+            'remove a file that is not one of ours, so it cannot destroy '
+            'something else. Dry run unless apply is true. Not covered by '
+            'install_agents, which installs rather than removes.'),
+        'inputSchema': {
+            'type': 'object',
+            'properties': {
+                'harness': {'type': 'string', 'enum': [
+                    'claude-code', 'opencode', 'agentsmd']},
+                'names': {'type': 'array', 'items': {'type': 'string'},
+                          'minItems': 1, 'maxItems': 50},
+                'apply': {'type': 'boolean', 'default': False},
+            },
+            'required': ['harness', 'names'],
+        },
+        'annotations': {'readOnlyHint': False, 'destructiveHint': True,
+                        'idempotentHint': True, 'openWorldHint': False},
+    },
+    {
+        'name': 'policy_get',
+        'title': 'Get the policy',
+        'description': (
+            'Reports the safety rules this server enforces: every rule, its '
+            'verdict, and why. A project may tighten the policy by denying '
+            'rule ids in .skills-library/policy.json; the report says which '
+            'rules the project file tightened. Read-only.'),
+        'inputSchema': {
+            'type': 'object',
+            'properties': {},
+        },
+        'annotations': {'readOnlyHint': True, 'destructiveHint': False,
+                        'idempotentHint': True, 'openWorldHint': False},
+    },
 ]
 
 
@@ -330,6 +371,21 @@ class Server:
         # that asked for it, so a client that never asked for the new
         # revision never sees a field it has not heard of.
         self.protocol_version = protocol.DEFAULT_PROTOCOL_VERSION
+
+        # The policy in force, and the error from loading it, if any.
+        #
+        # A broken policy file must not stop the server -- a read-only
+        # tool that does not write anything is still safe to serve -- but
+        # the error is reported by `policy_get` and by the write tools,
+        # so a caller can see that the policy it asked for is not the
+        # policy in force.
+        self.project_root = os.environ.get('SKILLS_LIBRARY_PROJECT') or os.getcwd()
+        self.policy_error = None
+        try:
+            self.policy = policy.load_policy(self.project_root)
+        except ValueError as e:
+            self.policy = policy.default_policy()
+            self.policy_error = str(e)
 
         self.tools = [
             dict(t, description=(t.get('description') or '')
@@ -735,6 +791,23 @@ class Server:
                             "to install specific skills, or tier to install "
                             "a whole tier.")
 
+        # The policy, before any of it happens. A dry run and a write
+        # are different operations: a plan writes nothing, so it needs
+        # no authorisation -- refusing it would make the tool useless,
+        # since the plan is how a caller finds out what a write would
+        # do.
+        operation = 'install.skills' if apply_ else 'install.skills.plan'
+        refusal = policy.permit(operation, {
+            'apply': apply_,
+            'overwrite': overwrite,
+            'args': {
+                'overwrite_requested': self._overwrite_requested(
+                    harness, ids, tier, mode),
+            },
+        }, self.policy)
+        if refusal is not None:
+            return policy.refusal_fields(refusal)
+
         targets, errors = [], []
         if not ids:
             # A tier install. Tier 3 holds 701 skills, so the batch is
@@ -769,6 +842,31 @@ class Server:
                 self.root, mode=mode, apply=apply_, overwrite=overwrite))
         return self._install_payload(harness, mode, apply_, targets, errors)
 
+    def _overwrite_requested(self, harness, ids, tier, mode):
+        """Would this install replace something that is already there?
+
+        The fact the policy needs. It is true when the caller asked to
+        overwrite *and* there is something to overwrite -- a request to
+        replace nothing is not a replacement.
+        """
+        if not ids and tier is None:
+            return False
+        wanted = ids
+        if not wanted:
+            wanted = [e['id'] for e in self.index['skills'] if e['tier'] == tier]
+        for id_ in wanted:
+            e = self.resolve(id_)
+            if not e or e['kind'] != 'skill':
+                continue
+            try:
+                path = skill_target_path(harness, e['name'], self.project_root)
+            except ValueError:
+                continue
+            link = os.path.dirname(path) if mode == 'symlink' else path
+            if os.path.exists(link) or os.path.islink(link):
+                return True
+        return False
+
     def tool_install_agents(self, args):
         harness = required(args, 'harness', 'install_agents')
         ids = required(args, 'ids', 'install_agents')
@@ -776,6 +874,15 @@ class Server:
         apply_ = args.get('apply', False)
         overwrite = args.get('overwrite', False)
         targets, errors = [], []
+
+        refusal = policy.permit(
+            'install.agents' if apply_ else 'install.agents.plan', {
+                'apply': apply_,
+                'overwrite': overwrite,
+            }, self.policy)
+        if refusal is not None:
+            return policy.refusal_fields(refusal)
+
         for id_ in ids:
             e = self.resolve(id_)
             if not e or e['kind'] != 'agent':
@@ -790,13 +897,25 @@ class Server:
                 install_mode=mode, apply=apply_, overwrite=overwrite))
         return self._install_payload(harness, mode, apply_, targets, errors)
 
-    @staticmethod
-    def _install_payload(harness, mode, apply_, targets, errors):
+    def _install_payload(self, harness, mode, apply_, targets, errors):
         written = sum(1 for t in targets if t['status'] == 'written')
         skipped = sum(1 for t in targets if t['status'] == 'skipped')
         note = ('%d written, %d skipped.' % (written, skipped) if apply_
                 else 'Dry run — nothing was written. %d target(s) planned.'
                      % len(targets))
+        # Every write is recorded, so a later uninstall knows what this
+        # server put there -- and only that. A write that was refused
+        # is not recorded: nothing was written.
+        if apply_:
+            for t in targets:
+                if t['status'] != 'written':
+                    continue
+                err = manifest.record_install(
+                    self.project_root, harness, t.get('kind', 'skill'),
+                    t.get('name', ''), t.get('path', ''),
+                    t.get('action', 'write'))
+                if err:
+                    errors.append(err)
         return {'harness': harness, 'mode': mode, 'apply': apply_,
                 'targets': targets, 'written': written, 'skipped': skipped,
                 'errors': errors, 'note': note}
@@ -805,6 +924,13 @@ class Server:
         harness = required(args, 'harness', 'uninstall_skills')
         names = required(args, 'names', 'uninstall_skills')
         apply_ = args.get('apply', False)
+
+        refusal = policy.permit(
+            'uninstall.skills' if apply_ else 'uninstall.skills.plan',
+            {'apply': apply_}, self.policy)
+        if refusal is not None:
+            return policy.refusal_fields(refusal)
+
         targets = []
         for name in names:
             path, err = uninstall_skill_path(harness, name)
@@ -814,6 +940,70 @@ class Server:
                 continue
             r = uninstall_target(path, apply_, self.root)
             targets.append({'name': name, 'path': path, 'status': r['status'],
+                            'wall': r.get('wall'), 'reason': r.get('reason')})
+        removed = sum(1 for t in targets if t['status'] == 'removed')
+        note = ('%d removed.' % removed if apply_
+                else 'Dry run — nothing was removed. %d target(s) planned.'
+                     % len(targets))
+        return {'harness': harness, 'apply': apply_, 'targets': targets,
+                'removed': removed, 'note': note}
+
+    def tool_uninstall_agents(self, args):
+        """Remove agents this server installed.
+
+        The manifest is the gate. A file that this server did not
+        write is refused with the `not_ours` wall rather than removed:
+        the harness's agent directory holds other people's agents too,
+        and this tool has no way to know which are which except by
+        having written them.
+        """
+        harness = required(args, 'harness', 'uninstall_agents')
+        names = required(args, 'names', 'uninstall_agents')
+        apply_ = args.get('apply', False)
+
+        refusal = policy.permit(
+            'uninstall.agents' if apply_ else 'uninstall.agents.plan',
+            {'apply': apply_}, self.policy)
+        if refusal is not None:
+            return policy.refusal_fields(refusal)
+
+        records, merror = manifest.records_for(self.project_root, harness,
+                                               'agent')
+        targets = []
+        for name in names:
+            try:
+                target = agent_target_path(harness, name, self.project_root)
+            except ValueError as e:
+                targets.append({'name': name, 'path': '', 'status': 'error',
+                                'reason': str(e)})
+                continue
+            # The whitelist still applies to a removal: this server
+            # does not delete files it was never allowed to write.
+            wall = check_target(harness, target, self.project_root)
+            if wall:
+                targets.append({'name': name, 'path': target,
+                                'status': 'error', 'wall': wall[0],
+                                'reason': wall[1]})
+                continue
+            if merror:
+                targets.append({'name': name, 'path': target,
+                                'status': 'error', 'reason': merror})
+                continue
+            ours = [r for r in records if r.get('path') == target]
+            if not ours:
+                targets.append({
+                    'name': name, 'path': target, 'status': 'error',
+                    'wall': 'not_ours',
+                    'reason': ('Refusing to remove %s: it is not a file this '
+                               'server installed, so removing it could destroy '
+                               'something else. Remove it yourself if you are '
+                               'sure.' % target)})
+                continue
+            r = uninstall_target(target, apply_, self.root)
+            if r['status'] == 'removed':
+                manifest.forget_install(self.project_root, target)
+            targets.append({'name': name, 'path': target,
+                            'status': r['status'], 'wall': r.get('wall'),
                             'reason': r.get('reason')})
         removed = sum(1 for t in targets if t['status'] == 'removed')
         note = ('%d removed.' % removed if apply_
@@ -821,6 +1011,10 @@ class Server:
                      % len(targets))
         return {'harness': harness, 'apply': apply_, 'targets': targets,
                 'removed': removed, 'note': note}
+
+    def tool_policy_get(self, args):
+        """The policy in force, as the caller sees it."""
+        return policy.describe_policy(self.policy, self.policy_error)
 
     # ------------------------------------------------------- dispatch
     def call_tool(self, name, args):
@@ -833,6 +1027,8 @@ class Server:
             'install_skills': self.tool_install_skills,
             'install_agents': self.tool_install_agents,
             'uninstall_skills': self.tool_uninstall_skills,
+            'uninstall_agents': self.tool_uninstall_agents,
+            'policy_get': self.tool_policy_get,
         }
         fn = table.get(name)
         if fn is None:

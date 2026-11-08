@@ -488,12 +488,12 @@ def test_server():
           init['serverInfo']['name'] == 'skills-library')
 
     tools = responses[2]['result']['tools']
-    check('server: exactly 8 tools', len(tools) == 8, str(len(tools)))
+    check('server: exactly 10 tools', len(tools) == 10, str(len(tools)))
     names = [t['name'] for t in tools]
     expected = ['search_library', 'get_skill', 'get_agent', 'get_skill_bundle',
                 'list_library', 'install_skills', 'install_agents',
-                'uninstall_skills']
-    check('server: the tool names are the expected 8', names == expected,
+                'uninstall_skills', 'uninstall_agents', 'policy_get']
+    check('server: the tool names are the expected 10', names == expected,
           str(names))
     check('server: every tool name is at most 17 characters',
           all(len(n) <= 17 for n in names))
@@ -596,14 +596,20 @@ def test_write_safety(idx):
         shutil.rmtree(tmp, ignore_errors=True)
 
     # The whitelist must refuse a path outside the harness directories.
+    # The refusal is a (wall, message) pair: the wall is the policy
+    # fact that made it, so the policy layer can name the rule.
     from installers import check_target
     err = check_target('puku-cli', '/tmp/evil')
     check('install: a path outside the whitelist is refused',
-          bool(err) and 'Refusing' in err, str(err))
+          bool(err) and 'Refusing' in err[1], str(err))
+    check('install: the refusal names the wall it hit',
+          bool(err) and err[0] == 'outside_whitelist', str(err))
     err = check_target('claude-code',
                        os.path.join(home, '.claude', 'skills', 'learned', 'x'))
     check('install: the harness-managed learned/ directory is refused',
-          bool(err) and 'Refusing' in err, str(err))
+          bool(err) and 'Refusing' in err[1], str(err))
+    check('install: the harness-managed refusal names its wall',
+          bool(err) and err[0] == 'harness_managed', str(err))
 
     # Cline has no agent mechanism, and the error must say so.
     t = install_agent('cline', 'code-reviewer', 'agent:code-reviewer', 'x',

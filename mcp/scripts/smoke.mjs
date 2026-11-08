@@ -76,7 +76,7 @@ check('initialize returns a protocolVersion', Boolean(init.protocolVersion));
 check('initialize returns serverInfo', init.serverInfo?.name === 'skills-library');
 
 const tools = res.responses.get(2)?.result?.tools ?? [];
-check('there are 8 tools', tools.length === 8, String(tools.length));
+check('there are 10 tools', tools.length === 10, String(tools.length));
 
 const sc = res.responses.get(3)?.result?.structuredContent;
 const results = sc?.results ?? [];

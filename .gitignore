@@ -27,3 +27,9 @@ mcp/docs/TOOL_REFERENCE.md
 
 # Per-step build logs and their snapshots.
 logs/
+
+# The project's policy file and install manifest. These are written by
+# the server at run time: the manifest records the paths *this* clone's
+# installs wrote, and the policy file says what this project allows.
+# Both are per-machine state, not source.
+mcp/.skills-library/

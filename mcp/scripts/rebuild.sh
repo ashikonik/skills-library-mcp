@@ -60,6 +60,26 @@ python3 "$LIBRARY_ROOT/mcp/tests/test_agreement.py"
 step "running the protocol test"
 python3 "$LIBRARY_ROOT/mcp/tests/test_jsonrpc.py"
 
+step "running the installer parity gate"
+python3 "$LIBRARY_ROOT/mcp/tests/test_installer_parity.py"
+
+step "running the policy layer gate"
+python3 "$LIBRARY_ROOT/mcp/tests/test_policy.py"
+
+step "running the Skills extension gate"
+python3 "$LIBRARY_ROOT/mcp/tests/test_skills_extension.py"
+
+step "checking the search ranking"
+# The ranking gate is the only regression check on *order*, so it
+# belongs here and not only under `.verify_all.py`.
+python3 "$LIBRARY_ROOT/mcp/scripts/eval_search.py"
+
+step "proving the gates can fail"
+# A test that passes on broken code is not a test. Each of these
+# breaks the code the gate guards and requires the gate to notice.
+bash "$LIBRARY_ROOT/mcp/scripts/break_check_policy.sh"
+bash "$LIBRARY_ROOT/mcp/scripts/break_check_skills.sh"
+
 echo
 echo "REBUILD: PASS"
 echo "The server is at $MCP_ROOT/dist/index.js"

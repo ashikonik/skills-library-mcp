@@ -92,8 +92,13 @@ const NOTIFY = { jsonrpc: '2.0', method: 'notifications/initialized' };
 // ---------------------------------------------------------------- the tree
 const home = REAL ? process.env.HOME : mkdtempSync(join(tmpdir(), 'e2e-home-'));
 const pukuSkills = join(home, '.puku-cli', 'skills');
+// The project root, where the server reads its policy file and writes
+// its install manifest. It is pointed at a temporary tree so the test
+// leaves nothing behind in the repository it runs from.
+const project = REAL ? process.cwd() : mkdtempSync(join(tmpdir(), 'e2e-project-'));
 const env = {
   SKILLS_LIBRARY_ROOT: LIBRARY,
+  SKILLS_LIBRARY_PROJECT: project,
   HOME: home,
   USERPROFILE: home,
 };

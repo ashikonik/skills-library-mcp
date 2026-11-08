@@ -67,6 +67,12 @@ export interface InstallTarget {
   path: string;
   action: 'symlink' | 'copy' | 'write';
   status: 'planned' | 'written' | 'skipped' | 'error';
+  /**
+   * The policy wall that stopped this target, when one did. The wall
+   * is the *fact* -- `outside_whitelist`, `harness_managed` -- and the
+   * policy layer turns it into a rule id.
+   */
+  wall?: string;
   reason?: string;
   dropped_keys?: string[];
   sidecars?: Array<{ path: string; action: string; status: string }>;
@@ -90,18 +96,36 @@ export function isInside(base: string, p: string): boolean {
 }
 
 /**
+ * A refusal, as a pair.
+ *
+ * The wall is the name of the policy fact that made the refusal --
+ * `outside_whitelist`, `harness_managed` -- so the policy layer can
+ * decide *which* rule stopped the write, rather than the refusal being
+ * prose that has to be parsed back.
+ */
+export interface TargetRefusal {
+  wall: string;
+  message: string;
+}
+
+/**
  * Check a target path against the whitelist.
  *
- * Returns an error message, or `null` when the path is allowed.
+ * Returns the refusal for this path, or `null` when the path is
+ * allowed.
  */
-export function checkTarget(harness: Harness, target: string, projectRoot?: string): string | null {
+export function checkTarget(
+  harness: Harness,
+  target: string,
+  projectRoot?: string,
+): TargetRefusal | null {
   const bases =
     harness === 'agentsmd'
       ? [join(projectRoot ?? process.cwd(), 'AGENTS.md')]
       : TARGET_DIRS[harness];
 
   if (bases.length === 0) {
-    return `Unsupported harness '${harness}'.`;
+    return { wall: 'unsupported_harness', message: `Unsupported harness '${harness}'.` };
   }
   const resolved = resolve(target);
   const allowed = bases.some((b) => {
@@ -116,11 +140,17 @@ export function checkTarget(harness: Harness, target: string, projectRoot?: stri
     return isInside(b, resolved) || resolve(b) === resolved;
   });
   if (!allowed) {
-    return `Refusing to write outside the harness directories: ${resolved}`;
+    return {
+      wall: 'outside_whitelist',
+      message: `Refusing to write outside the harness directories: ${resolved}`,
+    };
   }
   for (const ex of EXCLUDED_PREFIXES) {
     if (isInside(ex, resolved)) {
-      return `Refusing to write into the harness-managed directory: ${resolved}`;
+      return {
+        wall: 'harness_managed',
+        message: `Refusing to write into the harness-managed directory: ${resolved}`,
+      };
     }
   }
   return null;
@@ -317,7 +347,8 @@ export function installSkill(a: InstallSkillArgs): InstallTarget {
       path: target,
       action: 'write',
       status: 'error',
-      reason: err,
+      wall: err.wall,
+      reason: err.message,
     };
   }
 
@@ -483,7 +514,8 @@ export function installAgent(a: InstallAgentArgs): InstallTarget {
       path: target,
       action: 'write',
       status: 'error',
-      reason: err,
+      wall: err.wall,
+      reason: err.message,
     };
   }
 
@@ -602,12 +634,15 @@ export function uninstallSkillPath(
  * A symlink whose target is outside the library is refused: the caller
  * may have put something there, and deleting it is not this tool's
  * call.
+ *
+ * The refusal carries the wall that produced it, so the policy layer
+ * can name the rule that stopped the removal.
  */
 export function uninstallTarget(
   target: string,
   apply: boolean,
   libraryRoot: string,
-): { status: 'planned' | 'removed' | 'skipped' | 'error'; reason?: string } {
+): { status: 'planned' | 'removed' | 'skipped' | 'error'; reason?: string; wall?: string } {
   if (!existsSync(target) && !isSymlink(target)) {
     return { status: 'skipped', reason: 'nothing installed at that path' };
   }
@@ -625,6 +660,7 @@ export function uninstallTarget(
     if (!isInside(libraryRoot, abs)) {
       return {
         status: 'error',
+        wall: 'outside_whitelist',
         reason: `Refusing to remove ${target}: it is a symlink pointing outside the library (${abs}).`,
       };
     }

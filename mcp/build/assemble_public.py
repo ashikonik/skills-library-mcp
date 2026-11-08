@@ -84,7 +84,13 @@ COPY_FILES = [
 UPSTREAM_CLONES = ['ponytail', 'mattpocock-skills']
 
 SKIP_DIRS = {'__pycache__', 'node_modules', '.git', '.pytest_cache',
-             '.ruff_cache', '.mypy_cache'}
+             '.ruff_cache', '.mypy_cache',
+             # The project's policy file and install manifest. These
+             # are per-machine state, written by the server at run
+             # time: the manifest records the paths *this* machine's
+             # installs wrote, and the policy file says what this
+             # project allows. Neither belongs in a repository.
+             '.skills-library'}
 
 # Files that are scratch work on the builder's machine, not part of the
 # project. A one-off patch script or a debugging harness has no business
@@ -128,6 +134,12 @@ mcp/docs/TOOL_REFERENCE.md
 
 # Per-step build logs and their snapshots.
 logs/
+
+# The project's policy file and install manifest. These are written by
+# the server at run time: the manifest records the paths *this* clone's
+# installs wrote, and the policy file says what this project allows.
+# Both are per-machine state, not source.
+mcp/.skills-library/
 """
 
 

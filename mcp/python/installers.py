@@ -50,14 +50,22 @@ def is_inside(base, path):
 
 
 def check_target(harness, target, project_root=None):
-    """An error message, or None when the path is allowed."""
+    """The refusal for this path, or None when the path is allowed.
+
+    A refusal is a `(wall, message)` pair. The wall is the name of the
+    policy fact that made the refusal -- `outside_whitelist`,
+    `harness_managed` -- so the policy layer can decide *which* rule
+    stopped the write, rather than the refusal being prose that has to
+    be parsed back.
+    """
     if harness == 'agentsmd':
         bases = [os.path.join(project_root or os.getcwd(), 'AGENTS.md')]
     else:
         bases = TARGET_DIRS.get(harness, [])
 
     if not bases:
-        return "Unsupported harness '%s'." % harness
+        return ('unsupported_harness',
+                "Unsupported harness '%s'." % harness)
 
     resolved = os.path.abspath(target)
     allowed = False
@@ -68,11 +76,13 @@ def check_target(harness, target, project_root=None):
         elif is_inside(b, resolved) or os.path.abspath(b) == resolved:
             allowed = True
     if not allowed:
-        return ('Refusing to write outside the harness directories: %s' % resolved)
+        return ('outside_whitelist',
+                'Refusing to write outside the harness directories: %s' % resolved)
 
     for ex in EXCLUDED_PREFIXES:
         if is_inside(ex, resolved):
-            return ('Refusing to write into the harness-managed directory: %s'
+            return ('harness_managed',
+                    'Refusing to write into the harness-managed directory: %s'
                     % resolved)
     return None
 
@@ -219,9 +229,10 @@ def install_skill(harness, name, id, description, allowed_tools, lib_path,
     target = skill_target_path(harness, name, project_root)
     err = check_target(harness, target, project_root)
     if err:
+        wall, message = err
         return {'harness': harness, 'kind': 'skill', 'id': id, 'name': name,
                 'path': target, 'action': 'write', 'status': 'error',
-                'reason': err}
+                'wall': wall, 'reason': message}
 
     # AGENTS.md is a shared file, not one file per skill. It gets its
     # own path through the function: each skill is a marked section,
@@ -311,9 +322,10 @@ def install_agent(harness, name, id, description, tools=None, model='',
     target = agent_target_path(harness, name, project_root)
     err = check_target(harness, target, project_root)
     if err:
+        wall, message = err
         return {'harness': harness, 'kind': 'agent', 'id': id, 'name': name,
                 'path': target, 'action': 'write', 'status': 'error',
-                'reason': err}
+                'wall': wall, 'reason': message}
 
     exists = os.path.exists(target) or os.path.islink(target)
     if exists and not overwrite:
@@ -348,6 +360,9 @@ def uninstall_target(target, apply=False, library_root=''):
     A symlink whose target is outside the library is refused: the caller
     may have put something there, and deleting it is not this tool's
     call.
+
+    The refusal carries the wall that produced it, so the policy layer
+    can name the rule that stopped the removal.
     """
     if not (os.path.exists(target) or os.path.islink(target)):
         return {'status': 'skipped', 'reason': 'nothing installed at that path'}
@@ -357,6 +372,7 @@ def uninstall_target(target, apply=False, library_root=''):
             os.path.join(os.path.dirname(target), link))
         if not is_inside(library_root, abs_target):
             return {'status': 'error',
+                    'wall': 'outside_whitelist',
                     'reason': ('Refusing to remove %s: it is a symlink pointing '
                                'outside the library (%s).' % (target, abs_target))}
     if not apply:

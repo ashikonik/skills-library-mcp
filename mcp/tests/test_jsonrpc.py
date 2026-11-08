@@ -14,7 +14,7 @@ behave differently for no visible reason.
 Checks:
   * initialize negotiates the protocol version
   * `notifications/initialized` gets no response
-  * `tools/list` returns exactly 8 tools with inputSchema and annotations
+  * `tools/list` returns exactly 10 tools with inputSchema and annotations
   * `tools/call` returns content[0].text and structuredContent
   * an unknown method returns -32601
   * an unknown tool returns isError, not a transport crash
@@ -128,7 +128,7 @@ def check_server(label, cmd, env=None):
           'capabilities' in init)
 
     tools = r[2].get('result', {}).get('tools', [])
-    check('%s: tools/list returns exactly 8 tools' % label, len(tools) == 8,
+    check('%s: tools/list returns exactly 10 tools' % label, len(tools) == 10,
           str(len(tools)))
     check('%s: every tool has an inputSchema' % label,
           all(t.get('inputSchema') for t in tools))
