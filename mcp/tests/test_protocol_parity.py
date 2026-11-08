@@ -71,14 +71,14 @@ def check_python_only():
             continue
         check('python: %s gets no resultType' % v, protocol.result_type(v) == {})
         check('python: %s gets no cache fields' % v,
-              protocol.cache_fields(v, 60_000, 'session') == {})
+              protocol.cache_fields(v, 60_000, 'public') == {})
 
     check('python: the current revision gets resultType',
           protocol.result_type(protocol.CURRENT_PROTOCOL_VERSION)
           == {'resultType': 'complete'})
     check('python: the current revision gets ttlMs and cacheScope',
-          protocol.cache_fields(protocol.CURRENT_PROTOCOL_VERSION, 60_000, 'session')
-          == {'ttlMs': 60_000, 'cacheScope': 'session'})
+          protocol.cache_fields(protocol.CURRENT_PROTOCOL_VERSION, 60_000, 'public')
+          == {'ttlMs': 60_000, 'cacheScope': 'public'})
 
     # ---- the cursor.
     c = protocol.encode_cursor('skill:tdd-workflow', 'write tests')
@@ -112,7 +112,7 @@ def drive_ts(requested):
         "  negotiated: negotiate(r),"
         "  isCurrent: isCurrent(r),"
         "  resultType: resultType(r),"
-        "  cacheFields: cacheFields(r, 60000, 'session'),"
+        "  cacheFields: cacheFields(r, 60000, 'public'),"
         "}));"
     ) % (TS_PROTOCOL, json.dumps(requested))
     proc = subprocess.run(['node', '--input-type=module', '-e', script],
@@ -159,9 +159,9 @@ def check_parity():
               'python %s, typescript %s'
               % (protocol.result_type(py_negotiated), ts['resultType']))
         check('parity: %r yields the same cache fields' % (requested,),
-              ts['cacheFields'] == protocol.cache_fields(py_negotiated, 60_000, 'session'),
+              ts['cacheFields'] == protocol.cache_fields(py_negotiated, 60_000, 'public'),
               'python %s, typescript %s'
-              % (protocol.cache_fields(py_negotiated, 60_000, 'session'),
+              % (protocol.cache_fields(py_negotiated, 60_000, 'public'),
                  ts['cacheFields']))
 
     ts = drive_ts(protocol.DEFAULT_PROTOCOL_VERSION)

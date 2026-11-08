@@ -786,7 +786,7 @@ export class SearchIndex {
     //
     // The cursor names the last entry the client saw, and the page
     // starts after it. The cursor is honoured even if the entry is
-    // gone -- then the page starts at the end, and `cursor_stale`
+    // gone -- then the page starts at the end, and `cursorStale`
     // says so, because a client that silently got an empty page would
     // think it had reached the end of the results.
     let start = 0;
@@ -849,9 +849,9 @@ export class SearchIndex {
     // on the first one: the first page is where the client gets the
     // cursor it needs.
     if (truncated && results.length > 0) {
-      out.next_cursor = encodeCursor(results[results.length - 1]!.id, query);
+      out.nextCursor = encodeCursor(results[results.length - 1]!.id, query);
     }
-    if (cursorStale) out.cursor_stale = true;
+    if (cursorStale) out.cursorStale = true;
     return out;
   }
 }

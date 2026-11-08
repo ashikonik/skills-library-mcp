@@ -10344,6 +10344,39 @@
    "title": "supply-chain"
   },
   {
+   "copies": 1,
+   "desc": "Run a swarm: several agents working in parallel on one task, each in its own conversation, collaborating through a shared message board. Use when the work splits into pieces that can be done at the same time, or when a second pair of eyes should check the first pair's work.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "swarm",
+   "path": "skills/swarm/",
+   "rescued_from_tmp": false,
+   "source": "gemini-antigravity",
+   "title": "You are the swarm coordinator"
+  },
+  {
+   "copies": 1,
+   "desc": "ONLY for the native-swarm worker whose brief says it is the monitor. On a timer, it checks whether the whole swarm has stalled and calls on the one member who can unstick it. Coordinators and other workers: do not load this.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "swarm_monitor",
+   "path": "skills/swarm_monitor/",
+   "rescued_from_tmp": false,
+   "source": "gemini-antigravity",
+   "title": "You are the swarm's stall monitor"
+  },
+  {
+   "copies": 1,
+   "desc": "ONLY for the native-swarm worker whose brief says it is the narrator. It watches the board and keeps the user's Overview (view.json + view.html) current. Coordinators and other workers: do not load this.",
+   "desc_source": "yaml",
+   "locale_only": false,
+   "name": "swarm_narrator",
+   "path": "skills/swarm_narrator/",
+   "rescued_from_tmp": false,
+   "source": "gemini-antigravity",
+   "title": "You are the swarm's narrator"
+  },
+  {
    "copies": 32,
    "desc": "Thread-safe data persistence in Swift using actors — in-memory cache with file-backed storage, eliminating data races by design.",
    "desc_source": "yaml",

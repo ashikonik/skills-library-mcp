@@ -34,6 +34,19 @@ import {
   resultType,
   cacheFields,
 } from './protocol.js';
+import {
+  SKILLS_EXTENSION_ID,
+  SKILLS_TTL_MS,
+  SkillError,
+  listSkills,
+  listResources,
+  findByUri,
+  findSkillMd,
+  readSkillFile,
+  readSkillDirectory,
+  skillEntry,
+} from './skills-extension.js';
+import type { LibraryIndex } from './types.js';
 
 export {
   SUPPORTED_PROTOCOL_VERSIONS,
@@ -236,6 +249,147 @@ export function installRevisionHandlers(server: Server, state: RevisionState): v
 }
 
 /**
+ * The Skills extension's methods.
+ *
+ * None of them is a method the SDK knows, so all of them go through the
+ * fallback handler. The extension is only declared -- and only
+ * answered -- under the revision that has it: a client on `2025-11-25`
+ * never asked for `skills/list` and would not know what to do with the
+ * answer.
+ *
+ * `resources/list` is here too, because the `resources` capability is
+ * declared: a client that reads the capability and then calls the
+ * method would otherwise get `-32601` from a server that promised it.
+ *
+ * The results carry `resultType`, `ttlMs` and `cacheScope`, which the
+ * revision that requires them also requires on these methods.
+ */
+export function installSkillsExtension(
+  server: Server,
+  state: RevisionState,
+  index: LibraryIndex,
+  root: string,
+): void {
+  const existingFallback = server.fallbackRequestHandler;
+
+  const answer = async (method: string, params: Record<string, unknown> | undefined) => {
+    switch (method) {
+      case 'skills/list': {
+        const page = listSkills(index, params?.cursor as string | undefined);
+        return {
+          skills: page.skills,
+          ...(page.nextCursor ? { nextCursor: page.nextCursor } : {}),
+          ...resultType(state.version),
+          ...cacheFields(state.version, SKILLS_TTL_MS, 'public'),
+        };
+      }
+      case 'skills/get': {
+        const uri = params?.uri;
+        if (typeof uri !== 'string') {
+          throw new McpError(ErrorCode.InvalidParams, 'skills/get requires a uri');
+        }
+        const record = findSkillMd(index, uri);
+        if (!record) {
+          throw new McpError(ErrorCode.InvalidParams, `Unknown skill URI: ${uri}`);
+        }
+        return {
+          skill: skillEntry(record),
+          ...resultType(state.version),
+          ...cacheFields(state.version, SKILLS_TTL_MS, 'public'),
+        };
+      }
+      case 'resources/list': {
+        const page = listResources(index, params?.cursor as string | undefined);
+        return {
+          resources: page.resources,
+          ...(page.nextCursor ? { nextCursor: page.nextCursor } : {}),
+          ...resultType(state.version),
+          ...cacheFields(state.version, SKILLS_TTL_MS, 'public'),
+        };
+      }
+      case 'resources/read': {
+        const uri = params?.uri;
+        if (typeof uri !== 'string') {
+          throw new McpError(ErrorCode.InvalidParams, 'resources/read requires a uri');
+        }
+        try {
+          const file = readSkillFile(root, index, uri);
+          const contents = [
+            {
+              uri,
+              mimeType: file.mime,
+              ...(isTextual(file.mime)
+                ? { text: file.bytes.toString('utf-8') }
+                : { blob: file.bytes.toString('base64') }),
+            },
+          ];
+          return {
+            contents,
+            ...resultType(state.version),
+            ...cacheFields(state.version, SKILLS_TTL_MS, 'public'),
+          };
+        } catch (e) {
+          if (e instanceof SkillError) {
+            throw new McpError(ErrorCode.InvalidParams, e.message);
+          }
+          throw e;
+        }
+      }
+      case 'resources/directory/read': {
+        const uri = params?.uri;
+        if (typeof uri !== 'string') {
+          throw new McpError(
+            ErrorCode.InvalidParams,
+            'resources/directory/read requires a uri',
+          );
+        }
+        try {
+          const resources = readSkillDirectory(index, uri);
+          return {
+            resources,
+            ...resultType(state.version),
+            ...cacheFields(state.version, SKILLS_TTL_MS, 'public'),
+          };
+        } catch (e) {
+          if (e instanceof SkillError) {
+            throw new McpError(ErrorCode.InvalidParams, e.message);
+          }
+          throw e;
+        }
+      }
+      default:
+        return undefined;
+    }
+  };
+
+  server.fallbackRequestHandler = async (request, extra) => {
+    if (state.current) {
+      const params = request.params as Record<string, unknown> | undefined;
+      const result = await answer(request.method, params);
+      if (result !== undefined) return result;
+    }
+    if (existingFallback) {
+      return existingFallback(request, extra);
+    }
+    throw new McpError(ErrorCode.MethodNotFound, `Method not found: ${request.method}`);
+  };
+}
+
+/**
+ * Is this MIME type text?
+ *
+ * Text is served as `text`, everything else as `blob`. A client reads
+ * `text` into the model's context; `blob` is base64 and is decoded by
+ * the client. Serving a PNG as `text` would corrupt it, and serving a
+ * markdown file as `blob` would make the client decode it needlessly.
+ */
+function isTextual(mime: string): boolean {
+  return mime.startsWith('text/') || mime === 'application/json' ||
+    mime === 'application/yaml' || mime === 'application/xml' ||
+    mime === 'image/svg+xml';
+}
+
+/**
  * The shape of a tool as it appears in a `tools/list` result.
  *
  * Only the parts this file touches are described; the SDK's own
@@ -317,7 +471,7 @@ export function installRevisionResultFields(server: Server, state: RevisionState
       return {
         ...result,
         tools: patched,
-        ...cacheFields(state.version, TOOLS_LIST_TTL_MS, 'session'),
+        ...cacheFields(state.version, TOOLS_LIST_TTL_MS, 'public'),
       };
     });
   }

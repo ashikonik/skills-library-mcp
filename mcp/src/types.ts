@@ -55,6 +55,12 @@ export interface BundleRef {
 export interface BundleFile {
   path: string;
   bytes: number;
+  /** `sha256:<64 lowercase hex>`. Absent for a bundle scanned without a name. */
+  digest?: string;
+  /** The MIME type of the file, by its extension. */
+  mime?: string;
+  /** The `skill://` URI of the file. */
+  uri?: string;
 }
 
 export interface Bundle {
@@ -65,6 +71,63 @@ export interface Bundle {
   refs_total: number;
   refs_resolved: number;
   refs_dangling: number;
+}
+
+/**
+ * The Skills extension's view of one skill, as the *index* records it.
+ *
+ * Separate from the search record because the two answer different
+ * questions. The search record describes the entry as the *index* knows
+ * it -- the name it was found under, the description the library
+ * recorded. This one describes the entry as the *extension* serves it:
+ * under a name that conforms to the Agent Skills rules, with the
+ * frontmatter verbatim, and with a complete manifest.
+ */
+export interface SkillManifest {
+  /** The served name. Equal to the record's `name` unless overridden. */
+  name: string;
+  /** The served description. */
+  description: string;
+  /** The URI of the skill's `SKILL.md`. */
+  uri: string;
+  /** Every YAML frontmatter field, unchanged. */
+  frontmatter: Record<string, unknown>;
+  /** The complete file manifest: every file, exactly once. */
+  resources: SkillResource[];
+  /** Set when the served name differs from the file's. */
+  name_override?: string | null;
+  /** Set when the served description was cut. */
+  description_truncated?: string | null;
+  /** The Agent Skills rules the file broke, if any. */
+  problems: string[];
+}
+
+/**
+ * A skill entry, as the extension *serves* it.
+ *
+ * The specification's entry is `{uri, frontmatter, resources}`. The
+ * served name and description are in the frontmatter -- that is where
+ * the specification puts them -- so repeating them at the top level
+ * would be a second copy that could disagree with the first.
+ *
+ * The three extra fields appear only when the server adapted the skill
+ * to make it conform: a client that compares the frontmatter against
+ * the file it read needs to know that the server changed something.
+ */
+export interface SkillEntry {
+  uri: string;
+  frontmatter: Record<string, unknown>;
+  resources: SkillResource[];
+  name_override?: string | null;
+  description_truncated?: string | null;
+  problems?: string[];
+}
+
+/** One file in a skill's manifest. */
+export interface SkillResource {
+  uri: string;
+  digest: string;
+  size: number;
 }
 
 export interface Tokens {
@@ -92,6 +155,8 @@ export interface SkillRecord {
   frontmatter: SkillFrontmatter;
   bundle: Bundle;
   tokens: Tokens;
+  /** The Skills extension's view of this skill. */
+  skills: SkillManifest;
 }
 
 export interface AgentRecord {
@@ -213,7 +278,7 @@ export interface SearchResponse {
    * a client reading the older revision must not find a field it has
    * never heard of.
    */
-  next_cursor?: string;
+  nextCursor?: string;
   /** The cursor no longer points at a result: the library changed. */
-  cursor_stale?: boolean;
+  cursorStale?: boolean;
 }

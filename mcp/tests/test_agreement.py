@@ -405,7 +405,7 @@ def check_cursor(idx):
     srv = Server()
     srv.protocol_version = '2026-07-28'
     page1 = srv.tool_search_library({'query': query, 'limit': limit})
-    cursor = page1.get('next_cursor')
+    cursor = page1.get('nextCursor')
     page2 = srv.tool_search_library(
         {'query': query, 'limit': limit, 'cursor': cursor}) if cursor else {'results': []}
 

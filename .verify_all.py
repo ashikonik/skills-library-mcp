@@ -14,6 +14,7 @@
  11. mcp/tests/test_agreement.py the Python and TypeScript servers agree
  12. mcp/tests/test_jsonrpc.py   the protocol, against both servers
  13. mcp/scripts/eval_search.py  the ranking, against a labelled query set
+ 14. mcp/tests/test_skills_extension.py  the Skills extension, and its parity
 
 And, in addition: the protocol revision parity -- the two
 implementations of the revision, compared directly.
@@ -70,6 +71,7 @@ STEPS = [
     ('documentation counts', 'mcp/tests/test_doc_counts.py'),
     ('MCP protocol', 'mcp/tests/test_jsonrpc.py'),
     ('MCP protocol parity', 'mcp/tests/test_protocol_parity.py'),
+    ('MCP skills extension', 'mcp/tests/test_skills_extension.py'),
     ('search ranking', 'mcp/scripts/eval_search.py'),
     ('published tree in sync', 'mcp/tests/test_published_tree.py'),
 ]
@@ -97,6 +99,7 @@ NEEDS_INDEX = {
     'mcp/tests/test_doc_counts.py',
     'mcp/tests/test_jsonrpc.py',
     'mcp/tests/test_protocol_parity.py',
+    'mcp/tests/test_skills_extension.py',
     'mcp/scripts/eval_search.py',
 }
 INDEX = os.path.join(BASE, 'mcp', 'data', 'index.json')

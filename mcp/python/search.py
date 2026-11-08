@@ -672,11 +672,11 @@ class SearchIndex:
         #
         # The cursor names the last entry the client saw, and the page
         # starts after it. The cursor is honoured even if the entry is
-        # gone -- then the page starts at the end, and `cursor_stale`
+        # gone -- then the page starts at the end, and `cursorStale`
         # says so, because a client that silently got an empty page
         # would think it had reached the end of the results.
         start = 0
-        cursor_stale = False
+        cursorStale = False
         if cursor:
             pos = None
             for i, t in enumerate(kept):
@@ -687,7 +687,7 @@ class SearchIndex:
                 start = pos + 1
             else:
                 start = len(kept)
-                cursor_stale = True
+                cursorStale = True
 
         remaining = len(kept) - start
         truncated = remaining > limit
@@ -712,7 +712,7 @@ class SearchIndex:
             results.append(r)
 
         note = ''
-        if cursor_stale:
+        if cursorStale:
             note = ('The cursor no longer points at a result -- the library '
                     'changed. This page is empty.')
         elif truncated:
@@ -740,9 +740,9 @@ class SearchIndex:
         # on the first one: the first page is where the client gets the
         # cursor it needs.
         if truncated and results:
-            out['next_cursor'] = protocol.encode_cursor(results[-1]['id'], query)
-        if cursor_stale:
-            out['cursor_stale'] = True
+            out['nextCursor'] = protocol.encode_cursor(results[-1]['id'], query)
+        if cursorStale:
+            out['cursorStale'] = True
         return out
 
 

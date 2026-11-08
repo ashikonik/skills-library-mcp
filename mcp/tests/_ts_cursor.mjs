@@ -77,7 +77,7 @@ const call = async (cursor) => {
 };
 
 const page1 = await call(null);
-const cursor = page1.next_cursor ?? null;
+const cursor = page1.nextCursor ?? null;
 const page2 = cursor ? await call(cursor) : { results: [] };
 
 process.stdout.write(

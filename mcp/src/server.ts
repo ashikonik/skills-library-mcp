@@ -28,7 +28,7 @@ import {
   type Mode,
 } from './installers.js';
 import type { Harness } from './frontmatter.js';
-import { installRevisionHandlers, installRevisionResultFields, RevisionState } from './revision.js';
+import { installRevisionHandlers, installRevisionResultFields, installSkillsExtension, RevisionState } from './revision.js';
 import { decodeCursor, cursorMatches, type Cursor } from './protocol.js';
 
 export const DEFAULT_BUNDLE_BYTES = 200_000;
@@ -182,8 +182,8 @@ export function createServer(deps: Deps): McpServer {
       // must not find a field it has never heard of, and the
       // agreement gate compares the raw payloads.
       if (!revision.current) {
-        delete out.next_cursor;
-        delete out.cursor_stale;
+        delete out.nextCursor;
+        delete out.cursorStale;
       }
       return asText(out);
     },
@@ -688,6 +688,12 @@ export function createServer(deps: Deps): McpServer {
   // wrap until the tools exist.
   installRevisionHandlers(server.server, revision);
   installRevisionResultFields(server.server, revision);
+
+  // The Skills extension. It goes on last because it also uses the
+  // fallback handler, and it has to be *after* the revision handlers so
+  // that the fallback chain is: skills extension, then the revision's
+  // `server/discover`, then the SDK's own.
+  installSkillsExtension(server.server, revision, deps.index, libraryRoot());
 
   return server;
 }

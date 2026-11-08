@@ -211,7 +211,7 @@ def check_revisions(label, cmd, env=None):
     check('%s [new]: tools/list has ttlMs' % label,
           isinstance(new_list.get('ttlMs'), int), str(sorted(new_list)))
     check('%s [new]: tools/list has cacheScope' % label,
-          new_list.get('cacheScope') in ('session', 'request'),
+          new_list.get('cacheScope') in ('public', 'private'),
           str(new_list.get('cacheScope')))
     check('%s [new]: the tool list is unchanged by the revision' % label,
           [t['name'] for t in new_list.get('tools', [])]
@@ -276,7 +276,7 @@ def check_cursor(label, cmd, env=None):
     ids1 = [r['id'] for r in page1.get('results', [])]
     check('%s [cursor]: the first page returns results' % label, bool(ids1),
           str(ids1))
-    cursor = page1.get('next_cursor')
+    cursor = page1.get('nextCursor')
     check('%s [cursor]: the first page hands out a cursor' % label,
           isinstance(cursor, str) and cursor != '', str(cursor))
     check('%s [cursor]: the cursor is opaque' % label,
@@ -294,10 +294,10 @@ def check_cursor(label, cmd, env=None):
 
     # ---- the older revision: no cursor, no cursor fields.
     old = search('2025-11-25')
-    check('%s [cursor]: the old revision has no next_cursor' % label,
-          'next_cursor' not in old, str(sorted(old)))
-    check('%s [cursor]: the old revision has no cursor_stale' % label,
-          'cursor_stale' not in old, str(sorted(old)))
+    check('%s [cursor]: the old revision has no nextCursor' % label,
+          'nextCursor' not in old, str(sorted(old)))
+    check('%s [cursor]: the old revision has no cursorStale' % label,
+          'cursorStale' not in old, str(sorted(old)))
 
     # A cursor from one query must not paginate another.
     other = search('2026-07-28', {'cursor': cursor})

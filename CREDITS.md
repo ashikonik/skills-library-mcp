@@ -12,7 +12,7 @@ away from what actually shipped.
 
 | | |
 |---|---:|
-| Published entries | 1152 |
+| Published entries | 1155 |
 | Distinct authors and organisations | 57 |
 
 ## By author
@@ -33,11 +33,11 @@ away from what actually shipped.
 | Microsoft *(some under terms)* | 18 | MIT, other (unrecognised) | — |
 | Figma *(some under terms)* | 16 | LicenseRef-Figma-Developer-Terms | [plugins](https://github.com/openai/plugins) |
 | Expo Team | 13 | MIT | [expo](https://github.com/expo/skills/tree/main/plugins/expo) |
+| Google (Antigravity) *(some under terms)* | 13 | — | — |
 | NVIDIA | 13 | Apache-2.0 AND CC-BY-4.0 | [skills](https://github.com/NVIDIA/skills) |
 | Jesse Vincent | 12 | MIT | [superpowers](https://github.com/obra/superpowers) |
 | Hugging Face | 11 | MIT | [plugins](https://github.com/openai/plugins) |
 | Netlify | 11 | MIT | [plugins](https://github.com/openai/plugins) |
-| Google (Antigravity) *(some under terms)* | 10 | — | — |
 | Cloudflare | 9 | MIT | [plugins](https://github.com/openai/plugins) |
 | Moody's | 9 | MIT | [plugins](https://github.com/openai/plugins) |
 | Prisma (prisma/prisma) | 9 | MIT | [prisma](https://github.com/prisma/prisma) |
@@ -80,7 +80,7 @@ away from what actually shipped.
 ### The entries published under terms that do not grant
 redistribution
 
-These 135 entries are here at the repository owner's instruction.
+These 138 entries are here at the repository owner's instruction.
 Their upstream terms do not grant redistribution. `NOTICE` lists
 them all and quotes the terms; this is the credit.
 
@@ -195,7 +195,7 @@ them all and quotes the terms; this is the credit.
 - `figma-use-motion` (skill) — LicenseRef-Figma-Developer-Terms — [Figma](https://www.figma.com)
 - `figma-use-slides` (skill) — LicenseRef-Figma-Developer-Terms — [Figma](https://www.figma.com)
 
-**Google (Antigravity)** — 10 entries
+**Google (Antigravity)** — 13 entries
 
 - `agy-customizations` (skill) — not stated — [Google (Antigravity)](https://antigravity.google)
 - `antigravity-guide` (skill) — not stated — [Google (Antigravity)](https://antigravity.google)
@@ -206,6 +206,9 @@ them all and quotes the terms; this is the credit.
 - `plugin` (skill) — not stated — [Google (Antigravity)](https://antigravity.google)
 - `report_researcher` (agent) — not stated — [Google (Antigravity)](https://antigravity.google)
 - `run-workflow` (skill) — not stated — [Google (Antigravity)](https://antigravity.google)
+- `swarm` (skill) — not stated — [Google (Antigravity)](https://antigravity.google)
+- `swarm_monitor` (skill) — not stated — [Google (Antigravity)](https://antigravity.google)
+- `swarm_narrator` (skill) — not stated — [Google (Antigravity)](https://antigravity.google)
 - `ui-plugin-navigation` (skill) — not stated — [Google (Antigravity)](https://antigravity.google)
 
 **Anthropic** — 9 entries
@@ -1418,6 +1421,9 @@ summarise it; this is the attribution itself.
 | `supabase-postgres-best-practices` | skill | OpenAI | MIT | [OpenAI](https://github.com/openai/plugins) |
 | `superhuman-mail` | skill | Superhuman | MIT | [mcp-mail](https://github.com/superhuman/mcp-mail) |
 | `supply-chain` | skill | Daloopa | Apache-2.0 | [daloopa-plugin-codex](https://github.com/daloopa/daloopa-plugin-codex) |
+| `swarm` | skill | Google (Antigravity) | not stated | [Google (Antigravity)](https://antigravity.google) |
+| `swarm_monitor` | skill | Google (Antigravity) | not stated | [Google (Antigravity)](https://antigravity.google) |
+| `swarm_narrator` | skill | Google (Antigravity) | not stated | [Google (Antigravity)](https://antigravity.google) |
 | `swift-actor-persistence` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `swift-concurrency-6-2` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `swift-protocol-di-testing` | skill | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |

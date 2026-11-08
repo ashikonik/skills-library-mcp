@@ -93,14 +93,21 @@ export function resultType(version: string): { resultType?: string } {
  * changes when somebody adds a skill, so the TTL is short -- it is a
  * cache, not a snapshot.
  *
- * `cacheScope` says how widely the answer is valid: `"session"` means
- * the same for every caller in this session, which is true of the
- * library's structure but not of a search's ranking.
+ * `cacheScope` says who may reuse the answer: `"public"` means it is
+ * the same for every caller and a shared cache may serve it to anyone;
+ * `"private"` means it depends on the caller's own context and a
+ * cached copy must not cross authorization boundaries.
+ *
+ * The library's listings are public -- the catalogue is the same for
+ * everyone, and the same for every page of it. A filtered or
+ * caller-specific answer would be private.
  */
+export type CacheScope = 'public' | 'private';
+
 export function cacheFields(
   version: string,
   ttlMs: number,
-  scope: 'session' | 'request',
+  scope: CacheScope,
 ): { ttlMs?: number; cacheScope?: string } {
   if (!isCurrent(version)) return {};
   return { ttlMs, cacheScope: scope };
@@ -134,6 +141,10 @@ export interface Cursor {
 
 /** Encode a cursor. */
 export function encodeCursor(after: string, query: string): string {
+  // The keys are sorted so the byte string does not depend on the order
+  // the properties happen to be written in. The Python mirror sorts its
+  // keys too, and a cursor the two implementations disagree about
+  // would not cross between servers.
   const payload = JSON.stringify({ after, q: query } satisfies Cursor);
   return Buffer.from(payload, 'utf-8').toString('base64url');
 }

@@ -75,21 +75,31 @@ test('the current revision gets resultType', () => {
 test('the older revision gets no cache fields at all', () => {
   for (const v of SUPPORTED_PROTOCOL_VERSIONS) {
     if (v === CURRENT_PROTOCOL_VERSION) continue;
-    assert.deepEqual(cacheFields(v, 60_000, 'session'), {});
-    assert.equal('ttlMs' in cacheFields(v, 60_000, 'session'), false);
-    assert.equal('cacheScope' in cacheFields(v, 60_000, 'session'), false);
+    assert.deepEqual(cacheFields(v, 60_000, 'public'), {});
+    assert.equal('ttlMs' in cacheFields(v, 60_000, 'public'), false);
+    assert.equal('cacheScope' in cacheFields(v, 60_000, 'public'), false);
   }
 });
 
 test('the current revision gets ttlMs and cacheScope', () => {
-  assert.deepEqual(cacheFields(CURRENT_PROTOCOL_VERSION, 60_000, 'session'), {
+  assert.deepEqual(cacheFields(CURRENT_PROTOCOL_VERSION, 60_000, 'public'), {
     ttlMs: 60_000,
-    cacheScope: 'session',
+    cacheScope: 'public',
   });
-  assert.deepEqual(cacheFields(CURRENT_PROTOCOL_VERSION, 0, 'request'), {
+  assert.deepEqual(cacheFields(CURRENT_PROTOCOL_VERSION, 0, 'private'), {
     ttlMs: 0,
-    cacheScope: 'request',
+    cacheScope: 'private',
   });
+});
+
+test('the cache scope is one the spec defines', () => {
+  // The spec allows exactly two: "public" and "private". A third value
+  // would be a scope no client understands, and the client would have to
+  // guess what it means.
+  for (const scope of ['public', 'private'] as const) {
+    const fields = cacheFields(CURRENT_PROTOCOL_VERSION, 60_000, scope);
+    assert.equal(fields.cacheScope, scope);
+  }
 });
 
 test('the revisions are distinct strings, not an ordering accident', () => {

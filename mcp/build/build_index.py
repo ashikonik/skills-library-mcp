@@ -35,6 +35,7 @@ sys.path.insert(0, HERE)
 from domains import DOMAINS, assign                      # noqa: E402
 from tiering import PACKS, CORE_DOMAINS, assign_tiers    # noqa: E402
 from tasks import TASKS                                 # noqa: E402
+import conformance                                      # noqa: E402
 
 OUT = os.path.join(BASE, 'mcp', 'data', 'index.json')
 
@@ -178,13 +179,124 @@ def prompt_signals(metadata):
 # inside the skill's own directory.
 REF_RE = re.compile(r'`([A-Za-z0-9_./-]+\.(?:md|py|sh|js|ts|json|yaml|yml|txt|csv))`')
 
+# The MIME type of each file extension, for the Skills extension's
+# manifests. The extension serves `resources/read` with a `mimeType`, and
+# the type is what tells a client whether the bytes are prose or an
+# image. The table is deliberately small: it covers the extensions the
+# library actually uses, and anything else is served as a byte stream
+# (`application/octet-stream`), which every client can handle.
+MIME_TYPES = {
+    '.md': 'text/markdown',
+    '.markdown': 'text/markdown',
+    '.txt': 'text/plain',
+    '.csv': 'text/csv',
+    '.tsv': 'text/tab-separated-values',
+    '.json': 'application/json',
+    '.yaml': 'application/yaml',
+    '.yml': 'application/yaml',
+    '.xml': 'application/xml',
+    '.html': 'text/html',
+    '.htm': 'text/html',
+    '.css': 'text/css',
+    '.js': 'text/javascript',
+    '.mjs': 'text/javascript',
+    '.cjs': 'text/javascript',
+    '.ts': 'text/javascript',
+    '.jsx': 'text/javascript',
+    '.tsx': 'text/javascript',
+    '.py': 'text/x-python',
+    '.sh': 'text/x-shellscript',
+    '.bash': 'text/x-shellscript',
+    '.rb': 'text/x-ruby',
+    '.rs': 'text/x-rust',
+    '.go': 'text/x-go',
+    '.java': 'text/x-java',
+    '.c': 'text/x-c',
+    '.h': 'text/x-c',
+    '.cpp': 'text/x-c++',
+    '.sql': 'application/sql',
+    '.png': 'image/png',
+    '.jpg': 'image/jpeg',
+    '.jpeg': 'image/jpeg',
+    '.gif': 'image/gif',
+    '.webp': 'image/webp',
+    '.svg': 'image/svg+xml',
+    '.ico': 'image/vnd.microsoft.icon',
+    '.pdf': 'application/pdf',
+    '.zip': 'application/zip',
+    '.woff': 'font/woff',
+    '.woff2': 'font/woff2',
+}
 
-def scan_bundle(skill_dir, skill_md_text):
+DEFAULT_MIME = 'application/octet-stream'
+
+
+def mime_for(rel_path):
+    """The MIME type of a file, by its extension.
+
+    The extension is lower-cased, so `.PNG` and `.png` agree. A file with
+    no extension at all -- `Makefile`, `LICENSE` -- gets the byte-stream
+    type, which is the honest answer: there is no more specific one.
+    """
+    ext = os.path.splitext(rel_path)[1].lower()
+    return MIME_TYPES.get(ext, DEFAULT_MIME)
+
+
+def skill_uri(skill_name, rel_path):
+    """The `skill://` URI of a file inside a skill.
+
+    The final segment of the skill's path is the skill's name, and the
+    path after it is the file's path inside the skill -- the same
+    relative path the SKILL.md uses when it points at a reference. So
+    `references/checklist.md` inside `code-review` is
+    `skill://code-review/references/checklist.md`, and a client that
+    resolves the SKILL.md's relative references lands on the right file
+    without the server having to guess.
+    """
+    return 'skill://%s/%s' % (skill_name, rel_path)
+
+
+def verbatim_frontmatter(meta, served_name=None, served_description=None):
+    """Every YAML frontmatter field, unchanged.
+
+    The Skills extension requires the *verbatim* frontmatter: a host
+    compares it field-by-field against the `SKILL.md` it read, and a
+    curated subset -- only the fields this server happens to index --
+    would fail that comparison on any skill with a field the index does
+    not model.
+
+    So this is every key the YAML parser found, with its value as
+    parsed. Nested mappings and lists are kept whole: `metadata` holds
+    the author's own data, and dropping half of it would be a silent
+    loss.
+
+    The two fields the conformance layer had to adapt -- `name` and
+    `description` -- are the *served* values, because the client
+    compares the served values with the file and the specification
+    requires the served ones to conform.
+    """
+    if not meta:
+        return {}
+    out = dict(meta)
+    if served_name is not None and 'name' in out:
+        out['name'] = served_name
+    if served_description is not None and 'description' in out:
+        out['description'] = served_description
+    return out
+
+
+def scan_bundle(skill_dir, skill_md_text, skill_name=None):
     """The supporting files of a skill: what is there, and what is referenced.
 
     The bundle is a manifest, not the content. 114 references across the
     library already dangle — pre-existing, and recorded here rather than
     hidden, so a caller can tell a missing file from a missing mention.
+
+    When `skill_name` is given, each file also carries its SHA-256
+    digest, its MIME type and its `skill://` URI -- the three things the
+    Skills extension's manifest needs. The digest is what a host
+    verifies the bytes against, so it is computed from the file as it is
+    on disk, not from anything the library recorded about it.
     """
     files = []
     total = 0
@@ -197,7 +309,12 @@ def scan_bundle(skill_dir, skill_md_text):
                 size = os.path.getsize(p)
             except OSError:
                 continue
-            files.append({'path': rel, 'bytes': size})
+            entry = {'path': rel, 'bytes': size}
+            if skill_name:
+                entry['digest'] = 'sha256:%s' % sha256_file(p)
+                entry['mime'] = mime_for(rel)
+                entry['uri'] = skill_uri(skill_name, rel)
+            files.append(entry)
             total += size
 
     refs = []
@@ -467,14 +584,25 @@ def build():
         desc = s.get('desc', '')
         metadata = meta.get('metadata') if isinstance(meta.get('metadata'), dict) else {}
 
-        bundle = scan_bundle(skill_dir, text)
+        # The served name and description, conformed to the Agent
+        # Skills rules. Five skills in this library break one of them;
+        # the vendored files are not edited, so the fix lives here. See
+        # `mcp/build/conformance.py`.
+        file_name = meta.get('name', name) if meta else name
+        file_description = (meta.get('description') or desc) if meta else desc
+        conform = conformance.check(file_name, file_description,
+                                    (meta.get('compatibility') or '') if meta else '')
+        served_name = conform['name']
+        served_description = conform['description']
+
+        bundle = scan_bundle(skill_dir, text, served_name)
 
         raw_keys = sorted(meta.keys()) if meta else []
         allowed = meta.get('allowed-tools') if meta else None
         if allowed is None and raw:
             allowed = regex_field(raw, 'allowed-tools')
         front = {
-            'name': meta.get('name', name) if meta else name,
+            'name': file_name,
             'description': desc,
             'allowed_tools': norm_tools(allowed),
             'disable_model_invocation': bool(
@@ -519,6 +647,49 @@ def build():
                 'name': name_tokens,
                 'desc': desc_tokens,
                 'name_bigrams': bigrams(name_tokens),
+            },
+            # ---------------------------------------------------- the
+            # Skills extension's view of this skill. It is separate from
+            # the record above because the two answer different
+            # questions: the record above describes the entry as the
+            # search index knows it, and this one describes the entry as
+            # the extension serves it -- under a conforming name, with
+            # the frontmatter verbatim, and with a complete manifest.
+            'skills': {
+                # The served name. Equal to `name` unless the file
+                # breaks the Agent Skills naming rule.
+                'name': served_name,
+                # The served description. Equal to the file's unless it
+                # was too long.
+                'description': served_description,
+                # The URI of the skill's `SKILL.md`.
+                'uri': skill_uri(served_name, 'SKILL.md'),
+                # Every YAML frontmatter field, unchanged. The
+                # specification requires the *verbatim* frontmatter: a
+                # client compares it field-by-field against the file it
+                # read, so a curated subset would fail the comparison.
+                'frontmatter': verbatim_frontmatter(meta, served_name,
+                                                  served_description),
+                # The complete file manifest: every file in the bundle,
+                # exactly once, with its URI, digest and size. `SKILL.md`
+                # is in it, and the manifest is never split across
+                # pages.
+                'resources': [
+                    {
+                        'uri': f['uri'],
+                        'digest': f['digest'],
+                        'size': f['bytes'],
+                    }
+                    for f in bundle['files']
+                ],
+                # What the server did to make the skill conform, if
+                # anything. Absent for a skill served exactly as it is
+                # on disk.
+                'name_override': conform['name_override'],
+                'description_truncated': conform['description_truncated'],
+                # The rules the file broke, if any. Empty for a
+                # conforming skill.
+                'problems': conform['problems'],
             },
         })
 

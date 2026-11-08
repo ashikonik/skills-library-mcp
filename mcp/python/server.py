@@ -38,6 +38,7 @@ from installers import (                            # noqa: E402
     skill_target_path, uninstall_skill_path,
 )
 import protocol                                  # noqa: E402
+import skills_extension                          # noqa: E402
 
 DEFAULT_BUNDLE_BYTES = 200_000
 MAX_BUNDLE_BYTES = 2_000_000
@@ -424,6 +425,88 @@ class Server:
             },
         }
 
+    # --------------------------------------------------- the Skills extension
+    def skills_extension(self, method, params):
+        """The Skills extension's methods.
+
+        Returns the result dict, or `None` for a method the extension
+        does not define -- the caller then falls through to the "method
+        not found" answer.
+
+        An error is returned as `{'__error__': code, 'message': text}`,
+        because a JSON-RPC error and a result are different shapes and
+        the caller has to tell them apart.
+        """
+        params = params or {}
+
+        if method == 'skills/list':
+            page = skills_extension.list_skills(self.index, params.get('cursor'))
+            result = {'skills': page['skills']}
+            if page.get('nextCursor'):
+                result['nextCursor'] = page['nextCursor']
+            result.update(protocol.result_type(self.protocol_version))
+            result.update(protocol.cache_fields(
+                self.protocol_version, skills_extension.SKILLS_TTL_MS, 'public'))
+            return result
+
+        if method == 'resources/list':
+            page = skills_extension.list_resources(self.index, params.get('cursor'))
+            result = {'resources': page['resources']}
+            if page.get('nextCursor'):
+                result['nextCursor'] = page['nextCursor']
+            result.update(protocol.result_type(self.protocol_version))
+            result.update(protocol.cache_fields(
+                self.protocol_version, skills_extension.SKILLS_TTL_MS, 'public'))
+            return result
+
+        if method == 'skills/get':
+            uri = params.get('uri')
+            if not isinstance(uri, str):
+                return {'__error__': -32602,
+                        'message': 'skills/get requires a uri'}
+            record = skills_extension.find_skill_md(self.index, uri)
+            if record is None:
+                return {'__error__': -32602,
+                        'message': 'Unknown skill URI: %s' % uri}
+            result = {'skill': skills_extension.skill_entry(record)}
+            result.update(protocol.result_type(self.protocol_version))
+            result.update(protocol.cache_fields(
+                self.protocol_version, skills_extension.SKILLS_TTL_MS, 'public'))
+            return result
+
+        if method == 'resources/read':
+            uri = params.get('uri')
+            if not isinstance(uri, str):
+                return {'__error__': -32602,
+                        'message': 'resources/read requires a uri'}
+            try:
+                _, _, data, mime, _ = skills_extension.read_skill_file(
+                    self.root, self.index, uri)
+            except skills_extension.SkillError as e:
+                return {'__error__': e.code, 'message': str(e)}
+            result = {'contents': [skills_extension.contents_for(uri, data, mime)]}
+            result.update(protocol.result_type(self.protocol_version))
+            result.update(protocol.cache_fields(
+                self.protocol_version, skills_extension.SKILLS_TTL_MS, 'public'))
+            return result
+
+        if method == 'resources/directory/read':
+            uri = params.get('uri')
+            if not isinstance(uri, str):
+                return {'__error__': -32602,
+                        'message': 'resources/directory/read requires a uri'}
+            try:
+                resources = skills_extension.read_skill_directory(self.index, uri)
+            except skills_extension.SkillError as e:
+                return {'__error__': e.code, 'message': str(e)}
+            result = {'resources': resources}
+            result.update(protocol.result_type(self.protocol_version))
+            result.update(protocol.cache_fields(
+                self.protocol_version, skills_extension.SKILLS_TTL_MS, 'public'))
+            return result
+
+        return None
+
     # ------------------------------------------------------------- tools
     def tool_search_library(self, args):
         q = args.get('query', '')
@@ -456,8 +539,8 @@ class Server:
         # must not find a field it has never heard of, and the
         # agreement gate compares the raw payloads.
         if not protocol.is_current(self.protocol_version):
-            out.pop('next_cursor', None)
-            out.pop('cursor_stale', None)
+            out.pop('nextCursor', None)
+            out.pop('cursorStale', None)
         return out
 
     def tool_get_skill(self, args):
@@ -803,8 +886,26 @@ class Server:
         if method == 'tools/list':
             result = {'tools': self.tool_list()}
             result.update(protocol.cache_fields(
-                self.protocol_version, TOOLS_LIST_TTL_MS, 'session'))
+                self.protocol_version, TOOLS_LIST_TTL_MS, 'public'))
             return {'jsonrpc': '2.0', 'id': msg_id, 'result': result}
+
+        # ------------------------------------------- the Skills extension
+        #
+        # The extension exists only under the revision that declares
+        # it. A client on the older revision never asked for
+        # `skills/list` and would not know what to do with the answer,
+        # so the methods are not answered at all there -- they fall
+        # through to the "method not found" below.
+        if protocol.is_current(self.protocol_version):
+            extension = self.skills_extension(method, params)
+            if extension is not None:
+                if isinstance(extension, dict) and extension.get('__error__'):
+                    return {
+                        'jsonrpc': '2.0', 'id': msg_id,
+                        'error': {'code': extension['__error__'],
+                                  'message': extension['message']},
+                    }
+                return {'jsonrpc': '2.0', 'id': msg_id, 'result': extension}
 
         if method == 'tools/call':
             name = params.get('name')

@@ -39,14 +39,14 @@ part it derives from.
 
 Every other skill and agent under `skills/` and `agents/` is third-
 party work, redistributed under its own licence. Some are MIT, some
-are Apache-2.0, one is CC-BY-4.0, and 135 are under terms that do not
+are Apache-2.0, one is CC-BY-4.0, and 138 are under terms that do not
 permit redistribution — see the section below. The licence file for
 each one is in the upstream project it came from, and the
 attribution is listed in `CREDITS.md`.
 
 ## Entries published under terms that do not permit redistribution
 
-These 135 entries are in this repository because the repository's
+These 138 entries are in this repository because the repository's
 owner instructed that they be included. Their upstream terms do not
 grant redistribution, and shipping them redistributes material whose
 authors did not agree to that. They are listed here, in full, so
@@ -175,7 +175,7 @@ Figma's Developer Terms govern this work; they grant Figma a licence to distribu
 | `figma-use-motion` | skill | LicenseRef-Figma-Developer-Terms |
 | `figma-use-slides` | skill | LicenseRef-Figma-Developer-Terms |
 
-### Google (Antigravity) — 10 entries
+### Google (Antigravity) — 13 entries
 
 Antigravity is proprietary Google software with its own terms of service, and no licence accompanies these entries.
 
@@ -190,6 +190,9 @@ Antigravity is proprietary Google software with its own terms of service, and no
 | `plugin` | skill | not stated |
 | `report_researcher` | agent | not stated |
 | `run-workflow` | skill | not stated |
+| `swarm` | skill | not stated |
+| `swarm_monitor` | skill | not stated |
+| `swarm_narrator` | skill | not stated |
 | `ui-plugin-navigation` | skill | not stated |
 
 ### Anthropic — 9 entries
@@ -288,7 +291,7 @@ for it; the vendored copies remain Anthropic's.
 | Reason | Count |
 |---|---:|
 | Published — the licence permits redistribution | 1017 |
-| Published — the owner's instruction; the terms do not permit it | 135 |
+| Published — the owner's instruction; the terms do not permit it | 138 |
 | Excluded — the maintainer's own private project files | 2 |
 | Excluded — test fixtures, not published content | 3 |
 

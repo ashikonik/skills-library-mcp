@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| Skills | **1029** — instructions, playbooks and reference material the model follows |
+| Skills | **1032** — instructions, playbooks and reference material the model follows |
 | Agents | **114** — specialised sub-agents invoked for one bounded role |
 | Held aside | 14 pipeline-internal agents (see `agents/_agent-specific/`) |
 | Inventory | `SKILLS_AND_AGENTS_REPORT.md` — full census with sources |
@@ -174,7 +174,7 @@ every change, not on request.
 
 ## 4. Skill Catalogue by Domain
 
-All 1029 skills, grouped. The **use when** column is condensed from each skill's own
+All 1032 skills, grouped. The **use when** column is condensed from each skill's own
 frontmatter description — read that file for the full text.
 
 ### 4.1 Core engineering practice — 31 skills
@@ -433,7 +433,7 @@ frontmatter description — read that file for the full text.
 | `uspto-database` | USPTO patent and trademark data workflow for official record lookup, PatentSearch queries, TSDR checks, assignment data, and... |
 | `web-3d-asset-pipeline` | Prepare and optimize browser-game 3D assets. Use when the user asks for GLB or glTF shipping work, including Blender cleanup and... |
 
-### 4.7 DevOps & cloud — 51 skills
+### 4.7 DevOps & cloud — 52 skills
 
 | Skill | Use when |
 |---|---|
@@ -479,6 +479,7 @@ frontmatter description — read that file for the full text.
 | `render-web-services` | Configures Render web services—port binding, TLS, health checks, custom domains, auto-deploy, PR previews, persistent disks, and... |
 | `render-workflows` | Sets up, develops, tests, and deploys Render Workflows. Covers first-time scaffolding (via CLI or manual), SDK installation (Python... |
 | `sign-in-with-vercel` | Sign in with Vercel guidance — OAuth 2.0/OIDC identity provider for user authentication via Vercel accounts. Use when implementing... |
+| `swarm_monitor` | ONLY for the native-swarm worker whose brief says it is the monitor. On a timer, it checks whether the whole swarm has stalled and... |
 | `vercel-api` | Vercel app and REST API expert guidance. Use when the agent needs live access to Vercel projects, deployments, environment... |
 | `vercel-cli` | Vercel CLI expert guidance. Use when deploying, managing environment variables, linking projects, viewing logs, managing domains,... |
 | `vercel-firewall` | Vercel Firewall and security expert guidance. Use when configuring DDoS protection, WAF rules, rate limiting, bot filtering, IP... |
@@ -1088,7 +1089,7 @@ frontmatter description — read that file for the full text.
 | `stripe-best-practices` | Guides Stripe integration decisions — API selection (Checkout Sessions vs PaymentIntents), Connect platform setup (Accounts v2,... |
 | `upgrade-stripe` | Guide for upgrading Stripe API versions and SDKs |
 
-### 4.24 Agent orchestration & workflows — 32 skills
+### 4.24 Agent orchestration & workflows — 34 skills
 
 | Skill | Use when |
 |---|---|
@@ -1120,6 +1121,8 @@ frontmatter description — read that file for the full text.
 | `run-workflow` | How to write and run a dynamic workflow script with the `run_workflow` tool: a Python script that orchestrates many agents with... |
 | `start` | Use when starting Zoom work. |
 | `subagent-driven-development` | Use when executing implementation plans with independent tasks in the current session |
+| `swarm` | Run a swarm: several agents working in parallel on one task, each in its own conversation, collaborating through a shared message... |
+| `swarm_narrator` | ONLY for the native-swarm worker whose brief says it is the narrator. It watches the board and keeps the user's Overview (view.json... |
 | `template` | Canonical rules and HTML/CSS contract for the page chrome (head boilerplate, cover, table of contents, section block,... |
 | `terminal-ops` | Evidence-first repo execution workflow for ECC. Use when the user wants a command run, a repo checked, a CI failure debugged, or a... |
 | `using-superpowers` | Use when starting any conversation - establishes how to find and use skills, requiring Skill tool invocation before ANY response... |
