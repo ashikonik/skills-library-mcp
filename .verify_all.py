@@ -15,6 +15,9 @@
  12. mcp/tests/test_jsonrpc.py   the protocol, against both servers
  13. mcp/scripts/eval_search.py  the ranking, against a labelled query set
 
+And, in addition: the protocol revision parity -- the two
+implementations of the revision, compared directly.
+
 The last four need the MCP index. If `mcp/data/index.json` is missing
 they are skipped with a message rather than failed -- a fresh clone
 without a built index should not report a false failure -- but the
@@ -66,6 +69,7 @@ STEPS = [
     ('MCP sort parity', 'mcp/tests/test_sort_parity.py'),
     ('documentation counts', 'mcp/tests/test_doc_counts.py'),
     ('MCP protocol', 'mcp/tests/test_jsonrpc.py'),
+    ('MCP protocol parity', 'mcp/tests/test_protocol_parity.py'),
     ('search ranking', 'mcp/scripts/eval_search.py'),
     ('published tree in sync', 'mcp/tests/test_published_tree.py'),
 ]
@@ -92,6 +96,7 @@ NEEDS_INDEX = {
     'mcp/tests/test_sort_parity.py',
     'mcp/tests/test_doc_counts.py',
     'mcp/tests/test_jsonrpc.py',
+    'mcp/tests/test_protocol_parity.py',
     'mcp/scripts/eval_search.py',
 }
 INDEX = os.path.join(BASE, 'mcp', 'data', 'index.json')

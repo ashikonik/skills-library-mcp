@@ -37,12 +37,21 @@ from installers import (                            # noqa: E402
     install_skill, install_agent, uninstall_target,
     skill_target_path, uninstall_skill_path,
 )
-
-PROTOCOL_VERSIONS = ('2025-11-25', '2025-06-18', '2025-03-26',
-                     '2024-11-05', '2024-10-07')
+import protocol                                  # noqa: E402
 
 DEFAULT_BUNDLE_BYTES = 200_000
 MAX_BUNDLE_BYTES = 2_000_000
+
+# The Skills extension (SEP-2640). The library is a near-perfect fit
+# for it: a skill is a directory with a SKILL.md and some supporting
+# files, which is exactly what the extension describes.
+SKILLS_EXTENSION = 'io.modelcontextprotocol/skills'
+
+# How long a client may reuse the tool list, under the revision that
+# asks for a TTL. The tool list changes when the library changes --
+# a new skill does not add a tool, but a new harness does -- so the
+# TTL is short. It is a cache, not a snapshot.
+TOOLS_LIST_TTL_MS = 60_000
 
 # The tool list, with the library's size left as a placeholder.
 #
@@ -311,6 +320,16 @@ class Server:
         self.n_skills = str(len(self.index['skills']))
         self.n_agents = str(len(self.index['agents']))
         self.n_packs = str(len(self.index['packs']))
+
+        # The protocol revision this client negotiated.
+        #
+        # Until `initialize` says otherwise, the server assumes the
+        # default revision -- the one every current client speaks. The
+        # fields the newer revision adds are added only for a client
+        # that asked for it, so a client that never asked for the new
+        # revision never sees a field it has not heard of.
+        self.protocol_version = protocol.DEFAULT_PROTOCOL_VERSION
+
         self.tools = [
             dict(t, description=(t.get('description') or '')
                  .replace(SKILLS_TOKEN, self.n_skills)
@@ -320,16 +339,108 @@ class Server:
         ]
 
     # ------------------------------------------------------------ helpers
+    def tool_list(self, version=None):
+        """The tool list, under a revision.
+
+        `2026-07-28` adds the `cursor` argument to `search_library`:
+        under that revision pagination is cursor-based, and the
+        argument has to be in the schema or a client cannot use it.
+
+        The older revision does not have it. A client reading the old
+        revision must not find a field it has never heard of, and the
+        agreement gate compares the tool list byte for byte -- so the
+        argument is added only for the revision that requires it.
+        """
+        version = version or self.protocol_version
+        if not protocol.is_current(version):
+            return self.tools
+        out = []
+        for t in self.tools:
+            if t['name'] != 'search_library':
+                out.append(t)
+                continue
+            props = dict(t['inputSchema']['properties'])
+            props['cursor'] = {
+                'type': 'string',
+                'description': 'The cursor from the previous page. Omit for '
+                               'the first page.',
+            }
+            out.append({
+                'name': t['name'],
+                'title': t['title'],
+                'description': t['description'],
+                'inputSchema': {
+                    'type': 'object',
+                    'properties': props,
+                    'required': t['inputSchema']['required'],
+                },
+                'annotations': t['annotations'],
+            })
+        return out
+
     def resolve(self, id_):
         e = self.by_id.get(id_)
         if e:
             return e
         return self.by_name.get(id_)
 
+    # --------------------------------------------------------- protocol
+    def capabilities(self, version=None):
+        """What this server can do, under a revision.
+
+        The `2026-07-28` revision adds the `resources` capability and
+        the Skills extension declaration. The older revision does not
+        have them: a client reading the old revision must not find
+        capabilities it has never heard of, and it would try to call
+        `resources/list` against a server that answers `-32601`.
+        """
+        version = version or self.protocol_version
+        caps = {'tools': {'listChanged': False}}
+        if protocol.is_current(version):
+            caps['resources'] = {}
+            caps['extensions'] = {
+                SKILLS_EXTENSION: {'directoryRead': True},
+            }
+        return caps
+
+    def discover(self):
+        """The `server/discover` response.
+
+        Mandatory under `2026-07-28`. It says what the server is, which
+        revisions it speaks, and what it can do -- so a client can find
+        out the server's shape without having to guess at it.
+
+        It is answered under every revision, not only the new one: a
+        client that asks is asking, and refusing the question because
+        of the revision it already speaks would be answering "no" to
+        something the server could answer.
+        """
+        return {
+            'protocolVersions': list(protocol.SUPPORTED_PROTOCOL_VERSIONS),
+            'capabilities': self.capabilities(protocol.CURRENT_PROTOCOL_VERSION),
+            'serverInfo': {'name': 'skills-library', 'version': '1.0.0'},
+            'extensions': {
+                SKILLS_EXTENSION: {'directoryRead': True},
+            },
+        }
+
     # ------------------------------------------------------------- tools
     def tool_search_library(self, args):
         q = args.get('query', '')
         limit = args.get('limit', DEFAULT_LIMIT)
+
+        # The cursor is a `2026-07-28` feature. On the older revision
+        # it is not in the schema, and a client that sends one anyway
+        # is speaking a dialect this server does not serve -- the
+        # cursor is ignored rather than half-honoured.
+        cursor = None
+        if protocol.is_current(self.protocol_version):
+            raw = args.get('cursor')
+            if raw:
+                decoded = protocol.decode_cursor(raw)
+                if decoded and protocol.cursor_matches(decoded, q):
+                    cursor = decoded['after']
+
         out = self.index.search(
             q,
             limit=limit,
@@ -337,7 +448,16 @@ class Server:
             tier=args.get('tier'),
             domain=args.get('domain'),
             include_body=args.get('include_body', False),
+            cursor=cursor,
         )
+
+        # The cursor fields belong to `2026-07-28`. On the older
+        # revision they are removed: a client reading the old revision
+        # must not find a field it has never heard of, and the
+        # agreement gate compares the raw payloads.
+        if not protocol.is_current(self.protocol_version):
+            out.pop('next_cursor', None)
+            out.pop('cursor_stale', None)
         return out
 
     def tool_get_skill(self, args):
@@ -646,13 +766,15 @@ class Server:
 
         if method == 'initialize':
             client_version = params.get('protocolVersion')
-            version = (client_version if client_version in PROTOCOL_VERSIONS
-                       else PROTOCOL_VERSIONS[0])
+            version = protocol.negotiate(client_version)
+            # Remember it: everything after this is answered under the
+            # revision the client asked for.
+            self.protocol_version = version
             return {
                 'jsonrpc': '2.0', 'id': msg_id,
                 'result': {
                     'protocolVersion': version,
-                    'capabilities': {'tools': {'listChanged': False}},
+                    'capabilities': self.capabilities(version),
                     'serverInfo': {'name': 'skills-library', 'version': '1.0.0'},
                     'instructions': (
                         'Searches a local library of ' + self.n_skills +
@@ -666,6 +788,12 @@ class Server:
                 },
             }
 
+        if method == 'server/discover':
+            return {
+                'jsonrpc': '2.0', 'id': msg_id,
+                'result': self.discover(),
+            }
+
         if method in ('notifications/initialized', 'notifications/cancelled'):
             return None   # a notification gets no response
 
@@ -673,7 +801,10 @@ class Server:
             return {'jsonrpc': '2.0', 'id': msg_id, 'result': {}}
 
         if method == 'tools/list':
-            return {'jsonrpc': '2.0', 'id': msg_id, 'result': {'tools': self.tools}}
+            result = {'tools': self.tool_list()}
+            result.update(protocol.cache_fields(
+                self.protocol_version, TOOLS_LIST_TTL_MS, 'session'))
+            return {'jsonrpc': '2.0', 'id': msg_id, 'result': result}
 
         if method == 'tools/call':
             name = params.get('name')
@@ -681,30 +812,32 @@ class Server:
             try:
                 payload = self.call_tool(name, args)
             except ToolError as e:
-                return {
-                    'jsonrpc': '2.0', 'id': msg_id,
-                    'result': {
-                        'content': [{'type': 'text', 'text': str(e)}],
-                        'isError': True,
-                    },
+                result = {
+                    'content': [{'type': 'text', 'text': str(e)}],
+                    'isError': True,
                 }
+                result.update(protocol.result_type(self.protocol_version))
+                return {'jsonrpc': '2.0', 'id': msg_id, 'result': result}
             except Exception as e:                      # noqa: BLE001
                 log('tool %s failed: %s' % (name, e))
                 log(traceback.format_exc())
-                return {
-                    'jsonrpc': '2.0', 'id': msg_id,
-                    'result': {
-                        'content': [{'type': 'text',
-                                     'text': 'The tool %s failed: %s'
-                                             % (name, e)}],
-                        'isError': True,
-                    },
+                result = {
+                    'content': [{'type': 'text',
+                                 'text': 'The tool %s failed: %s'
+                                         % (name, e)}],
+                    'isError': True,
                 }
+                result.update(protocol.result_type(self.protocol_version))
+                return {'jsonrpc': '2.0', 'id': msg_id, 'result': result}
             text = (json.dumps(payload, indent=2, ensure_ascii=False)
                     if not isinstance(payload, str) else payload)
             result = {'content': [{'type': 'text', 'text': text}]}
             if isinstance(payload, dict):
                 result['structuredContent'] = payload
+            # The newer revision says whether a result is complete.
+            # The older revision says nothing -- a client that never
+            # asked for it must not find a field it has not heard of.
+            result.update(protocol.result_type(self.protocol_version))
             return {'jsonrpc': '2.0', 'id': msg_id, 'result': result}
 
         # An unknown method is a protocol error, not a crash.

@@ -18,6 +18,18 @@ Checks:
   * `tools/call` returns content[0].text and structuredContent
   * an unknown method returns -32601
   * an unknown tool returns isError, not a transport crash
+
+And, separately, the two protocol revisions -- each against its own
+connection, because the revision is negotiated per connection:
+
+  * a `2025-11-25` client sees exactly the fields it saw before: no
+    `resultType`, no `ttlMs`, no `cacheScope`, no `resources`
+    capability, no extensions
+  * a `2026-07-28` client sees `resultType`, `ttlMs`, `cacheScope`,
+    the `resources` capability and the skills extension
+  * a client asking for a revision the server has never heard of gets
+    the default, not the newest
+  * `server/discover` is answered under every revision
 """
 import json
 import os
@@ -45,11 +57,17 @@ def check(label, condition, detail=''):
         sys.stderr.write('FAIL %s %s\n' % (label, detail))
 
 
-def drive(cmd, env=None):
-    """Run one server and return its parsed responses, keyed by id."""
+def drive(cmd, env=None, protocol_version='2025-06-18', with_discover=False,
+          with_call=None):
+    """Run one server and return its parsed responses, keyed by id.
+
+    The revision is per-connection: a client negotiates it once, at
+    `initialize`, and everything after that is answered under it. So the
+    version is a parameter of the drive, not of the server.
+    """
     requests = [
         {'jsonrpc': '2.0', 'id': 1, 'method': 'initialize',
-         'params': {'protocolVersion': '2025-06-18', 'capabilities': {},
+         'params': {'protocolVersion': protocol_version, 'capabilities': {},
                     'clientInfo': {'name': 'protocol-test', 'version': '1'}}},
         {'jsonrpc': '2.0', 'method': 'notifications/initialized'},
         {'jsonrpc': '2.0', 'id': 2, 'method': 'tools/list'},
@@ -70,6 +88,12 @@ def drive(cmd, env=None):
         {'jsonrpc': '2.0', 'id': 7, 'method': 'tools/call',
          'params': {'name': 'uninstall_skills', 'arguments': {'harness': 'opencode'}}},
     ]
+    if with_discover:
+        requests.append({'jsonrpc': '2.0', 'id': 8, 'method': 'server/discover'})
+    if with_call is not None:
+        requests.append({'jsonrpc': '2.0', 'id': 9, 'method': 'tools/call',
+                         'params': {'name': 'search_library',
+                                    'arguments': with_call}})
     payload = '\n'.join(json.dumps(r) for r in requests) + '\n'
     full_env = dict(os.environ)
     if env:
@@ -146,6 +170,141 @@ def check_server(label, cmd, env=None):
     }
 
 
+def check_revisions(label, cmd, env=None):
+    """Check both revisions against one server.
+
+    Three connections are made: one asking for the older revision, one
+    asking for the newer one, and one asking for a revision the server
+    has never heard of.
+    """
+    # ---- the older revision: nothing new may appear.
+    _, old = drive(cmd, env, protocol_version='2025-11-25')
+    init = old[1].get('result', {})
+    check('%s [old]: initialize negotiates the requested revision' % label,
+          init.get('protocolVersion') == '2025-11-25', str(init)[:200])
+    caps = init.get('capabilities', {})
+    check('%s [old]: the old revision declares no resources capability' % label,
+          'resources' not in caps, str(caps))
+    check('%s [old]: the old revision declares no extensions' % label,
+          'extensions' not in caps, str(caps))
+    old_list = old[2].get('result', {})
+    check('%s [old]: tools/list has no ttlMs' % label,
+          'ttlMs' not in old_list, str(sorted(old_list)))
+    check('%s [old]: tools/list has no cacheScope' % label,
+          'cacheScope' not in old_list, str(sorted(old_list)))
+    old_call = old[3].get('result', {})
+    check('%s [old]: tools/call has no resultType' % label,
+          'resultType' not in old_call, str(sorted(old_call)))
+
+    # ---- the newer revision: the new fields must appear.
+    _, new = drive(cmd, env, protocol_version='2026-07-28')
+    init = new[1].get('result', {})
+    check('%s [new]: initialize negotiates the newer revision' % label,
+          init.get('protocolVersion') == '2026-07-28', str(init)[:200])
+    caps = init.get('capabilities', {})
+    check('%s [new]: the new revision declares the resources capability' % label,
+          'resources' in caps, str(caps))
+    check('%s [new]: the new revision declares the skills extension' % label,
+          'io.modelcontextprotocol/skills' in caps.get('extensions', {}),
+          str(caps))
+    new_list = new[2].get('result', {})
+    check('%s [new]: tools/list has ttlMs' % label,
+          isinstance(new_list.get('ttlMs'), int), str(sorted(new_list)))
+    check('%s [new]: tools/list has cacheScope' % label,
+          new_list.get('cacheScope') in ('session', 'request'),
+          str(new_list.get('cacheScope')))
+    check('%s [new]: the tool list is unchanged by the revision' % label,
+          [t['name'] for t in new_list.get('tools', [])]
+          == [t['name'] for t in old_list.get('tools', [])],
+          '%s vs %s' % ([t['name'] for t in new_list.get('tools', [])],
+                        [t['name'] for t in old_list.get('tools', [])]))
+    new_call = new[3].get('result', {})
+    check('%s [new]: tools/call has resultType' % label,
+          new_call.get('resultType') == 'complete', str(sorted(new_call)))
+
+    # ---- an unknown revision falls back to the default, not the newest.
+    _, unknown = drive(cmd, env, protocol_version='2999-01-01')
+    init = unknown[1].get('result', {})
+    check('%s [unknown]: an unknown revision gets the default' % label,
+          init.get('protocolVersion') == '2025-11-25', str(init)[:200])
+    unknown_list = unknown[2].get('result', {})
+    check('%s [unknown]: an unknown revision gets the old field set' % label,
+          'ttlMs' not in unknown_list, str(sorted(unknown_list)))
+
+    # ---- `server/discover` is answered under every revision.
+    for version in ('2025-11-25', '2026-07-28'):
+        _, d = drive(cmd, env, protocol_version=version, with_discover=True)
+        res = d.get(8, {}).get('result')
+        check('%s: server/discover is answered under %s' % (label, version),
+              isinstance(res, dict), str(d.get(8))[:200])
+        if not isinstance(res, dict):
+            continue
+        check('%s: server/discover lists the protocol versions' % label,
+              '2026-07-28' in res.get('protocolVersions', [])
+              and '2025-11-25' in res.get('protocolVersions', []),
+              str(res.get('protocolVersions')))
+        check('%s: server/discover names the server' % label,
+              res.get('serverInfo', {}).get('name') == 'skills-library',
+              str(res.get('serverInfo')))
+        check('%s: server/discover declares the skills extension' % label,
+              'io.modelcontextprotocol/skills' in res.get('extensions', {}),
+              str(res.get('extensions')))
+        check('%s: server/discover lists capabilities' % label,
+              'tools' in res.get('capabilities', {}),
+              str(res.get('capabilities')))
+
+
+def check_cursor(label, cmd, env=None):
+    """Check the cursor pagination, against one server.
+
+    The cursor is a `2026-07-28` feature. Three things have to hold:
+    the first page hands out a cursor, the cursor brings back the
+    *next* results rather than the same ones, and the older revision
+    has no cursor at all.
+    """
+    query = 'code review refactoring'
+
+    def search(version, extra=None):
+        args = {'query': query, 'limit': 3}
+        if extra:
+            args.update(extra)
+        _, r = drive(cmd, env, protocol_version=version, with_call=args)
+        return r[9].get('result', {}).get('structuredContent', {})
+
+    # ---- the newer revision.
+    page1 = search('2026-07-28')
+    ids1 = [r['id'] for r in page1.get('results', [])]
+    check('%s [cursor]: the first page returns results' % label, bool(ids1),
+          str(ids1))
+    cursor = page1.get('next_cursor')
+    check('%s [cursor]: the first page hands out a cursor' % label,
+          isinstance(cursor, str) and cursor != '', str(cursor))
+    check('%s [cursor]: the cursor is opaque' % label,
+          not cursor.startswith('skill:'), str(cursor))
+
+    page2 = search('2026-07-28', {'cursor': cursor})
+    ids2 = [r['id'] for r in page2.get('results', [])]
+    check('%s [cursor]: the second page returns results' % label, bool(ids2),
+          str(ids2))
+    check('%s [cursor]: the second page does not repeat the first' % label,
+          not (set(ids1) & set(ids2)), 'page1 %s, page2 %s' % (ids1, ids2))
+    check('%s [cursor]: the pages are in ranking order' % label,
+          page2.get('results') and page1.get('results')
+          and page2['results'][0]['score'] <= page1['results'][0]['score'])
+
+    # ---- the older revision: no cursor, no cursor fields.
+    old = search('2025-11-25')
+    check('%s [cursor]: the old revision has no next_cursor' % label,
+          'next_cursor' not in old, str(sorted(old)))
+    check('%s [cursor]: the old revision has no cursor_stale' % label,
+          'cursor_stale' not in old, str(sorted(old)))
+
+    # A cursor from one query must not paginate another.
+    other = search('2026-07-28', {'cursor': cursor})
+    check('%s [cursor]: a cursor is bound to its query' % label,
+          other.get('query') == query, str(other.get('query')))
+
+
 def main():
     py_cmd = [PYTHON, os.path.join(MCP, 'python', 'server.py')]
     py = check_server('python', py_cmd)
@@ -167,6 +326,16 @@ def main():
               py['search'] == ts['search'])
         check('both servers return the same library statistics',
               py['stats'] == ts['stats'])
+
+    # ---- the protocol revisions, against every server that is present.
+    check_revisions('python', py_cmd)
+    check_cursor('python', py_cmd)
+    if ts is not None:
+        check_revisions('typescript', ['node', TS_ENTRY])
+        check_cursor('typescript', ['node', TS_ENTRY])
+    else:
+        sys.stderr.write(
+            'SKIP: the revision checks need the TypeScript build.\n')
 
     if failures:
         sys.stderr.write('\n%d FAILURE(S) out of %d checks\n'

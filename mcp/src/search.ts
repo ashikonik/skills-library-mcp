@@ -60,6 +60,7 @@
  * shorter name first, then lexicographic name.
  */
 import { tokenize, bigrams, headTokens } from './tokenize.js';
+import { encodeCursor } from './protocol.js';
 import type {
   Entry,
   LibraryIndex,
@@ -309,6 +310,16 @@ export interface SearchOptions {
   tier?: Tier;
   domain?: string;
   include_body?: boolean;
+  /**
+   * The pagination cursor: the id of the entry the previous page
+   * ended on.
+   *
+   * The cursor is decoded *before* it reaches here -- the server
+   * layer decodes it and checks that it belongs to this query. Only
+   * used under `2026-07-28`. The older revision has no cursor, and a
+   * client on it must not find a field it has never heard of.
+   */
+  cursor?: string;
 }
 
 export class SearchIndex {
@@ -770,8 +781,29 @@ export class SearchIndex {
     const filteredOut = total - kept.length;
 
     const limit = Math.max(1, Math.min(Math.trunc(limit0) || DEFAULT_LIMIT, MAX_LIMIT));
-    const truncated = kept.length > limit;
-    const shown = kept.slice(0, limit);
+
+    // Cursor pagination.
+    //
+    // The cursor names the last entry the client saw, and the page
+    // starts after it. The cursor is honoured even if the entry is
+    // gone -- then the page starts at the end, and `cursor_stale`
+    // says so, because a client that silently got an empty page would
+    // think it had reached the end of the results.
+    let start = 0;
+    let cursorStale = false;
+    if (opts.cursor) {
+      const pos = kept.findIndex((t) => t[1].id === opts.cursor);
+      if (pos >= 0) {
+        start = pos + 1;
+      } else {
+        start = kept.length;
+        cursorStale = true;
+      }
+    }
+
+    const remaining = kept.length - start;
+    const truncated = remaining > limit;
+    const shown = kept.slice(start, start + limit);
 
     const results: SearchResult[] = shown.map(([s, e, matched]) => {
       const r: SearchResult = {
@@ -791,12 +823,14 @@ export class SearchIndex {
     });
 
     let note = '';
-    if (truncated) {
-      note = `Showing ${limit} of ${kept.length} matches. Refine the query to narrow it down.`;
+    if (cursorStale) {
+      note = 'The cursor no longer points at a result -- the library changed. This page is empty.';
+    } else if (truncated) {
+      note = `Showing ${limit} of ${remaining} matches. Refine the query to narrow it down.`;
     } else if (filteredOut > 0) {
       note = `Showing ${kept.length} of ${total} matches; ${filteredOut} were below the relevance floor.`;
     }
-    return {
+    const out: SearchResponse = {
       query,
       total_matched: total,
       filtered_out: filteredOut,
@@ -805,5 +839,19 @@ export class SearchIndex {
       note,
       results,
     };
+
+    // The cursor for the next page, when there is one. It names the
+    // last entry of *this* page, so the next page starts after it --
+    // not after an offset, which would skip or repeat entries if the
+    // ranking changed between the two calls.
+    //
+    // The cursor is emitted whenever there is a next page, including
+    // on the first one: the first page is where the client gets the
+    // cursor it needs.
+    if (truncated && results.length > 0) {
+      out.next_cursor = encodeCursor(results[results.length - 1]!.id, query);
+    }
+    if (cursorStale) out.cursor_stale = true;
+    return out;
   }
 }

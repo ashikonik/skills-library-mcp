@@ -370,12 +370,83 @@ def check_tools():
     ok('tool surface: titles, descriptions and annotations agree')
 
 
+def check_cursor(idx):
+    """Both servers must paginate the same way.
+
+    The cursor is opaque, but it is not opaque to *the other
+    implementation*: a cursor the Python server issued must work
+    against the TypeScript server, or a client that switched servers
+    mid-pagination would lose its place. So the cursor string itself
+    is compared -- if the two encoders disagree by a single byte, the
+    cursors do not cross over.
+    """
+    script = os.path.join(HERE, '_ts_cursor.mjs')
+    if UPDATING:
+        return
+    if not os.path.isfile(TS_ENTRY):
+        skip('the TypeScript build is missing.')
+        return
+
+    from server import Server
+
+    query = 'code review refactoring'
+    limit = 3
+
+    proc = subprocess.run(
+        ['node', script, query, str(limit)],
+        capture_output=True, text=True, timeout=180,
+    )
+    if proc.returncode != 0:
+        fail('the TypeScript cursor failed:\n%s' % proc.stderr[-800:])
+        return
+    ts = json.loads(proc.stdout)
+
+    # The Python server, under the newer revision, the same way.
+    srv = Server()
+    srv.protocol_version = '2026-07-28'
+    page1 = srv.tool_search_library({'query': query, 'limit': limit})
+    cursor = page1.get('next_cursor')
+    page2 = srv.tool_search_library(
+        {'query': query, 'limit': limit, 'cursor': cursor}) if cursor else {'results': []}
+
+    py_ids1 = [r['id'] for r in page1.get('results', [])]
+    py_ids2 = [r['id'] for r in page2.get('results', [])]
+
+    if py_ids1 != ts['page1']:
+        fail('cursor: the first page differs\n  python: %s\n  ts    : %s'
+             % (py_ids1, ts['page1']))
+        return
+    ok('cursor: the first page agrees (%d results)' % len(py_ids1))
+
+    if cursor != ts['cursor']:
+        fail('cursor: the cursor string differs\n  python: %r\n  ts    : %r'
+             % (cursor, ts['cursor']))
+        return
+    ok('cursor: the cursor string is byte-identical')
+
+    if py_ids2 != ts['page2']:
+        fail('cursor: the second page differs\n  python: %s\n  ts    : %s'
+             % (py_ids2, ts['page2']))
+        return
+    ok('cursor: the second page agrees (%d results)' % len(py_ids2))
+
+    if not cursor:
+        fail('cursor: no cursor was issued')
+        return
+    if set(py_ids1) & set(py_ids2):
+        fail('cursor: the second page repeats the first: %s'
+             % sorted(set(py_ids1) & set(py_ids2)))
+        return
+    ok('cursor: the pages do not overlap')
+
+
 def main():
     idx = load_index()
     check_search(idx)
     check_tokenizer(idx)
     check_frontmatter(idx)
     check_tools()
+    check_cursor(idx)
 
     if failures:
         sys.stderr.write('\n%d FAILURE(S)\n' % len(failures))

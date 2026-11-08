@@ -74,8 +74,10 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 BASE = os.path.dirname(os.path.dirname(HERE))
 sys.path.insert(0, os.path.join(BASE, 'mcp', 'build'))
+sys.path.insert(0, os.path.join(BASE, 'mcp', 'python'))
 
 from build_index import tokenize, bigrams, head_tokens, STOPWORDS   # noqa: E402
+import protocol   # noqa: E402
 
 
 DEFAULT_LIMIT = 10
@@ -567,7 +569,7 @@ class SearchIndex:
         return base - TASK_DEMOTE
 
     def search(self, query, limit=DEFAULT_LIMIT, kind=None, tier=None,
-               domain=None, include_body=False):
+               domain=None, include_body=False, cursor=None):
         q_tokens = tokenize(query)
         if not q_tokens:
             return {'query': query, 'total_matched': 0, 'filtered_out': 0,
@@ -665,8 +667,31 @@ class SearchIndex:
         filtered_out = total - len(kept)
 
         limit = max(1, min(int(limit or DEFAULT_LIMIT), MAX_LIMIT))
-        truncated = len(kept) > limit
-        shown = kept[:limit]
+
+        # Cursor pagination.
+        #
+        # The cursor names the last entry the client saw, and the page
+        # starts after it. The cursor is honoured even if the entry is
+        # gone -- then the page starts at the end, and `cursor_stale`
+        # says so, because a client that silently got an empty page
+        # would think it had reached the end of the results.
+        start = 0
+        cursor_stale = False
+        if cursor:
+            pos = None
+            for i, t in enumerate(kept):
+                if t[1]['id'] == cursor:
+                    pos = i
+                    break
+            if pos is not None:
+                start = pos + 1
+            else:
+                start = len(kept)
+                cursor_stale = True
+
+        remaining = len(kept) - start
+        truncated = remaining > limit
+        shown = kept[start:start + limit]
 
         results = []
         for s, e, matched in shown:
@@ -687,13 +712,16 @@ class SearchIndex:
             results.append(r)
 
         note = ''
-        if truncated:
+        if cursor_stale:
+            note = ('The cursor no longer points at a result -- the library '
+                    'changed. This page is empty.')
+        elif truncated:
             note = ('Showing %d of %d matches. Refine the query to narrow it '
-                    'down.' % (limit, len(kept)))
+                    'down.' % (limit, remaining))
         elif filtered_out > 0:
             note = ('Showing %d of %d matches; %d were below the relevance '
                     'floor.' % (len(kept), total, filtered_out))
-        return {
+        out = {
             'query': query,
             'total_matched': total,
             'filtered_out': filtered_out,
@@ -702,6 +730,20 @@ class SearchIndex:
             'note': note,
             'results': results,
         }
+
+        # The cursor for the next page, when there is one. It names the
+        # last entry of *this* page, so the next page starts after it --
+        # not after an offset, which would skip or repeat entries if the
+        # ranking changed between the two calls.
+        #
+        # The cursor is emitted whenever there is a next page, including
+        # on the first one: the first page is where the client gets the
+        # cursor it needs.
+        if truncated and results:
+            out['next_cursor'] = protocol.encode_cursor(results[-1]['id'], query)
+        if cursor_stale:
+            out['cursor_stale'] = True
+        return out
 
 
 def load_index(path=None):

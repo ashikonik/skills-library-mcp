@@ -205,4 +205,15 @@ export interface SearchResponse {
   truncated: boolean;
   note: string;
   results: SearchResult[];
+  /**
+   * The cursor for the next page.
+   *
+   * Only under `2026-07-28`, and only when there is a next page.
+   * The older revision has no cursor, and the field is absent there --
+   * a client reading the older revision must not find a field it has
+   * never heard of.
+   */
+  next_cursor?: string;
+  /** The cursor no longer points at a result: the library changed. */
+  cursor_stale?: boolean;
 }

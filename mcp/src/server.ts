@@ -28,6 +28,8 @@ import {
   type Mode,
 } from './installers.js';
 import type { Harness } from './frontmatter.js';
+import { installRevisionHandlers, installRevisionResultFields, RevisionState } from './revision.js';
+import { decodeCursor, cursorMatches, type Cursor } from './protocol.js';
 
 export const DEFAULT_BUNDLE_BYTES = 200_000;
 export const MAX_BUNDLE_BYTES = 2_000_000;
@@ -115,6 +117,18 @@ export function createServer(deps: Deps): McpServer {
     },
   );
 
+  // ------------------------------------------------------- the revision
+  //
+  // The protocol revision is negotiated per connection, so it lives in
+  // a `RevisionState` rather than in a constant. It is created before
+  // the tools are registered because the tools close over it: a tool
+  // has to know which revision it is answering under.
+  //
+  // `installRevisionHandlers` must run *after* the tools are
+  // registered -- it wraps the SDK's own `tools/list` and `tools/call`
+  // handlers, and there is nothing to wrap until they exist.
+  const revision = new RevisionState();
+
   // ------------------------------------------------------------ 1. search
   server.registerTool(
     'search_library',
@@ -131,6 +145,11 @@ export function createServer(deps: Deps): McpServer {
         tier: z.union([z.literal(1), z.literal(2), z.literal(3)]).optional(),
         domain: z.string().optional(),
         include_body: z.boolean().default(false),
+        // The pagination cursor. Under `2026-07-28` it appears in the
+        // published schema too; the zod schema cannot change with the
+        // revision, so it always accepts the argument and the
+        // behaviour below decides whether it is honoured.
+        cursor: z.string().optional(),
       },
       annotations: {
         readOnlyHint: true,
@@ -139,8 +158,33 @@ export function createServer(deps: Deps): McpServer {
         openWorldHint: false,
       },
     },
-    async ({ query, limit, kind, tier, domain, include_body }) => {
-      const out = search.search(query, { limit, kind, tier, domain, include_body });
+    async ({ query, limit, kind, tier, domain, include_body, cursor }) => {
+      // The cursor is a `2026-07-28` feature. On the older revision it
+      // is not in the published schema, and a client that sends one
+      // anyway is speaking a dialect this server does not serve -- the
+      // cursor is ignored rather than half-honoured.
+      let decoded: Cursor | undefined;
+      if (revision.current && cursor) {
+        const c = decodeCursor(cursor);
+        if (c && cursorMatches(c, query)) decoded = c;
+      }
+      const out = search.search(query, {
+        limit,
+        kind,
+        tier,
+        domain,
+        include_body,
+        cursor: decoded?.after,
+      });
+
+      // The cursor fields belong to `2026-07-28`. On the older
+      // revision they are removed: a client reading the old revision
+      // must not find a field it has never heard of, and the
+      // agreement gate compares the raw payloads.
+      if (!revision.current) {
+        delete out.next_cursor;
+        delete out.cursor_stale;
+      }
       return asText(out);
     },
   );
@@ -636,6 +680,14 @@ export function createServer(deps: Deps): McpServer {
       return asText({ harness, apply, targets, removed, note });
     },
   );
+
+  // ------------------------------------------------------- the revision
+  //
+  // The handlers are installed last: they wrap the SDK's own
+  // `tools/list` and `tools/call` handlers, and there is nothing to
+  // wrap until the tools exist.
+  installRevisionHandlers(server.server, revision);
+  installRevisionResultFields(server.server, revision);
 
   return server;
 }
