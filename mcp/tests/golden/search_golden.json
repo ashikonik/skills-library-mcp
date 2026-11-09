@@ -6,6 +6,7 @@
    "skill:skill-creator-plus",
    "skill:figma-generate-library"
   ],
+  "note": "Showing 3 of 30 matches; 27 were below the relevance floor.",
   "scores": [
    62.1222,
    32.351,
@@ -28,6 +29,7 @@
    "skill:security-review",
    "skill:laravel-security"
   ],
+  "note": "Showing 10 of 15 matches. Refine the query to narrow it down.",
   "scores": [
    12.763,
    11.2224,
@@ -52,6 +54,7 @@
    "skill:artifact-template-system-design",
    "skill:jira-integration"
   ],
+  "note": "Showing 5 of 26 matches; 21 were below the relevance floor.",
   "scores": [
    44.3851,
    18.3259,
@@ -68,6 +71,7 @@
    "skill:api-design",
    "skill:api-connector-builder"
   ],
+  "note": "Showing 2 of 13 matches; 11 were below the relevance floor.",
   "scores": [
    50.3851,
    15.2806
@@ -89,6 +93,7 @@
    "skill:quarkus-patterns",
    "skill:springboot-patterns"
   ],
+  "note": "Showing 10 of 28 matches. Refine the query to narrow it down.",
   "scores": [
    34.2382,
    21.8643,
@@ -113,6 +118,7 @@
    "skill:mixpanel-auth",
    "skill:building-mcp-server-on-cloudflare"
   ],
+  "note": "",
   "scores": [
    9.567,
    8.7838,
@@ -128,6 +134,7 @@
   "ids": [
    "skill:catalyst-by-zoho"
   ],
+  "note": "",
   "scores": [
    14.0811
   ],
@@ -142,6 +149,7 @@
    "skill:api-connector-builder",
    "skill:coding-standards"
   ],
+  "note": "Showing 4 of 28 matches; 24 were below the relevance floor.",
   "scores": [
    33.8806,
    19.3441,
@@ -152,7 +160,7 @@
   "truncated": false
  },
  "build a document from a template": {
-  "filtered_out": 11,
+  "filtered_out": 13,
   "ids": [
    "skill:document-builder",
    "skill:twilio-content-template-builder",
@@ -165,6 +173,7 @@
    "skill:artifact-template-investment-committee-memo",
    "skill:artifact-template-three-statement-forecast"
   ],
+  "note": "Showing 10 of 11 matches. Refine the query to narrow it down.",
   "scores": [
    43.1859,
    19.2262,
@@ -177,7 +186,7 @@
    17.9511,
    16.6388
   ],
-  "total": 22,
+  "total": 24,
   "truncated": true
  },
  "build failed with no error message": {
@@ -194,6 +203,7 @@
    "agent:rust-build-resolver",
    "agent:swift-build-resolver"
   ],
+  "note": "Showing 10 of 23 matches. Refine the query to narrow it down.",
   "scores": [
    28.6781,
    19.1941,
@@ -215,6 +225,7 @@
    "skill:caveman-mode",
    "skill:ponytail"
   ],
+  "note": "",
   "scores": [
    51.0471,
    17.2054
@@ -235,6 +246,7 @@
    "skill:circleci-builds",
    "skill:deployment-patterns"
   ],
+  "note": "Showing 9 of 13 matches; 4 were below the relevance floor.",
   "scores": [
    40.8028,
    32.0755,
@@ -263,6 +275,7 @@
    "skill:generate-snapshot",
    "skill:codehealth-mcp"
   ],
+  "note": "Showing 10 of 22 matches. Refine the query to narrow it down.",
   "scores": [
    25.25,
    21.0486,
@@ -292,6 +305,7 @@
    "skill:document-quality-check",
    "skill:prediction-market-risk-review"
   ],
+  "note": "Showing 10 of 15 matches. Refine the query to narrow it down.",
   "scores": [
    41.7952,
    29.2178,
@@ -321,6 +335,7 @@
    "agent:java-reviewer",
    "agent:kotlin-reviewer"
   ],
+  "note": "Showing 10 of 32 matches. Refine the query to narrow it down.",
   "scores": [
    25.7571,
    25.7571,
@@ -341,6 +356,7 @@
   "ids": [
    "skill:math-olympiad"
   ],
+  "note": "",
   "scores": [
    70.9211
   ],
@@ -356,6 +372,7 @@
    "skill:clickhouse-io",
    "skill:react-performance"
   ],
+  "note": "",
   "scores": [
    30.1126,
    13.8034,
@@ -380,6 +397,7 @@
    "skill:skill-library-adder",
    "skill:example-skill"
   ],
+  "note": "Showing 10 of 59 matches; 49 were below the relevance floor.",
   "scores": [
    37.8888,
    29.9887,
@@ -409,6 +427,7 @@
    "skill:uspto-database",
    "skill:d3-data-visualization"
   ],
+  "note": "Showing 10 of 14 matches. Refine the query to narrow it down.",
   "scores": [
    34.5004,
    34.5004,
@@ -438,6 +457,7 @@
    "skill:dashboards-and-real-time-visualization",
    "skill:gantt-chart-visualization"
   ],
+  "note": "Showing 10 of 14 matches. Refine the query to narrow it down.",
   "scores": [
    57.6244,
    43.4372,
@@ -466,6 +486,7 @@
    "skill:mysql-patterns",
    "skill:supabase-postgres-best-practices"
   ],
+  "note": "Showing 9 of 16 matches; 7 were below the relevance floor.",
   "scores": [
    36.6811,
    24.1262,
@@ -485,6 +506,7 @@
   "ids": [
    "skill:debug-failing-test"
   ],
+  "note": "Showing 1 of 10 matches; 9 were below the relevance floor.",
   "scores": [
    62.876
   ],
@@ -499,6 +521,7 @@
    "skill:vercel-agent",
    "skill:kubernetes-patterns"
   ],
+  "note": "Showing 4 of 10 matches; 6 were below the relevance floor.",
   "scores": [
    28.3614,
    17.8913,
@@ -514,6 +537,7 @@
    "skill:building-mcp-server-on-cloudflare",
    "skill:huggingface-llm-trainer"
   ],
+  "note": "",
   "scores": [
    10.9653,
    8.4817
@@ -528,6 +552,7 @@
    "skill:docker-patterns",
    "skill:deployment-patterns"
   ],
+  "note": "",
   "scores": [
    27.3608,
    27.3608,
@@ -537,16 +562,17 @@
   "truncated": false
  },
  "document-builder": {
-  "filtered_out": 12,
+  "filtered_out": 14,
   "ids": [
    "skill:document-builder",
    "agent:comfyui-workflow-builder"
   ],
+  "note": "Showing 2 of 16 matches; 14 were below the relevance floor.",
   "scores": [
    59.6117,
    19.1054
   ],
-  "total": 14,
+  "total": 16,
   "truncated": false
  },
  "explore the codebase agent": {
@@ -561,6 +587,7 @@
    "agent:agent-evaluator",
    "skill:security-scan"
   ],
+  "note": "Showing 8 of 24 matches; 16 were below the relevance floor.",
   "scores": [
    34.8259,
    25.25,
@@ -588,6 +615,7 @@
    "skill:circleci-builds",
    "skill:chunk"
   ],
+  "note": "Showing 10 of 13 matches. Refine the query to narrow it down.",
   "scores": [
    25.25,
    23.5412,
@@ -604,16 +632,17 @@
   "truncated": true
  },
  "fix my latex document errors": {
-  "filtered_out": 9,
+  "filtered_out": 11,
   "ids": [
    "skill:latex-doctor",
    "skill:document-builder"
   ],
+  "note": "Showing 2 of 13 matches; 11 were below the relevance floor.",
   "scores": [
    42.7691,
    39.6577
   ],
-  "total": 11,
+  "total": 13,
   "truncated": false
  },
  "frontend ui accessibility": {
@@ -630,6 +659,7 @@
    "skill:accessibility-and-inclusive-visualization",
    "skill:impeccable"
   ],
+  "note": "Showing 10 of 11 matches. Refine the query to narrow it down.",
   "scores": [
    25.124,
    24.1397,
@@ -659,6 +689,7 @@
    "skill:ck",
    "skill:skill-scout"
   ],
+  "note": "Showing 10 of 12 matches. Refine the query to narrow it down.",
   "scores": [
    27.042,
    20.1152,
@@ -677,6 +708,7 @@
  "grpc streaming backpressure": {
   "filtered_out": 0,
   "ids": [],
+  "note": "",
   "scores": [],
   "total": 0,
   "truncated": false
@@ -684,6 +716,7 @@
  "how to bake sourdough bread at home": {
   "filtered_out": 0,
   "ids": [],
+  "note": "",
   "scores": [],
   "total": 0,
   "truncated": false
@@ -694,6 +727,7 @@
    "skill:humanizer",
    "skill:make-interfaces-feel-better"
   ],
+  "note": "Showing 2 of 8 matches; 6 were below the relevance floor.",
   "scores": [
    62.9522,
    17.6852
@@ -709,6 +743,7 @@
    "agent:a11y-architect",
    "skill:frontend-a11y"
   ],
+  "note": "Showing 4 of 5 matches; 1 were below the relevance floor.",
   "scores": [
    48.4723,
    27.124,
@@ -732,6 +767,7 @@
    "skill:skill-creator-plus",
    "skill:investigation-mode"
   ],
+  "note": "Showing 10 of 13 matches. Refine the query to narrow it down.",
   "scores": [
    28.2717,
    22.3726,
@@ -753,6 +789,7 @@
    "agent:pytorch-build-resolver",
    "skill:test-triage"
   ],
+  "note": "",
   "scores": [
    7.8483,
    6.5983
@@ -763,6 +800,7 @@
  "it hangs on startup": {
   "filtered_out": 0,
   "ids": [],
+  "note": "",
   "scores": [],
   "total": 0,
   "truncated": false
@@ -772,6 +810,7 @@
   "ids": [
    "skill:vercel-queues"
   ],
+  "note": "",
   "scores": [
    9.7502
   ],
@@ -784,6 +823,7 @@
    "skill:kubernetes-patterns",
    "skill:physical-ai-infrastructure-setup-and-resilient-scaling"
   ],
+  "note": "Showing 2 of 3 matches; 1 were below the relevance floor.",
   "scores": [
    33.3931,
    15.0586
@@ -805,6 +845,7 @@
    "skill:huggingface-vision-trainer",
    "skill:uml-and-software-architecture-visualization"
   ],
+  "note": "",
   "scores": [
    18.8622,
    17.3622,
@@ -825,6 +866,7 @@
   "ids": [
    "skill:math-olympiad"
   ],
+  "note": "",
   "scores": [
    57.9368
   ],
@@ -838,6 +880,7 @@
    "skill:build-mcp-server",
    "skill:building-mcp-server-on-cloudflare"
   ],
+  "note": "Showing 3 of 35 matches; 32 were below the relevance floor.",
   "scores": [
    67.8249,
    41.2481,
@@ -860,6 +903,7 @@
    "skill:run-workflow",
    "skill:google-workspace-ops"
   ],
+  "note": "Showing 10 of 11 matches. Refine the query to narrow it down.",
   "scores": [
    18.6054,
    18.6054,
@@ -885,6 +929,7 @@
    "skill:shopify-use-shopify-cli",
    "skill:intent-driven-development"
   ],
+  "note": "",
   "scores": [
    7.2704,
    7.0405,
@@ -901,6 +946,7 @@
   "ids": [
    "skill:agent-browser-verify"
   ],
+  "note": "",
   "scores": [
    8.0
   ],
@@ -910,6 +956,7 @@
  "numpy vectorized computation": {
   "filtered_out": 0,
   "ids": [],
+  "note": "",
   "scores": [],
   "total": 0,
   "truncated": false
@@ -919,6 +966,7 @@
   "ids": [
    "skill:postgres-patterns"
   ],
+  "note": "",
   "scores": [
    19.4905
   ],
@@ -930,6 +978,7 @@
   "ids": [
    "skill:prompt-optimizer"
   ],
+  "note": "Showing 1 of 3 matches; 2 were below the relevance floor.",
   "scores": [
    46.6444
   ],
@@ -950,6 +999,7 @@
    "skill:golang-testing",
    "skill:kotlin-testing"
   ],
+  "note": "Showing 10 of 12 matches. Refine the query to narrow it down.",
   "scores": [
    40.4939,
    23.6104,
@@ -968,6 +1018,7 @@
  "quantum chromodynamics lattice simulation": {
   "filtered_out": 0,
   "ids": [],
+  "note": "",
   "scores": [],
   "total": 0,
   "truncated": false
@@ -986,6 +1037,7 @@
    "skill:swiftui-ui-patterns",
    "skill:vue-patterns"
   ],
+  "note": "Showing 10 of 16 matches. Refine the query to narrow it down.",
   "scores": [
    27.2579,
    20.9415,
@@ -1009,6 +1061,7 @@
    "skill:render-keyvalue",
    "skill:nextjs"
   ],
+  "note": "",
   "scores": [
    29.422,
    27.6289,
@@ -1031,6 +1084,7 @@
    "skill:build-chatgpt-app",
    "agent:tdd-guide"
   ],
+  "note": "Showing 9 of 15 matches; 6 were below the relevance floor.",
   "scores": [
    22.5097,
    22.0097,
@@ -1051,6 +1105,7 @@
    "skill:research-partner",
    "skill:literature-review"
   ],
+  "note": "Showing 2 of 6 matches; 4 were below the relevance floor.",
   "scores": [
    44.4906,
    38.9321
@@ -1069,6 +1124,7 @@
    "skill:ensembl-skill",
    "skill:uniprot-skill"
   ],
+  "note": "Showing 7 of 31 matches; 24 were below the relevance floor.",
   "scores": [
    37.9419,
    24.2377,
@@ -1095,6 +1151,7 @@
    "skill:ponytail-review",
    "skill:codebase-onboarding"
   ],
+  "note": "Showing 10 of 18 matches. Refine the query to narrow it down.",
   "scores": [
    44.7571,
    26.5345,
@@ -1124,6 +1181,7 @@
    "skill:flutter-dart-code-review",
    "agent:code-reviewer"
   ],
+  "note": "Showing 10 of 23 matches. Refine the query to narrow it down.",
   "scores": [
    26.3816,
    25.624,
@@ -1153,6 +1211,7 @@
    "agent:network-config-reviewer",
    "agent:php-reviewer"
   ],
+  "note": "Showing 10 of 18 matches. Refine the query to narrow it down.",
   "scores": [
    26.3816,
    16.6839,
@@ -1179,6 +1238,7 @@
    "skill:twilio-marketing-promotions-advisor",
    "skill:autonomous-agent-harness"
   ],
+  "note": "",
   "scores": [
    22.6275,
    22.6275,
@@ -1194,6 +1254,7 @@
  "ship a release": {
   "filtered_out": 0,
   "ids": [],
+  "note": "",
   "scores": [],
   "total": 0,
   "truncated": false
@@ -1204,6 +1265,7 @@
    "agent:silent-failure-hunter",
    "skill:agent-development"
   ],
+  "note": "Showing 2 of 8 matches; 6 were below the relevance floor.",
   "scores": [
    86.7552,
    34.8259
@@ -1224,6 +1286,7 @@
    "skill:springboot-tdd",
    "agent:ecc-coordinator"
   ],
+  "note": "Showing 9 of 15 matches; 6 were below the relevance floor.",
   "scores": [
    28.3248,
    20.1152,
@@ -1243,6 +1306,7 @@
   "ids": [
    "skill:brand-discovery"
   ],
+  "note": "",
   "scores": [
    6.49
   ],
@@ -1258,6 +1322,7 @@
    "skill:game-playtest",
    "skill:windows-desktop-e2e"
   ],
+  "note": "",
   "scores": [
    21.2422,
    18.3046,
@@ -1273,6 +1338,7 @@
   "ids": [
    "skill:investigation-mode"
   ],
+  "note": "",
   "scores": [
    12.2634
   ],
@@ -1287,6 +1353,7 @@
    "skill:render-scaling",
    "skill:temporal-developer"
   ],
+  "note": "",
   "scores": [
    14.1937,
    11.9677,
@@ -1301,6 +1368,7 @@
   "ids": [
    "skill:agent-browser-verify"
   ],
+  "note": "",
   "scores": [
    8.0
   ],
@@ -1321,6 +1389,7 @@
    "skill:nestjs-patterns",
    "skill:prisma-patterns"
   ],
+  "note": "Showing 10 of 21 matches. Refine the query to narrow it down.",
   "scores": [
    29.7635,
    25.0986,
@@ -1350,6 +1419,7 @@
    "skill:zoom-video-sdk-react-native",
    "skill:zoom-meeting-sdk-react-native"
   ],
+  "note": "Showing 10 of 32 matches. Refine the query to narrow it down.",
   "scores": [
    20.7386,
    20.6236,
@@ -1375,6 +1445,7 @@
    "skill:ck",
    "skill:figma-swiftui"
   ],
+  "note": "",
   "scores": [
    6.8769,
    6.6269,
@@ -1389,6 +1460,7 @@
  "websocket reconnection backoff": {
   "filtered_out": 0,
   "ids": [],
+  "note": "",
   "scores": [],
   "total": 0,
   "truncated": false
@@ -1407,6 +1479,7 @@
    "skill:coding-standards",
    "skill:python-patterns"
   ],
+  "note": "Showing 10 of 23 matches. Refine the query to narrow it down.",
   "scores": [
    25.25,
    25.0,
@@ -1431,6 +1504,7 @@
    "skill:search-company-knowledge",
    "skill:geistdocs"
   ],
+  "note": "",
   "scores": [
    20.6637,
    10.3726,
@@ -1444,6 +1518,7 @@
  "zzzzqqqq nonexistent gibberish token": {
   "filtered_out": 0,
   "ids": [],
+  "note": "",
   "scores": [],
   "total": 0,
   "truncated": false

@@ -250,18 +250,18 @@ read as a document, not parsed as a skill.
 | Tier | Contents | Count |
 |---|---|---|
 | 1 | the seven hand-authored packs | 7 |
-| 2 | the ten core domains | 269 |
-| 3 | everything else | 701 |
+| 2 | the ten core domains | 294 |
+| 3 | everything else | 726 |
 
 A tier install is capped at 50 targets per call — the same cap an
 explicit `ids` list has. When the tier is bigger than the cap, the
 truncation is **reported**, not silent:
 
-> Tier 3 holds 701 skills; only the first 50 are planned. Install the
-> rest by id.
+> Tier 3 holds 726 skills; only the first 50 are
+> planned. Install the rest by id.
 
-Tier 1 is the one worth installing wholesale: six skills, curated,
-each a bundle of real material.
+Tier 1 is the one worth installing wholesale: 7 skills,
+curated, each a bundle of real material.
 
 ---
 

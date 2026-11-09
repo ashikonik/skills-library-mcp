@@ -45,6 +45,7 @@ GENERATED = {
     'mcp/data/cases.json',
     'mcp/README.md',
     'mcp/docs/ARCHITECTURE.md',
+    'mcp/docs/INSTALLING.md',
     'mcp/docs/REGISTERING.md',
     'mcp/docs/TOOL_REFERENCE.md',
     'mcp/docs/last-run.json',

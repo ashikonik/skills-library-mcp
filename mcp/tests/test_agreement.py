@@ -98,6 +98,14 @@ def python_results(idx, queries):
             # of bug as a divergence in the ids.
             'filtered_out': r['filtered_out'],
             'truncated': r['truncated'],
+            # The note is the human-readable half of the same
+            # quartet. It states the counts the numeric fields
+            # carry -- "Showing 10 of 32 matches; 3 were below the
+            # relevance floor" -- so a divergence in the note is a
+            # divergence in the numbers, dressed as prose. If the
+            # two engines disagree about which count is the
+            # denominator, the note is where it shows.
+            'note': r['note'],
         }
     return out
 
@@ -181,6 +189,10 @@ def check_search(idx):
         elif py[q]['truncated'] != ts[q]['truncated']:
             fail('truncated mismatch for %r\n  python: %s\n  ts    : %s'
                  % (q, py[q]['truncated'], ts[q]['truncated']))
+            mismatched += 1
+        elif py[q]['note'] != ts[q]['note']:
+            fail('note mismatch for %r\n  python: %s\n  ts    : %s'
+                 % (q, py[q]['note'], ts[q]['note']))
             mismatched += 1
     if mismatched == 0:
         ok('search: %d queries produce identical id lists, scores and counts'

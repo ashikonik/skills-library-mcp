@@ -93,10 +93,48 @@ step "running the postings gate"
 # buckets resolve.
 python3 "$LIBRARY_ROOT/mcp/tests/test_postings.py"
 
+step "running the BM25 gate"
+# BM25 ships at weight zero, and this gate holds that honest: it
+# checks the arm is inert, that every term is finite, and that the
+# two implementations compute the same term and the same raw score,
+# bit for bit. The last of those found a latent one-ULP divergence in
+# the shared idf, which the quantised score key had been hiding.
+python3 "$LIBRARY_ROOT/mcp/tests/test_bm25.py"
+
 step "checking the search ranking"
 # The ranking gate is the only regression check on *order*, so it
 # belongs here and not only under `.verify_all.py`.
 python3 "$LIBRARY_ROOT/mcp/scripts/eval_search.py"
+
+step "measuring the BM25 weight"
+# The arm ships at weight zero. That is a *measured* decision, and
+# this is the measurement: the sweep runs the labelled sets at every
+# candidate weight and shows that none of them beats zero on the
+# held-out set. The sweep also proves the arm is live -- if the
+# weight were not actually reaching the scorer, "no weight helps"
+# would be vacuously true and the script says so.
+python3 "$LIBRARY_ROOT/mcp/scripts/eval_bm25.py"
+
+step "running the property gate"
+# The properties are the things that must hold of *every* response:
+# the counts add up, `truncated` means what it says, the limit is
+# honoured, every manifest is complete and every digest matches the
+# bytes. A gate that only checks specific answers cannot catch a
+# response that is internally inconsistent.
+python3 "$LIBRARY_ROOT/mcp/tests/test_properties.py"
+
+step "running the task-table gate"
+# The task table is the curated prior: 74 hand-written rows. This
+# gate checks every row -- that the entries it names exist, that its
+# note and its lists agree, that the row is reachable by its own
+# text -- and that the index matches the table row for row.
+#
+# It found four rows whose *agent* slot held skill names, which the
+# builder silently dropped: "Refactor / simplify" lost its
+# `refactor-cleaner` agent, "Remove dead code" lost
+# `silent-failure-hunter`, and two documentation rows lost
+# `docs-lookup`.
+python3 "$LIBRARY_ROOT/mcp/tests/test_task_table.py"
 
 step "proving the gates can fail"
 # A test that passes on broken code is not a test. Each of these
@@ -107,6 +145,9 @@ bash "$LIBRARY_ROOT/mcp/scripts/break_check_provenance.sh"
 bash "$LIBRARY_ROOT/mcp/scripts/break_check_search.sh"
 bash "$LIBRARY_ROOT/mcp/scripts/break_check_filters.sh"
 bash "$LIBRARY_ROOT/mcp/scripts/break_check_postings.sh"
+bash "$LIBRARY_ROOT/mcp/scripts/break_check_bm25.sh"
+bash "$LIBRARY_ROOT/mcp/scripts/break_check_properties.sh"
+bash "$LIBRARY_ROOT/mcp/scripts/break_check_task_table.sh"
 
 echo
 echo "REBUILD: PASS"

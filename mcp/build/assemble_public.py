@@ -166,6 +166,7 @@ DOC_COUNT_FILES = [
     ('mcp/docs/ARCHITECTURE.md', 'mcp/docs/templates/ARCHITECTURE.md.tpl'),
     ('mcp/docs/REGISTERING.md', 'mcp/docs/templates/REGISTERING.md.tpl'),
     ('mcp/docs/TOOL_REFERENCE.md', 'mcp/docs/templates/TOOL_REFERENCE.md.tpl'),
+    ('mcp/docs/INSTALLING.md', 'mcp/docs/templates/INSTALLING.md.tpl'),
 ]
 
 
@@ -289,6 +290,18 @@ def doc_counts(root):
         '{n_vocab}': '{:,}'.format(len(vocab)),
         '{n_noted_rows}': str(n_noted_rows),
     }
+
+    # The cap on one call's results. It is a *code* constant rather
+    # than an index fact, so it is read from the engine that
+    # enforces it -- if the constant changes, the documentation
+    # changes with it.
+    try:
+        sys.path.insert(0, os.path.join(root, 'mcp', 'python'))
+        sys.path.insert(0, os.path.join(root, 'mcp', 'build'))
+        import search as _search  # noqa: PLC0415
+        subs['{max_limit}'] = str(_search.MAX_LIMIT)
+    except Exception:                          # noqa: BLE001
+        pass
 
     # The ranking figures, measured against this tree's own index.
     #

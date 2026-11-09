@@ -20,17 +20,23 @@
  17. mcp/tests/test_search_rules.py  the search rules, one by one
  18. mcp/tests/test_filter_validation.py  the search filters are checked
  19. mcp/tests/test_postings.py  the postings cover every advertised field
- 20. mcp/scripts/break_check_policy.sh  the policy gate can actually fail
- 21. mcp/scripts/break_check_skills.sh  the Skills gate can actually fail
- 22. mcp/scripts/break_check_provenance.sh  the provenance gate can actually fail
- 23. mcp/scripts/break_check_search.sh  the search gate can actually fail
- 24. mcp/scripts/break_check_filters.sh  the filter gate can actually fail
- 25. mcp/scripts/break_check_postings.sh  the postings gate can actually fail
+ 20. mcp/tests/test_bm25.py  the BM25 arm, and its parity with TypeScript
+ 21. mcp/tests/test_properties.py  the invariants every response must hold
+ 22. mcp/tests/test_task_table.py  the task table, row by row
+ 23. mcp/scripts/break_check_policy.sh  the policy gate can actually fail
+ 24. mcp/scripts/break_check_skills.sh  the Skills gate can actually fail
+ 25. mcp/scripts/break_check_provenance.sh  the provenance gate can actually fail
+ 26. mcp/scripts/break_check_search.sh  the search gate can actually fail
+ 27. mcp/scripts/break_check_filters.sh  the filter gate can actually fail
+ 28. mcp/scripts/break_check_postings.sh  the postings gate can actually fail
+ 29. mcp/scripts/break_check_bm25.sh  the BM25 gate can actually fail
+ 30. mcp/scripts/break_check_properties.sh  the property gate can actually fail
+ 31. mcp/scripts/break_check_task_table.sh  the task-table gate can actually fail
 
 And, in addition: the protocol revision parity -- the two
 implementations of the revision, compared directly.
 
-The last fourteen need the MCP index. If `mcp/data/index.json` is missing
+The last eighteen need the MCP index. If `mcp/data/index.json` is missing
 they are skipped with a message rather than failed -- a fresh clone
 without a built index should not report a false failure -- but the
 skipped steps are named in the output, so a green run never hides them.
@@ -92,6 +98,9 @@ STEPS = [
     ('search rules', 'mcp/tests/test_search_rules.py'),
     ('filter validation', 'mcp/tests/test_filter_validation.py'),
     ('postings fields', 'mcp/tests/test_postings.py'),
+    ('BM25 arm', 'mcp/tests/test_bm25.py'),
+    ('response properties', 'mcp/tests/test_properties.py'),
+    ('task table', 'mcp/tests/test_task_table.py'),
     ('search ranking', 'mcp/scripts/eval_search.py'),
     ('policy gate can fail', 'mcp/scripts/break_check_policy.sh'),
     ('Skills gate can fail', 'mcp/scripts/break_check_skills.sh'),
@@ -99,6 +108,9 @@ STEPS = [
     ('search gate can fail', 'mcp/scripts/break_check_search.sh'),
     ('filter gate can fail', 'mcp/scripts/break_check_filters.sh'),
     ('postings gate can fail', 'mcp/scripts/break_check_postings.sh'),
+    ('BM25 gate can fail', 'mcp/scripts/break_check_bm25.sh'),
+    ('property gate can fail', 'mcp/scripts/break_check_properties.sh'),
+    ('task-table gate can fail', 'mcp/scripts/break_check_task_table.sh'),
     ('published tree in sync', 'mcp/tests/test_published_tree.py'),
 ]
 
@@ -131,6 +143,9 @@ NEEDS_INDEX = {
     'mcp/tests/test_search_rules.py',
     'mcp/tests/test_filter_validation.py',
     'mcp/tests/test_postings.py',
+    'mcp/tests/test_bm25.py',
+    'mcp/tests/test_properties.py',
+    'mcp/tests/test_task_table.py',
     'mcp/scripts/eval_search.py',
     # The break-checks run the policy and Skills gates, and both of
     # those need the index.
@@ -140,6 +155,9 @@ NEEDS_INDEX = {
     'mcp/scripts/break_check_search.sh',
     'mcp/scripts/break_check_filters.sh',
     'mcp/scripts/break_check_postings.sh',
+    'mcp/scripts/break_check_bm25.sh',
+    'mcp/scripts/break_check_properties.sh',
+    'mcp/scripts/break_check_task_table.sh',
 }
 INDEX = os.path.join(BASE, 'mcp', 'data', 'index.json')
 

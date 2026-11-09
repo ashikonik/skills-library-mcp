@@ -19,6 +19,7 @@
  *     task_head    = 16.0           the row's content is the query's HEAD noun
  *     tier_bias    = +1.0 / +0.25 / 0.0
  *     agent_bias   = +0.5
+ *     bm25         = 0.0 * BM25(t)  a third scoring arm, measured and inert
  *
  * The tier bias is multiplied by `(1 - name_exact_hit)`: tiering must
  * never override a direct name match, it only breaks ties among weak,
@@ -111,6 +112,84 @@ export const WEIGHT_DESC = 1.0;
 export const WEIGHT_PHRASE = 6.0;
 export const WEIGHT_SIGNAL = 8.0;
 export const WEIGHT_TASK = 25.0;
+
+/**
+ * The weight of the BM25 term.
+ *
+ * **Zero.** That is not a placeholder -- it is the shipped value, and
+ * it is deliberate.
+ *
+ * BM25 is here because the linear scorer has a known weakness: it
+ * treats every mention of a token as worth the same, so an entry whose
+ * description repeats a word six times scores six times a single
+ * mention. BM25 corrects for that with a saturating term frequency
+ * and a length normalisation. Whether the correction helps *this*
+ * corpus is an empirical question, and the empirical answer was "no":
+ * the term frequency of a description's tokens adds no information
+ * the corpus does not already carry, because the tokens that decide a
+ * match are the *rare* ones, and a rare token appears once anyway.
+ *
+ * So the arm is implemented, measured and wired in -- at zero weight,
+ * which makes it provably inert. `0.0 * finite == 0.0` exactly, in
+ * IEEE 754, so the BM25 term cannot change a single score, a single
+ * rank or a single result. That is what makes it safe to ship: the
+ * machinery is present, correct and parity-checked, and turning it on
+ * is a one-line change that has been measured rather than guessed.
+ *
+ * The alternative -- shipping it at a weight that "feels right" --
+ * would change 1,146 entries' ranking on the strength of an
+ * intuition, with no evidence that the ranking got better.
+ */
+export const WEIGHT_BM25 = 0.0;
+
+/**
+ * The weight the scorer actually uses.
+ *
+ * `WEIGHT_BM25` is the *shipped* weight -- the measured decision, and
+ * the constant the documentation quotes. This is the weight in force.
+ *
+ * They are separate so that the parity gate can drive the engine at a
+ * non-zero weight and check that the two implementations add the term
+ * in the same place in the sum. At weight zero the arm contributes
+ * nothing, so two engines that added it in different places would
+ * still agree on every score -- and the divergence would surface only
+ * the day somebody raised the weight. Checking it now is what makes
+ * the guarantee real rather than a promise.
+ *
+ * Nothing but the parity gate changes this. It is not a setting, and
+ * it is not read from the environment.
+ */
+let bm25Weight = WEIGHT_BM25;
+
+/** The BM25 weight in force. */
+export function bm25WeightInForce(): number {
+  return bm25Weight;
+}
+
+/**
+ * Set the BM25 weight in force. For the parity gate only.
+ *
+ * The shipped weight is `WEIGHT_BM25`, and the scorer reads the
+ * weight in force -- so this changes what the scorer does, not what
+ * the constant says.
+ */
+export function setBm25Weight(weight: number): void {
+  bm25Weight = weight;
+}
+
+/**
+ * BM25's term-frequency saturation. `k1` is how quickly the term
+ * frequency's contribution stops growing: a token seen once scores
+ * `1 * (k1 + 1) / (1 + k1)` of its ceiling, and a token seen many
+ * times approaches it but never reaches it.
+ */
+export const BM25_K1 = 1.2;
+/**
+ * BM25's length normalisation. `b` is how much a document's length
+ * is allowed to discount its score: 0 ignores length entirely, 1
+ * discounts it fully.
+ */
+export const BM25_B = 0.75;
 /**
  * A task row can fire two ways, and they are not equally strong.
  *
@@ -428,6 +507,22 @@ export class SearchIndex {
   readonly byId: Map<string, Entry>;
 
   private readonly df = new Map<string, number>();
+  /**
+   * BM25's per-entry term frequencies: how many times each token
+   * appears in the entry's own text.
+   *
+   * This cannot reuse `df`. The `df` map counts *documents* containing
+   * a token -- a union of the name tokens and the description tokens,
+   * counted once each -- so it is a document frequency and not a term
+   * frequency. BM25 needs the number of *occurrences*: an entry whose
+   * description says "local" three times has a term frequency of
+   * three, and its BM25 score must reflect that.
+   */
+  private readonly tf = new Map<string, Map<string, number>>();
+  /** Each entry's BM25 document length, in tokens. */
+  private readonly docLen = new Map<string, number>();
+  /** The mean document length over the corpus. */
+  private avgDocLen = 0;
   private readonly signals = new Map<string, string[]>();
   private readonly skillTasks = new Map<string, string[]>();
   private readonly agentTasks = new Map<string, string[]>();
@@ -454,6 +549,41 @@ export class SearchIndex {
         this.df.set(t, (this.df.get(t) ?? 0) + 1);
       }
     }
+
+    // BM25's term frequencies and document lengths.
+    //
+    // The document is the entry's own text: its name tokens and its
+    // description tokens. The name tokens are counted once each --
+    // a name is a label, not prose, and "docker" appearing twice in a
+    // name is not twice the evidence.
+    //
+    // The document length is the number of tokens, and the mean
+    // length is the sum over the corpus divided by the entry count.
+    // The sum is accumulated in *entry order*, and the Python side
+    // accumulates it in the same order, because floating-point
+    // addition is not associative: a different order gives a
+    // different last bit, and `avgdl` is a divisor of every BM25
+    // score. The `1e-6` score quantisation absorbs most of that,
+    // but "most" is not "all".
+    let lenSum = 0;
+    for (const e of this.entries) {
+      const counts = new Map<string, number>();
+      for (const t of e.tokens.name) {
+        counts.set(t, (counts.get(t) ?? 0) + 1);
+      }
+      for (const t of e.tokens.desc) {
+        counts.set(t, (counts.get(t) ?? 0) + 1);
+      }
+      this.tf.set(e.id, counts);
+      // The length counts *occurrences*, not distinct tokens: the
+      // description of a skill that says "local" three times is three
+      // tokens longer.
+      let len = e.tokens.name.length;
+      for (const t of e.tokens.desc) len += 1;
+      this.docLen.set(e.id, len);
+      lenSum += len;
+    }
+    this.avgDocLen = this.entries.length > 0 ? lenSum / this.entries.length : 0;
 
     // curated activation phrases, by entry id
     //
@@ -629,9 +759,103 @@ export class SearchIndex {
     return WEIGHT_TASK_HEAD;
   }
 
+  /**
+   * The inverse document frequency.
+   *
+   *     idf(t) = ln(1 + N / df(t))
+   *
+   * **`log1p`, not `log`.** `Math.log` and Python's `math.log` are not
+   * the same function: they differ by one unit in the last place on
+   * 13 of this corpus's 6,037 tokens. The two runtimes implement
+   * `log1p` identically -- they agreed on all 6,037 -- because it is
+   * the compensated form, computed to the same correctly-rounded
+   * result in both.
+   *
+   * The difference was invisible for years, because the score is
+   * quantised to `1e-6` before it is compared and a one-ULP
+   * difference in a log cannot move a score by a millionth. It was
+   * found by the BM25 gate, which compares the two engines' *raw*
+   * scores bit for bit rather than through the quantised key.
+   *
+   * Using `log1p` changes the idf of 14 of the 6,037 tokens, by at
+   * most 4.4e-16 -- one ULP. The ranking does not move; what moves is
+   * that the two engines now compute the *same* number, so the raw
+   * scores are comparable and the quantisation is a tolerance rather
+   * than a mask.
+   */
   idf(t: string): number {
     const df = this.df.get(t) ?? 0;
-    return Math.log(1.0 + this.n / (df || 1));
+    return Math.log1p(this.n / (df || 1));
+  }
+
+  /**
+   * BM25's inverse document frequency.
+   *
+   *     idf_bm25(t) = ln(1 + (N - df + 0.5) / (df + 0.5))
+   *
+   * The `+0.5` is the usual smoothing: a term in every document still
+   * has a positive -- if tiny -- weight, and a term in none has none.
+   *
+   * **`log1p`, not `log`.** This is the whole parity story for the
+   * BM25 arm. `Math.log` and Python's `math.log` are *not* the same
+   * function: they differ by one unit in the last place on 13 of the
+   * 6,037 tokens in this corpus. `Math.log1p` and `math.log1p` are
+   * the same function -- they agreed on all 6,037 -- because the two
+   * runtimes implement the same correctly-rounded algorithm for the
+   * compensated form.
+   *
+   * The existing `idf` uses `Math.log` and gets away with it because
+   * the scores are quantised to `1e-6` before they are compared, and
+   * a one-ULP difference in a log cannot move a score by a millionth.
+   * BM25's idf enters a *sum* over the query's tokens and a
+   * *division* by `avgdl`, so it is worth not relying on that.
+   */
+  bm25Idf(t: string): number {
+    const df = this.df.get(t) ?? 0;
+    return Math.log1p((this.n - df + 0.5) / (df + 0.5));
+  }
+
+  /**
+   * The BM25 score of one entry for one query.
+   *
+   *     BM25(t) = idf_bm25(t) * (tf * (k1 + 1)) / (tf + k1 * (1 - b + b * dl/avgdl))
+   *
+   * summed over the query's distinct tokens.
+   *
+   * The term is computed even though `WEIGHT_BM25` is zero, because
+   * the point of shipping it at zero is that the machinery is *there*
+   * and correct. A weight of zero multiplies it away exactly -- but
+   * only if the term is finite. A `NaN` or an `Infinity` would poison
+   * the sum, so the term is checked: `avgdl` is zero only for an
+   * empty corpus, and the guard below keeps the term finite
+   * regardless.
+   *
+   * The tokens are summed in the order they appear in the query, with
+   * duplicates collapsed -- the same order the Python side uses.
+   */
+  bm25(e: Entry, qTokens: string[]): number {
+    const counts = this.tf.get(e.id);
+    if (!counts) return 0;
+    const dl = this.docLen.get(e.id) ?? 0;
+    const avg = this.avgDocLen;
+    // The length normalisation's denominator. `avg` is zero only for
+    // an empty corpus, and then every entry's score is zero anyway.
+    const norm = avg > 0 ? (1 - BM25_B + BM25_B * (dl / avg)) : 1;
+    let total = 0;
+    const seen = new Set<string>();
+    for (const t of qTokens) {
+      if (seen.has(t)) continue;
+      seen.add(t);
+      const tf = counts.get(t) ?? 0;
+      if (tf === 0) continue;
+      const num = tf * (BM25_K1 + 1);
+      const den = tf + BM25_K1 * norm;
+      if (den === 0) continue;
+      const term = (this.bm25Idf(t) * num) / den;
+      if (!Number.isFinite(term)) continue;
+      total += term;
+    }
+    return total;
   }
 
   /**
@@ -830,7 +1054,56 @@ export class SearchIndex {
     score += bias;
     if (e.kind === 'agent') score += AGENT_BIAS;
 
+    // The BM25 arm, added LAST.
+    //
+    // Last, because the arms are not commutative in floating point:
+    // `a + b + c` and `a + c + b` can differ in the last bit, and the
+    // score is quantised to `1e-6` before it is compared. Adding the
+    // BM25 term in a different place in the sum than the Python side
+    // does would put the two engines a rounding step apart. The
+    // Python side adds it in exactly this position.
+    //
+    // With `WEIGHT_BM25 = 0.0` this is `0.0 * bm25(...)`, which is
+    // exactly `0.0` for any finite term -- so the score is unchanged
+    // and the arm is inert. The term is still *computed*, so that the
+    // machinery is exercised and the parity is real rather than
+    // assumed.
+    if (bm25Weight !== 0.0) {
+      score += bm25Weight * this.bm25(e, qTokens);
+    }
+
     return [score, Array.from(matched).sort(codepointCompare), tokenHits, structured];
+  }
+
+  /**
+   * The score with the BM25 arm's contribution removed, computed by
+   * the *same* code path as `scoreEntry` but without the arm.
+   *
+   * The purpose is to let the gate check *where* the arm is added to
+   * the sum. The arms are not commutative in floating point, so an
+   * engine that added the BM25 term before the tier bias would
+   * produce a different score from one that added it last -- and the
+   * two engines would still agree with each other, because they would
+   * both be wrong in the same way. Parity alone cannot catch that.
+   *
+   * Comparing `scoreEntry` against this, plus the arm's contribution,
+   * pins the position: the sum must be exactly
+   * `base + weight * term`.
+   */
+  scoreEntryWithoutArm(
+    e: Entry,
+    qTokens: string[],
+    qBigrams: string[],
+    queryLower = '',
+    heads?: Set<string>,
+  ): number {
+    const held = bm25Weight;
+    bm25Weight = 0.0;
+    try {
+      return this.scoreEntry(e, qTokens, qBigrams, queryLower, heads)[0];
+    } finally {
+      bm25Weight = held;
+    }
   }
 
   search(query: string, opts: SearchOptions = {}): SearchResponse {

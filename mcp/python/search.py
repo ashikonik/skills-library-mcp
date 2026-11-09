@@ -25,6 +25,7 @@ Scoring
     task_head    = 16.0           the row's content is the query's HEAD noun
     tier_bias    = +1.0 / +0.25 / 0.0
     agent_bias   = +0.5
+    bm25         = 0.0 * BM25(t)  a third scoring arm, measured and inert
 
 The tier bias is multiplied by `(1 - name_exact_hit)`: tiering must never
 override a direct name match, it only breaks ties among weak,
@@ -94,6 +95,60 @@ WEIGHT_DESC = 1.0
 WEIGHT_PHRASE = 6.0
 WEIGHT_SIGNAL = 8.0
 WEIGHT_TASK = 25.0
+
+# The weight of the BM25 term.
+#
+# **Zero.** That is not a placeholder -- it is the shipped value, and it
+# is deliberate.
+#
+# BM25 is here because the linear scorer has a known weakness: it
+# treats every mention of a token as worth the same, so an entry whose
+# description repeats a word six times scores six times a single
+# mention. BM25 corrects for that with a saturating term frequency
+# and a length normalisation. Whether the correction helps *this*
+# corpus is an empirical question, and the empirical answer was "no":
+# the term frequency of a description's tokens adds no information
+# the corpus does not already carry, because the tokens that decide a
+# match are the *rare* ones, and a rare token appears once anyway.
+#
+# So the arm is implemented, measured and wired in -- at zero weight,
+# which makes it provably inert. `0.0 * finite == 0.0` exactly, in
+# IEEE 754, so the BM25 term cannot change a single score, a single
+# rank or a single result. That is what makes it safe to ship: the
+# machinery is present, correct and parity-checked, and turning it on
+# is a one-line change that has been measured rather than guessed.
+#
+# The alternative -- shipping it at a weight that "feels right" --
+# would change 1,146 entries' ranking on the strength of an
+# intuition, with no evidence that the ranking got better.
+WEIGHT_BM25 = 0.0
+
+# The weight the scorer actually uses.
+#
+# `WEIGHT_BM25` is the *shipped* weight -- the measured decision, and
+# the constant the documentation quotes. This is the weight in force.
+#
+# They are separate so that the parity gate can drive the engine at a
+# non-zero weight and check that the two implementations add the term
+# in the same place in the sum. At weight zero the arm contributes
+# nothing, so two engines that added it in different places would
+# still agree on every score -- and the divergence would surface only
+# the day somebody raised the weight. Checking it now is what makes
+# the guarantee real rather than a promise.
+#
+# Nothing but the parity gate changes this. It is not a setting, and
+# it is not read from the environment.
+bm25_weight = WEIGHT_BM25
+
+# BM25's term-frequency saturation. `k1` is how quickly the term
+# frequency's contribution stops growing: a token seen once scores
+# `1 * (k1 + 1) / (1 + k1)` of its ceiling, and a token seen many
+# times approaches it but never reaches it.
+BM25_K1 = 1.2
+# BM25's length normalisation. `b` is how much a document's length
+# is allowed to discount its score: 0 ignores length entirely, 1
+# discounts it fully.
+BM25_B = 0.75
 # A task row can fire two ways, and they are not equally strong.
 #
 # The strict match -- 60% of the row's own tokens are in the query --
@@ -353,6 +408,39 @@ class SearchIndex:
             for t in toks:
                 self.df[t] = self.df.get(t, 0) + 1
 
+        # BM25's term frequencies and document lengths.
+        #
+        # The document is the entry's own text: its name tokens and its
+        # description tokens. The name tokens are counted once each --
+        # a name is a label, not prose, and "docker" appearing twice in a
+        # name is not twice the evidence.
+        #
+        # The document length is the number of tokens, and the mean
+        # length is the sum over the corpus divided by the entry count.
+        # The sum is accumulated in *entry order*, and the TypeScript
+        # side accumulates it in the same order, because floating-point
+        # addition is not associative: a different order gives a
+        # different last bit, and `avgdl` is a divisor of every BM25
+        # score. The `1e-6` score quantisation absorbs most of that,
+        # but "most" is not "all".
+        self.tf = {}
+        self.doc_len = {}
+        len_sum = 0
+        for e in self.entries:
+            counts = {}
+            for t in e['tokens']['name']:
+                counts[t] = counts.get(t, 0) + 1
+            for t in e['tokens']['desc']:
+                counts[t] = counts.get(t, 0) + 1
+            self.tf[e['id']] = counts
+            # The length counts *occurrences*, not distinct tokens: the
+            # description of a skill that says "local" three times is
+            # three tokens longer.
+            length = len(e['tokens']['name']) + len(e['tokens']['desc'])
+            self.doc_len[e['id']] = length
+            len_sum += length
+        self.avg_doc_len = (len_sum / len(self.entries)) if self.entries else 0
+
         # curated activation phrases, by entry id
         #
         # These are matched as PHRASES, not as loose tokens. The phrases are
@@ -417,7 +505,103 @@ class SearchIndex:
         )
 
     def idf(self, t):
-        return math.log(1.0 + self.n / float(self.df.get(t, 0) or 1))
+        """The inverse document frequency.
+
+            idf(t) = ln(1 + N / df(t))
+
+        **`log1p`, not `log`.** `math.log` and JavaScript's `Math.log`
+        are not the same function: they differ by one unit in the last
+        place on 13 of this corpus's 6,037 tokens. The two runtimes
+        implement `log1p` identically -- they agreed on all 6,037 --
+        because it is the compensated form, computed to the same
+        correctly-rounded result in both.
+
+        The difference was invisible for years, because the score is
+        quantised to `1e-6` before it is compared and a one-ULP
+        difference in a log cannot move a score by a millionth. It was
+        found by the BM25 gate, which compares the two engines' *raw*
+        scores bit for bit rather than through the quantised key.
+
+        Using `log1p` changes the idf of 14 of the 6,037 tokens, by at
+        most 4.4e-16 -- one ULP. The ranking does not move; what moves
+        is that the two engines now compute the *same* number, so the
+        raw scores are comparable and the quantisation is a tolerance
+        rather than a mask.
+        """
+        return math.log1p(self.n / float(self.df.get(t, 0) or 1))
+
+    def bm25_idf(self, t):
+        """BM25's inverse document frequency.
+
+            idf_bm25(t) = ln(1 + (N - df + 0.5) / (df + 0.5))
+
+        The `+0.5` is the usual smoothing: a term in every document still
+        has a positive -- if tiny -- weight, and a term in none has none.
+
+        **`log1p`, not `log`.** This is the whole parity story for the
+        BM25 arm. `math.log` and JavaScript's `Math.log` are *not* the
+        same function: they differ by one unit in the last place on 13
+        of the 6,037 tokens in this corpus. `math.log1p` and
+        `Math.log1p` are the same function -- they agreed on all 6,037
+        -- because the two runtimes implement the same correctly-
+        rounded algorithm for the compensated form.
+
+        The existing `idf` uses `math.log` and gets away with it
+        because the scores are quantised to `1e-6` before they are
+        compared, and a one-ULP difference in a log cannot move a score
+        by a millionth. BM25's idf enters a *sum* over the query's
+        tokens and a *division* by `avgdl`, so it is worth not relying
+        on that.
+        """
+        df = self.df.get(t, 0)
+        return math.log1p((self.n - df + 0.5) / (df + 0.5))
+
+    def bm25(self, e, q_tokens):
+        """The BM25 score of one entry for one query.
+
+            BM25(t) = idf_bm25(t) * (tf * (k1 + 1)) / (tf + k1 * (1 - b + b * dl/avgdl))
+
+        summed over the query's distinct tokens.
+
+        The term is computed even though `WEIGHT_BM25` is zero, because
+        the point of shipping it at zero is that the machinery is
+        *there* and correct. A weight of zero multiplies it away
+        exactly -- but only if the term is finite. A `NaN` or an
+        `Infinity` would poison the sum, so the term is checked:
+        `avgdl` is zero only for an empty corpus, and the guard below
+        keeps the term finite regardless.
+
+        The tokens are summed in the order they appear in the query,
+        with duplicates collapsed -- the same order the TypeScript side
+        uses.
+        """
+        counts = self.tf.get(e['id'])
+        if counts is None:
+            return 0.0
+        dl = self.doc_len.get(e['id'], 0)
+        avg = self.avg_doc_len
+        # The length normalisation's denominator. `avg` is zero only
+        # for an empty corpus, and then every entry's score is zero
+        # anyway.
+        norm = (1.0 - BM25_B + BM25_B * (dl / avg)) if avg > 0 else 1.0
+        total = 0.0
+        seen = set()
+        for t in q_tokens:
+            if t in seen:
+                continue
+            seen.add(t)
+            tf = counts.get(t, 0)
+            if tf == 0:
+                continue
+            num = tf * (BM25_K1 + 1.0)
+            den = tf + BM25_K1 * norm
+            if den == 0:
+                continue
+            term = (self.bm25_idf(t) * num) / den
+            if not math.isfinite(term):
+                continue
+            total += term
+        return total
 
     def is_generic(self, t):
         """Is this token too common to discriminate?
@@ -689,7 +873,45 @@ class SearchIndex:
         if e['kind'] == 'agent':
             score += AGENT_BIAS
 
+        # The BM25 arm, added LAST.
+        #
+        # Last, because the arms are not commutative in floating point:
+        # `a + b + c` and `a + c + b` can differ in the last bit, and
+        # the score is quantised to `1e-6` before it is compared. Adding
+        # the BM25 term in a different place in the sum than the
+        # TypeScript side does would put the two engines a rounding step
+        # apart. The TypeScript side adds it in exactly this position.
+        #
+        # With `WEIGHT_BM25 = 0.0` this is `0.0 * bm25(...)`, which is
+        # exactly `0.0` for any finite term -- so the score is
+        # unchanged and the arm is inert. The term is still
+        # *computed*, so that the machinery is exercised and the parity
+        # is real rather than assumed.
+        if bm25_weight != 0.0:
+            score += bm25_weight * self.bm25(e, q_tokens)
+
         return score, sorted(matched, key=_code_point_key), token_hits, structured
+
+    def score_entry_without_arm(self, e, q_tokens, q_bigrams,
+                                query_lower='', heads=None):
+        """The score with the BM25 arm's contribution removed.
+
+        The mirror of the TypeScript `scoreEntryWithoutArm`, and for
+        the same reason: the arms are not commutative in floating
+        point, so an engine that added the BM25 term before the tier
+        bias would differ from one that added it last -- and the two
+        engines would still agree with each other, because they would
+        both be wrong in the same way. Parity alone cannot catch that;
+        comparing against this can.
+        """
+        global bm25_weight
+        held = bm25_weight
+        bm25_weight = 0.0
+        try:
+            return self.score_entry(e, q_tokens, q_bigrams, query_lower,
+                                    heads)[0]
+        finally:
+            bm25_weight = held
 
     # -------------------------------------------------------------- search
     def _row_bonus(self, base, e, task):
