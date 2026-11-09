@@ -26,7 +26,7 @@ DST = os.environ.get('PUBLIC_TREE') or os.path.join(
 README = """\
 # Skills & Agents Library — with a local MCP server
 
-[![M8ven Score](https://m8ven.ai/badge/mcp/ashikonik/skills-library-mcp)](https://m8ven.ai/mcp/ashikonik/skills-library-mcp?s=readme)
+[![M8ven Score](https://m8ven.ai/badge/mcp/ashikonik-skills-library-mcp-e5ygie?v=1003ccc53c3fff3693ae5e86b16ba16e)](https://m8ven.ai/mcp/ashikonik-skills-library-mcp-e5ygie?s=readme)
 
 **{n_skills} skills** and **{n_agents} agents** in one library, plus a local
 MCP server that lets any coding agent find them.
