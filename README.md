@@ -24,6 +24,23 @@ Then, in a fresh session:
 
 ---
 
+## Trust and verification
+
+This server is listed on the **M8ven Trust Index**:
+<https://m8ven.ai/mcp/ashikonik/skills-library-mcp>.
+
+| State | What it means |
+|---|---|
+| **Verified Publisher** | The publisher has proved control of what M8ven scores — urgent findings reach the right inbox. |
+| **Live Monitored** | The listing is connected through the M8ven GitHub App, so it is re-checked on every push rather than on a crawl schedule. |
+| **Code Verified** | The server's code was read and audited independently of the publisher. |
+
+The badge at the top is a live image M8ven keeps current: it shows the grade, the
+commit the grade was measured at, and a `⚡ Live` marker while the GitHub App
+connection is up.
+
+---
+
 ## What is in here
 
 | Path | What it is |
@@ -49,7 +66,7 @@ listed in full in `NOTICE`, with the upstream terms quoted.
 
 ---
 
-## The eight tools
+## The ten tools
 
 | Tool | What it does |
 |---|---|
@@ -61,6 +78,8 @@ listed in full in `NOTICE`, with the upstream terms quoted.
 | `install_skills` | writes skills into a harness so they auto-activate |
 | `install_agents` | writes agent definitions into a harness |
 | `uninstall_skills` | removes what this server installed |
+| `uninstall_agents` | removes agent definitions this server installed |
+| `policy_get` | the write-safety rules this server holds itself to |
 
 Search is enough for most work — the agent pulls the skill's content into its
 context and uses it. Install is for the skills you want *always* available.
@@ -158,8 +177,27 @@ python3 .verify_all.py      # runs every check below, exits non-zero on failure
 | `.audit_frontmatter.py` | Every stored description equals the real YAML frontmatter — the guard against frontmatter truncation |
 | `mcp/tests/test_mcp.py` | The MCP index, the search, the tool surface, and the write-safety rules |
 | `mcp/tests/test_agreement.py` | The Python and TypeScript servers rank identically |
+| `mcp/tests/test_installer_parity.py` | The two installers agree about what they will write |
+| `mcp/tests/test_sort_parity.py` | The two servers order results the same way |
+| `mcp/tests/test_doc_counts.py` | Every number in a rendered document is read from the library, not typed |
 | `mcp/tests/test_jsonrpc.py` | The protocol, spoken to both servers over real pipes |
+| `mcp/tests/test_protocol_parity.py` | Both servers answer every protocol revision identically |
+| `mcp/tests/test_skills_extension.py` | The `2026-07-28` skills extension, served the same way by both |
+| `mcp/tests/test_policy.py` | The write-safety policy layer, and that it can refuse |
+| `mcp/tests/test_provenance.py` | Provenance is joined into the index, so redistribution can be asked about |
+| `mcp/tests/test_search_rules.py` | The ranking rules, on both servers |
+| `mcp/tests/test_filter_validation.py` | A filter that names nothing is an error, not an empty result |
+| `mcp/tests/test_postings.py` | The search postings cover every field the index advertises |
+| `mcp/tests/test_bm25.py` | The BM25 arm, and its agreement with the lexical arm |
+| `mcp/tests/test_properties.py` | The response properties, held on both servers |
+| `mcp/tests/test_task_table.py` | The task table's rows match the built index, and the curation survives |
 | `mcp/scripts/eval_search.py` | The ranking, against a labelled query set |
+| `mcp/scripts/break_check_*.sh` | Nine gates, each broken on purpose and required to catch it |
+| `mcp/tests/test_published_tree.py` | The published tree carries its upstream's sources, byte-identical |
+
+Thirty-six steps in all. The eight machine-scanning steps are skipped *by design*
+here, because a published tree has no machine to scan; they are named in the
+output, so a green run never hides them.
 
 `python3 .verify_determinism.py` additionally proves the generators are
 byte-reproducible.
