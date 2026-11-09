@@ -16,6 +16,8 @@ Checks:
   * `notifications/initialized` gets no response
   * `tools/list` returns exactly 10 tools with inputSchema and annotations
   * `tools/call` returns content[0].text and structuredContent
+  * every tool answers over the wire, not just the two the protocol
+    happened to exercise first
   * an unknown method returns -32601
   * an unknown tool returns isError, not a transport crash
 
@@ -42,6 +44,24 @@ BASE = os.path.dirname(MCP)
 PYTHON = sys.executable
 
 TS_ENTRY = os.path.join(MCP, 'dist', 'index.js')
+
+# The ids the base drive() sends. Ids 8 and 9 are reserved for the
+# conditional requests (`server/discover`, and the filtered search), so
+# they are not in this set -- the base run does not send them.
+EXPECTED_IDS = {1, 2, 3, 4, 5, 6, 7, 10, 11, 12, 13, 14, 15, 16}
+
+# The tools called by the base drive(), and the id each answer comes
+# back on. The list and the requests below are written together so a
+# tool cannot be added to one and forgotten in the other.
+TOOL_CALLS = [
+    (10, 'get_skill'),
+    (11, 'get_agent'),
+    (12, 'get_skill_bundle'),
+    (13, 'install_skills'),
+    (14, 'install_agents'),
+    (15, 'uninstall_agents'),
+    (16, 'policy_get'),
+]
 
 failures = []
 checks = 0
@@ -88,6 +108,39 @@ def drive(cmd, env=None, protocol_version='2025-06-18', with_discover=False,
         {'jsonrpc': '2.0', 'id': 7, 'method': 'tools/call',
          'params': {'name': 'uninstall_skills', 'arguments': {'harness': 'opencode'}}},
     ]
+    # The rest of the tool surface. Ids 8 and 9 are reserved for the
+    # conditional requests below (`server/discover` and the filtered
+    # search), so these start at 10 and never collide with them.
+    #
+    # The install and uninstall calls omit `apply`, which defaults to
+    # false: they plan and report, and write nothing. A protocol test
+    # that installed a skill into a real harness would be a test with a
+    # side effect on someone's machine.
+    requests += [
+        {'jsonrpc': '2.0', 'id': 10, 'method': 'tools/call',
+         'params': {'name': 'get_skill',
+                    'arguments': {'id': 'skill:tdd-workflow'}}},
+        {'jsonrpc': '2.0', 'id': 11, 'method': 'tools/call',
+         'params': {'name': 'get_agent',
+                    'arguments': {'id': 'agent:code-reviewer'}}},
+        {'jsonrpc': '2.0', 'id': 12, 'method': 'tools/call',
+         'params': {'name': 'get_skill_bundle',
+                    'arguments': {'id': 'skill:tdd-workflow'}}},
+        {'jsonrpc': '2.0', 'id': 13, 'method': 'tools/call',
+         'params': {'name': 'install_skills',
+                    'arguments': {'harness': 'puku-cli',
+                                  'ids': ['skill:tdd-workflow']}}},
+        {'jsonrpc': '2.0', 'id': 14, 'method': 'tools/call',
+         'params': {'name': 'install_agents',
+                    'arguments': {'harness': 'claude-code',
+                                  'ids': ['agent:code-reviewer']}}},
+        {'jsonrpc': '2.0', 'id': 15, 'method': 'tools/call',
+         'params': {'name': 'uninstall_agents',
+                    'arguments': {'harness': 'claude-code',
+                                  'names': ['code-reviewer']}}},
+        {'jsonrpc': '2.0', 'id': 16, 'method': 'tools/call',
+         'params': {'name': 'policy_get', 'arguments': {}}},
+    ]
     if with_discover:
         requests.append({'jsonrpc': '2.0', 'id': 8, 'method': 'server/discover'})
     if with_call is not None:
@@ -115,9 +168,9 @@ def check_server(label, cmd, env=None):
     check('%s: the server exits cleanly' % label, proc.returncode == 0,
           proc.stderr[-400:])
     check('%s: every request got exactly one response' % label,
-          set(r) == {1, 2, 3, 4, 5, 6, 7}, str(sorted(r)))
+          set(r) == EXPECTED_IDS, str(sorted(r)))
     check('%s: a notification gets no response' % label,
-          len(r) == 7, str(len(r)))
+          len(r) == len(EXPECTED_IDS), str(len(r)))
 
     init = r[1].get('result', {})
     check('%s: initialize returns a protocolVersion' % label,
@@ -142,6 +195,19 @@ def check_server(label, cmd, env=None):
           bool(sc.get('content')) and sc['content'][0].get('type') == 'text')
     check('%s: tools/call returns structuredContent' % label,
           bool(sc.get('structuredContent')))
+
+    # Every tool is called, so every tool is known to answer over the
+    # wire. A tool that is listed but never called is a tool whose
+    # behaviour nobody has checked.
+    for tool_id, tool_name in TOOL_CALLS:
+        res = r[tool_id].get('result', {})
+        check('%s: %s answers with content' % (label, tool_name),
+              bool(res.get('content'))
+              and res['content'][0].get('type') == 'text',
+              str(res)[:200])
+        check('%s: %s is not an error' % (label, tool_name),
+              res.get('isError') is not True,
+              str(res)[:200])
 
     check('%s: an unknown method returns -32601' % label,
           r[5].get('error', {}).get('code') == -32601,

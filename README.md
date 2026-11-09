@@ -1,5 +1,7 @@
 # Skills & Agents Library — with a local MCP server
 
+[![M8ven Score](https://m8ven.ai/badge/mcp/ashikonik/skills-library-mcp)](https://m8ven.ai/mcp/ashikonik/skills-library-mcp?s=readme)
+
 **1027 skills** and **114 agents** in one library, plus a local
 MCP server that lets any coding agent find them.
 
