@@ -19,6 +19,7 @@ import { join, resolve, dirname } from 'node:path';
 import { SearchIndex } from './search.js';
 import type { LibraryIndex, Entry, SkillRecord, AgentRecord } from './types.js';
 import { libraryRoot } from './index-loader.js';
+import { LiveIndex } from './live-index.js';
 import {
   installSkill,
   installAgent,
@@ -134,8 +135,56 @@ function isSymlinkPath(p: string): boolean {
 }
 
 export function createServer(deps: Deps): McpServer {
-  const index = deps.index;
-  const search = new SearchIndex(index);
+  // The index, and the search engine over it, are refreshed when the
+  // index *file* changes.
+  //
+  // A long-running server outlives the build that produced its index.
+  // Serving the stale one is a quiet failure: `get_agent` reports "not
+  // found" for an agent that is on disk, and `search_library` cannot
+  // find what the caller just added. The file's mtime and size are
+  // checked before each tool call, so the reload costs one `stat`.
+  //
+  // The check is on the file, not on in-memory state, because the file
+  // is the shared artifact -- the Python server reads the same path and
+  // the two must never disagree about what the library contains.
+  const live = new LiveIndex(deps.indexPath, deps.index);
+  let index = live.current();
+  let search = new SearchIndex(index);
+  // The error from a failed reload, if the last one failed. The
+  // previous index stays in service and the error is reported, so a
+  // half-written index degrades the answer rather than removing it.
+  let liveError: string | null = null;
+
+  // The tool descriptions quote the library's size, and the SDK
+  // captures a description string when a tool is registered. So the
+  // descriptions have to be *rewritten* when the index moves, or the
+  // server would claim a size the library no longer has.
+  //
+  // The rewrite is a callback the index refresh calls, set after the
+  // tools are registered.
+  let rewriteDescriptions: (() => void) | null = null;
+
+  /** Reload the index and the search engine if the file has changed. */
+  const refresh = (): void => {
+    const next = live.current();
+    if (next === index) return;
+    // The search engine is built over the new index. If that fails --
+    // an index written halfway, a malformed entry -- the old index is
+    // kept and the error is remembered. Serving the previous index is
+    // better than serving nothing: the caller gets answers, and the
+    // error is reported rather than thrown at every tool call.
+    try {
+      search = new SearchIndex(next);
+    } catch (e) {
+      liveError = e instanceof Error ? e.message : String(e);
+      return;
+    }
+    index = next;
+    liveError = null;
+    // The counts in the descriptions now have to match the new index.
+    rewriteDescriptions?.();
+  };
+
   const root = libraryRoot();
 
   // The policy in force, and the error from loading it, if any.
@@ -164,23 +213,56 @@ export function createServer(deps: Deps): McpServer {
   // compares it byte for byte against the Python fallback. So the count
   // is read from the index, in both implementations, and the two cannot
   // drift apart.
-  const nSkills = String(index.skills.length);
-  const nAgents = String(index.agents.length);
+  // These are read through getters rather than captured, so a
+  // description never claims a count the library no longer has. The
+  // agreement gate compares the descriptions byte for byte against the
+  // Python fallback, and the two read the same index -- so a count
+  // that moved would show up there rather than silently here.
+  const nSkills = (): string => String(live.current().skills.length);
+  const nAgents = (): string => String(live.current().agents.length);
   // The pack count, read from the index for the same reason: the pack
   // list grows, and a literal "six" in a tool description would go
   // stale the first time somebody registers an eighth pack.
-  const nPacks = String(index.packs.length);
+  const nPacks = (): string => String(live.current().packs.length);
 
   const server = new McpServer(
     { name: 'skills-library', version: '1.0.0' },
     {
       instructions:
-        `Searches a local library of ${nSkills} skills and ${nAgents} agents, and installs them into ` +
+        `Searches a local library of ${nSkills()} skills and ${nAgents()} agents, and installs them into ` +
         'coding harnesses. Start with search_library to find candidates, then get_skill ' +
         'or get_agent to read one. install_skills and install_agents make a skill ' +
         'auto-activate in the target harness; both are dry runs unless apply is true.',
     },
   );
+
+  // --------------------------------------------------- the live index
+  //
+  // Every tool refreshes the index before it runs, so a server that
+  // has been running across a rebuild answers from the library as it
+  // is now rather than as it was when the process started.
+  //
+  // The wrapper is installed here, once, rather than by editing the
+  // ten handlers: a refresh that has to be remembered in ten places is
+  // a refresh that will be forgotten in the eleventh.
+  const registerTool = server.registerTool.bind(server);
+  (server as unknown as { registerTool: unknown }).registerTool = (
+    ...args: unknown[]
+  ): unknown => {
+    const [name, config, handler] = args as [
+      string,
+      unknown,
+      ((...a: unknown[]) => unknown) | undefined,
+    ];
+    if (typeof handler !== 'function') {
+      return (registerTool as (...a: unknown[]) => unknown)(...args);
+    }
+    const wrapped = async (...a: unknown[]): Promise<unknown> => {
+      refresh();
+      return handler(...a);
+    };
+    return (registerTool as (...a: unknown[]) => unknown)(name, config, wrapped);
+  };
 
   // ------------------------------------------------------- the revision
   //
@@ -201,7 +283,7 @@ export function createServer(deps: Deps): McpServer {
       title: 'Search library',
       description:
         'Rank skills and agents by relevance to a query. Returns scored candidates with ' +
-        `the terms each matched on. Covers all ${nSkills} skills and ${nAgents} agents. ` +
+        `the terms each matched on. Covers all ${nSkills()} skills and ${nAgents()} agents. ` +
         'Not covered by get_skill, which returns one document in full.',
       inputSchema: {
         query: z.string().min(1).max(500),
@@ -388,7 +470,15 @@ export function createServer(deps: Deps): McpServer {
         }
         return asError(
           `Agent '${id}' not found. Use search_library to find valid ids, or pass ` +
-            `include_held_aside=true for the 14 agents held aside from the library.`,
+            `include_held_aside=true for the 14 agents held aside from the library.` +
+            // A failed reload is the one case where "not found" is not
+            // the whole story: the entry may be on disk and the
+            // server may not have been able to read it. Saying so
+            // saves the caller from hunting for an agent that is
+            // already there.
+            (liveError
+              ? ` The index could not be reloaded: ${liveError}`
+              : ''),
         );
       }
       const a = e as AgentRecord;
@@ -496,7 +586,7 @@ export function createServer(deps: Deps): McpServer {
     {
       title: 'List library',
       description:
-        `Lists the library's structure: its domains, tiers, the ${nPacks} hand-authored ` +
+        `Lists the library's structure: its domains, tiers, the ${nPacks()} hand-authored ` +
         'packs, the task-type index, the provenance of every entry, or overall ' +
         'statistics. ' +
         'Not covered by search_library, which ranks entries by relevance to a query.',
@@ -536,7 +626,7 @@ export function createServer(deps: Deps): McpServer {
           return asText({
             packs: index.packs,
             note:
-              `The ${nPacks} hand-authored packs are the highest-quality material in the ` +
+              `The ${nPacks()} hand-authored packs are the highest-quality material in the ` +
               'library and the first thing to reach for.',
           });
         case 'provenance':
@@ -977,6 +1067,39 @@ export function createServer(deps: Deps): McpServer {
     async () => asText(describePolicy(policy, policyError)),
   );
 
+  // ------------------------------------------- the live descriptions
+  //
+  // The tool descriptions quote the library's size, and the SDK takes
+  // a description *string* when a tool is registered. So when the
+  // index moves, the descriptions have to be rewritten -- otherwise
+  // the server claims a size the library no longer has, which is a
+  // claim the model makes about the server's own coverage.
+  //
+  // The rewrite goes through the SDK's own `update` method, so the
+  // list-changed notification the SDK sends is the SDK's.
+  rewriteDescriptions = () => {
+    const registered = (server as unknown as {
+      _registeredTools?: Record<string, { update?: (u: { description?: string }) => void }>;
+    })._registeredTools;
+    if (!registered) return;
+    const update = (name: string, description: string): void => {
+      registered[name]?.update?.({ description });
+    };
+    update(
+      'search_library',
+      'Rank skills and agents by relevance to a query. Returns scored candidates with ' +
+        `the terms each matched on. Covers all ${nSkills()} skills and ${nAgents()} agents. ` +
+        'Not covered by get_skill, which returns one document in full.',
+    );
+    update(
+      'list_library',
+      `Lists the library's structure: its domains, tiers, the ${nPacks()} hand-authored ` +
+        'packs, the task-type index, the provenance of every entry, or overall ' +
+        'statistics. ' +
+        'Not covered by search_library, which ranks entries by relevance to a query.',
+    );
+  };
+
   // ------------------------------------------------------- the revision
   //
   // The handlers are installed last: they wrap the SDK's own
@@ -989,7 +1112,7 @@ export function createServer(deps: Deps): McpServer {
   // fallback handler, and it has to be *after* the revision handlers so
   // that the fallback chain is: skills extension, then the revision's
   // `server/discover`, then the SDK's own.
-  installSkillsExtension(server.server, revision, deps.index, libraryRoot());
+  installSkillsExtension(server.server, revision, () => live.current(), libraryRoot());
 
   return server;
 }

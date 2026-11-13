@@ -267,12 +267,17 @@ export function installRevisionHandlers(server: Server, state: RevisionState): v
 export function installSkillsExtension(
   server: Server,
   state: RevisionState,
-  index: LibraryIndex,
+  getIndex: () => LibraryIndex,
   root: string,
 ): void {
   const existingFallback = server.fallbackRequestHandler;
 
   const answer = async (method: string, params: Record<string, unknown> | undefined) => {
+    // The index is read through a getter, so the extension answers
+    // from the library as it is now rather than as it was when the
+    // server started. A server that outlives a rebuild would
+    // otherwise list a library that no longer exists.
+    const index = getIndex();
     switch (method) {
       case 'skills/list': {
         const page = listSkills(index, params?.cursor as string | undefined);
