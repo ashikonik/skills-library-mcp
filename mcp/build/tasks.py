@@ -202,6 +202,11 @@ TASKS = [
     ('Use git properly', ['git-workflow', 'using-git-worktrees', 'finishing-a-development-branch',
                           'github-ops', 'gh-fix-ci', 'gh-address-comments', 'permissioned-github'],
      [], ''),
+    ('Change a package dependency / upgrade a package dependency / install a package',
+     [],
+     ['dependency-lockfile-custodian'],
+     'No skill covers dependency hygiene. The custodian edits the manifest, regenerates the '
+     'lockfile, and reports a manifest/lockfile mismatch as a failure.'),
     ('Handle a PR', ['requesting-code-review', 'receiving-code-review'],
      ['pr-test-analyzer', 'code-reviewer'],
      ''),

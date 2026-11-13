@@ -5,7 +5,7 @@
 | | |
 |---|---|
 | Skills | **1032** — instructions, playbooks and reference material the model follows |
-| Agents | **114** — specialised sub-agents invoked for one bounded role |
+| Agents | **115** — specialised sub-agents invoked for one bounded role |
 | Held aside | 14 pipeline-internal agents (see `agents/_agent-specific/`) |
 | Inventory | `SKILLS_AND_AGENTS_REPORT.md` — full census with sources |
 | Machine index | `.library_data.json` |
@@ -54,15 +54,15 @@ Find your task type. Read across for the recommended skill and agent.
 
 | Task | Skill (how) | Agent (judgement) | Notes |
 |---|---|---|---|
-| **Write new code** | `api-design`, `coding-standards`, `python-patterns`, `coding-standards`, `react-patterns`, `backend-patterns` | `code-architect`, `planner` | Skill gives the conventions; the architect/planner agent shapes the feature first. |
+| **Write new code** | `api-design`, `coding-standards`, `python-patterns`, `react-patterns`, `backend-patterns` | `code-architect`, `planner` | Skill gives the conventions; the architect/planner agent shapes the feature first. |
 | **Review code I did not write** | `code-review`, `codebase-onboarding` | `code-reviewer`, `code-explorer` | Reviewer agent is the default. The generic `code-reviewer` covers any language; |
 | **Fix a failing build** | `error-handling`, `systematic-debugging`, `build-run-debug` | `build-error-resolver`, `react-build-resolver`, `java-build-resolver` | Use the build resolver for the language. It makes minimal diffs and no refactors. |
 | **Debug a runtime bug** | `systematic-debugging`, `debug-failing-test`, `test-triage` | `debug`, `silent-failure-hunter` | `systematic-debugging` for method; `debug` is the Java-specific VS Code agent. |
-| **Refactor / simplify** | `coding-standards`, `codehealth-mcp`, `codehealth-mcp` | — | The `refactor-cleaner` agent runs knip/depcheck/ts-prune to find dead code. |
+| **Refactor / simplify** | `coding-standards`, `codehealth-mcp` | `refactor-cleaner` | The `refactor-cleaner` agent runs knip/depcheck/ts-prune to find dead code. |
 | **Stop over-engineering** | `ponytail` | `architecture-critic` | `ponytail` applies a 7-rung ladder — does it need to exist, is it already here, stdlib, native, a dependency, one line, else the minimum that works — and never cuts security, validation or accessibility. |
 | **Review a change for quality** | `ponytail-review` | `code-reviewer` | `ponytail-review` reads the connected code, not just the diff, and explains each finding in plain English. |
-| **Audit a whole repo for quality** | `ponytail-audit` | `security-auditor` | `ponytail-audit` is the repo-wide pass; `ponytail-review` is per-change. |
-| **Remove dead code** | `codehealth-mcp`, `repo-scan` | — | Always pair with `silent-failure-hunter` — dead code often hid a swallowed error. |
+| **Audit a whole repo for quality** | `ponytail-audit`, `ponytail-review` | `security-auditor` | `ponytail-audit` is the repo-wide pass; `ponytail-review` is per-change. |
+| **Remove dead code** | `codehealth-mcp`, `repo-scan` | `silent-failure-hunter` | Always pair with `silent-failure-hunter` — dead code often hid a swallowed error. |
 | **Design an architecture** | `architecture-decision-records`, `hexagonal-architecture`, `design-system`, `blueprint`, `intent-driven-development` | `architect`, `code-architect`, `architecture-critic` | Plan first, then implement. `architecture-critic` challenges over-engineering. |
 | **Plan a feature** | `plan-orchestrate`, `writing-plans`, `executing-plans`, `spec-to-backlog` | `planner`, `Plan`, `code-architect` | Use `planner` for complex features and refactors; it is marked PROACTIVE. `Plan` is the read-only Copilot-Chat variant. |
 | **Ask a question about the code** | `codebase-onboarding`, `code-tour` | `Ask`, `code-explorer`, `Explore` | `Ask` and `Explore` are read-only — they answer without changing anything. Use `Explore` instead of chaining many search/read calls. |
@@ -71,33 +71,33 @@ Find your task type. Read across for the recommended skill and agent.
 | **Fix flaky / failing tests** | `debug-failing-test`, `test-triage`, `e2e-testing` | `pr-test-analyzer`, `e2e-runner` | `e2e-runner` quarantines flaky tests and uploads artifacts. |
 | **Run end-to-end tests** | `e2e-testing`, `browser-qa`, `run-e2e-tests`, `agent-browser-verify` | `e2e-runner` | `agent-browser-verify` does a quick visual gut-check after a dev server starts. |
 | **Ship to production** | `deployment-patterns`, `deployments-cicd`, `finishing-a-development-branch` | `deployment-expert` | `deployment-expert` covers preview URLs, promotions, rollbacks, env vars, domains. |
-| **Set up CI/CD** | `deployments-cicd`, `expo-cicd-workflows`, `circleci-config`, `deployments-cicd` | `deployment-expert` | Pick the vendor skill — CircleCI, Expo, Render, Netlify, Vercel all have one. |
-| **Containerise** | `docker-patterns`, `docker-patterns` | — | Skill only. |
-| **Infrastructure / Kubernetes** | `kubernetes-patterns`, `deployments-cicd` | — | Note: there is no dedicated Kubernetes agent — use `architect`. |
+| **Set up CI/CD** | `deployments-cicd`, `expo-cicd-workflows`, `circleci-config` | `deployment-expert` | Pick the vendor skill — CircleCI, Expo, Render, Netlify, Vercel all have one. |
+| **Containerise** | `docker-patterns` | — | Skill only. |
+| **Infrastructure / Kubernetes** | `kubernetes-patterns`, `deployments-cicd` | `architect` | Note: there is no dedicated Kubernetes agent — use `architect`. |
 | **Manage a database** | `postgres-patterns`, `mysql-patterns`, `database-migrations`, `prisma-patterns`, `clickhouse-io`, `redis-patterns`, `jpa-patterns` | `database-reviewer` | `database-reviewer` is PostgreSQL-specific: query optimisation, schema design, security. |
 | **Write SQL / optimise queries** | `postgres-patterns`, `mysql-patterns` | `database-reviewer` |  |
-| **Design a data pipeline** | `data-throughput-accelerator`, `research-ops`, `recsys-pipeline-architect` | — | Note: `data-scraper-agent` is a skill, not an agent. |
+| **Design a data pipeline** | `data-throughput-accelerator`, `research-ops`, `recsys-pipeline-architect`, `data-scraper-agent` | — | Note: `data-scraper-agent` is a skill, not an agent — it collects the data rather than designing the pipeline. |
 | **Analyse data / visualise** | `data-visualization`, `d3-data-visualization`, `canvas2d-data-visualization`, `threejs-data-visualization`, `statistical-and-uncertainty-visualization`, `grammar-of-graphics-and-declarative-visualization`, `dashboards-and-real-time-visualization` | `performance-optimizer` | There are ~15 visualisation skills — see §4 for the full list. |
 | **Build a dashboard** | `dashboard-builder`, `dashboard-expert`, `artifact-template-analytics-dashboard` | — |  |
 | **Build a web frontend** | `frontend-patterns`, `frontend-design`, `frontend-design-direction`, `design-system`, `ui-demo`, `frontend-app-builder`, `make-interfaces-feel-better` | `a11y-architect` | `a11y-architect` covers WCAG 2.2 and should be consulted for any UI component. |
 | **Write a React app** | `react-patterns`, `react-performance`, `react-best-practices`, `nextjs-turbopack`, `shadcn` | `react-reviewer`, `react-build-resolver` | Use `react-reviewer` for any `.tsx`/`.jsx` change — it is marked MUST BE USED. |
 | **Write a Vue app** | `vue-patterns`, `ui-to-vue`, `vite-patterns` | `vue-reviewer` |  |
-| **Build a mobile app** | `swiftui-patterns`, `swift-concurrency-6-2`, `kotlin-patterns`, `android-clean-architecture`, `flutter-dart-code-review` | `flutter-reviewer`, `kotlin-reviewer` | Note: there is no native SwiftUI reviewer — use `swift-reviewer` (general Swift). |
+| **Build a mobile app** | `swiftui-patterns`, `swift-concurrency-6-2`, `kotlin-patterns`, `android-clean-architecture`, `flutter-dart-code-review` | `flutter-reviewer`, `kotlin-reviewer`, `swift-reviewer` | Note: there is no native SwiftUI reviewer — use `swift-reviewer` (general Swift). |
 | **Build a CLI** | `typer`, `coding-standards` | — | `typer` covers the Typer framework — typing, CLI structure, and version-current patterns. |
 | **Build an API** | `api-design`, `api-connector-builder`, `mcp-server-patterns` | `database-reviewer` | `api-design` covers resource naming, status codes, pagination, versioning, rate limits. |
 | **Build an MCP server** | `mcp-server-patterns`, `build-mcp-server`, `building-mcp-server-on-cloudflare` | — |  |
-| **Build an AI / LLM app** | `ai-first-engineering`, `ai-sdk`, `chat-sdk`, `agents-sdk`, `mcp-server-patterns`, `mcp-server-patterns` | `ai-architect`, `agent-creator` | `ai-architect` chooses between AI SDK patterns, providers, agents, workflows, MCP. |
+| **Build an AI / LLM app** | `ai-first-engineering`, `ai-sdk`, `chat-sdk`, `agents-sdk`, `mcp-server-patterns` | `ai-architect`, `agent-creator` | `ai-architect` chooses between AI SDK patterns, providers, agents, workflows, MCP. |
 | **Write a prompt / agent harness** | `prompt-optimizer`, `agent-harness-construction`, `agentic-engineering`, `context-budget`, `token-budget-advisor` | `agent-creator`, `agent-evaluator`, `harness-optimizer` | `agent-creator` generates the agent config; `agent-evaluator` scores the output. |
-| **Reduce cost / latency of LLM calls** | `cost-aware-llm-pipeline`, `cost-tracking`, `context-budget`, `token-budget-advisor`, `context-budget`, `latency-critical-systems` | `harness-optimizer` |  |
+| **Reduce cost / latency of LLM calls** | `cost-aware-llm-pipeline`, `cost-tracking`, `context-budget`, `token-budget-advisor`, `latency-critical-systems` | `harness-optimizer` |  |
 | **Run an autonomous loop** | `autonomous-loops`, `continuous-agent-loop`, `continuous-learning` | `loop-operator`, `observer` | `loop-operator` monitors progress and intervenes when loops stall. |
 | **Secure a codebase** | `security-review`, `security-scan`, `deep-security-scan`, `threat-model`, `attack-path-analysis`, `supply-chain` | `security-reviewer`, `security-auditor` | `security-reviewer` flags secrets, SSRF, injection, unsafe crypto, OWASP Top 10. |
 | **Prepare a codebase for open source** | `opensource-pipeline` | `opensource-forker`, `opensource-sanitizer`, `opensource-packager` | Three-stage pipeline: fork -> sanitize -> package. Run it in order. |
-| **Research a topic** | `deep-research`, `research-ops`, `literature-review`, `research-router-skill`, `market-research` | — | For academic work prefer the hand-authored `research-partner` pack (§7). |
-| **Write a document / report / deck** | `document-builder`, `article-writing`, `competitive-report-structure` | — | Prefer the hand-authored `document-builder` pack — it enforces spec-then-verify. |
+| **Research a topic** | `deep-research`, `research-ops`, `literature-review`, `research-router-skill`, `market-research`, `research-partner` | — | For academic work prefer the hand-authored `research-partner` pack (§7). |
+| **Write a document / report / deck** | `document-builder`, `article-writing`, `competitive-report-structure`, `documentation-lookup` | `docs-lookup` | Prefer the hand-authored `document-builder` pack — it enforces spec-then-verify. |
 | **Write LaTeX** | `latex-doctor` | — | Only one LaTeX skill — it is comprehensive. |
 | **Make text sound human** | `humanizer` | — | Prefer the hand-authored `humanizer` pack. |
 | **Write / edit prose** | `writing-skills`, `caveman-mode`, `brand-voice` | — | `caveman-mode` is a style override, not a writing aid. |
-| **Update documentation** | `documentation-lookup`, `documentation-lookup` | `docs-lookup` | `docs-lookup` pulls current docs via Context7 MCP. |
+| **Update documentation** | `documentation-lookup` | `docs-lookup` | `docs-lookup` pulls current docs via Context7 MCP. |
 | **Handle email / Slack / Teams** | `email-ops`, `messages-ops`, `slack-reply-drafting`, `teams-reply-drafting`, `gmail-inbox-triage` | `chief-of-staff` | `chief-of-staff` triages across email, Slack, LINE and Messenger into 4 tiers. |
 | **Manage a calendar** | `google-calendar-meeting-prep`, `outlook-calendar-meeting-prep` | — | Both Google and Outlook variants exist. |
 | **Manage a knowledge base** | `knowledge-ops`, `notion-knowledge-capture` | — |  |
@@ -106,11 +106,12 @@ Find your task type. Read across for the recommended skill and agent.
 | **Generate leads / outreach** | `lead-intelligence`, `social-graph-ranker`, `investor-outreach` | `signal-scorer`, `enrichment-agent`, `mutual-mapper`, `outreach-drafter` | Four-stage: score -> enrich -> map mutuals -> draft outreach. |
 | **Do finance / valuation** | `unit-economics`, `capital-allocation`, `dcf`, `working-capital`, `returns-reverse-logistics`, `bull-bear`, `fund-comparison` | — |  |
 | **Work with a vendor API** | `twilio-send-message`, `zoom-meeting-sdk-web`, `shopify-liquid`, `figma-design-to-code`, `netlify-deploy`, `render-deploy`, `vercel-cli`, `stripe-best-practices`, `airtable-overview`, `hubspot`, `notion-meeting-intelligence`, `circleci-cli` | `zoom-integration-reviewer`, `zoom-oauth-scope-auditor` | ~200 vendor skills — see §4 for the full vendor list. |
-| **Optimise performance** | `react-performance`, `react-performance`, `web-perf`, `pylance-python-profiling`, `swiftui-performance-audit`, `android-performance` | `performance-optimizer` | `performance-optimizer` covers bottlenecks, bundle size, memory leaks, render cost. |
+| **Optimise performance** | `web-perf`, `react-performance`, `pylance-python-profiling`, `swiftui-performance-audit`, `android-performance` | `performance-optimizer` | `web-perf` measures Core Web Vitals for any site; the others are platform-specific. `performance-optimizer` covers bottlenecks, bundle size, memory leaks, render cost. |
 | **Improve accessibility** | `accessibility`, `frontend-a11y`, `accessibility-and-inclusive-visualization` | `a11y-architect` |  |
-| **Manage CI quality gates** | `run-pre-commit-checks`, `run-pre-commit-checks`, `run-smoke-tests`, `run-integration-tests` | `code-reviewer` | The VS Code Python extension ships several run-* skills worth reusing. |
+| **Manage CI quality gates** | `run-pre-commit-checks`, `run-smoke-tests`, `run-integration-tests` | `code-reviewer` | The VS Code Python extension ships several run-* skills worth reusing. |
 | **Use git properly** | `git-workflow`, `using-git-worktrees`, `finishing-a-development-branch`, `github-ops`, `gh-fix-ci`, `gh-address-comments`, `permissioned-github` | — |  |
-| **Handle a PR** | `requesting-code-review`, `receiving-code-review`, `requesting-code-review` | `pr-test-analyzer`, `code-reviewer` |  |
+| **Change a dependency** | — | `dependency-lockfile-custodian` | No skill covers dependency hygiene. The custodian edits the manifest, regenerates the lockfile, and reports a manifest/lockfile mismatch as a failure. |
+| **Handle a PR** | `requesting-code-review`, `receiving-code-review` | `pr-test-analyzer`, `code-reviewer` |  |
 | **Work with a monorepo** | `turborepo`, `turbopack`, `workspace-surface-audit` | — |  |
 | **Do ML / MLOps** | `mle-workflow`, `pytorch-patterns`, `recsys-pipeline-architect`, `ml-adoption-playbook`, `foundation-models-on-device` | `mle-reviewer` | `mle-reviewer` covers data contracts, reproducibility, offline/online eval, monitoring. |
 | **Work with healthcare data** | `healthcare-phi-compliance`, `hipaa-compliance`, `healthcare-cdss-patterns`, `healthcare-emr-patterns`, `healthcare-eval-harness` | `healthcare-reviewer` | `healthcare-reviewer` covers clinical safety, CDSS accuracy, PHI compliance. |
@@ -120,8 +121,8 @@ Find your task type. Read across for the recommended skill and agent.
 | **Build a network / homelab** | `homelab-network-setup`, `homelab-network-readiness`, `homelab-vlan-segmentation`, `homelab-wireguard-vpn`, `cisco-ios-patterns`, `netmiko-ssh-automation` | `homelab-architect`, `network-architect`, `network-troubleshooter`, `network-config-reviewer` | `network-troubleshooter` is read-only and OSI-layered. |
 | **Automate the browser** | `agent-browser`, `agent-browser-verify`, `browser-qa` | — |  |
 | **Build a game / 3D** | `web-game-foundations`, `game-studio`, `three-webgl-game`, `phaser-2d-game`, `react-three-fiber-game`, `motion-foundations` | — |  |
-| **Make a video** | `remotion-video-creation`, `video-editing`, `video-editing`, `video-editing`, `heygen-video`, `heygen-avatar` | — |  |
-| **Create a skill** | `skill-creator`, `writing-skills`, `skill-development` | `agent-creator`, `skill-reviewer` | Prefer the hand-authored `skill-creator-plus` pack (§7) — it has an eval harness. |
+| **Make a video** | `remotion-video-creation`, `video-editing`, `heygen-video`, `heygen-avatar` | — |  |
+| **Create a skill** | `skill-creator`, `writing-skills`, `skill-development`, `skill-creator-plus` | `agent-creator`, `skill-reviewer` | Prefer the hand-authored `skill-creator-plus` pack (§7) — it has an eval harness. |
 | **Create an agent** | `agent-development`, `command-development`, `hook-development` | `agent-creator`, `agent-evaluator` |  |
 | **Create a plugin** | `plugin-structure`, `plugin-creator` | `plugin-validator` |  |
 | **Add a skill or agent to this library** | `skill-library-adder` | `skill-reviewer` | The `skill-library-adder` pack (§7) — where the file goes, what the scanner accepts, and the licence and publish rules. |
@@ -1406,7 +1407,7 @@ frontmatter description — read that file for the full text.
 
 ## 5. Agent Catalogue by Function
 
-All 114 agents. **Model** is the model the definition requests; **Tools** is its
+All 115 agents. **Model** is the model the definition requests; **Tools** is its
 allow-list. Read the agent file before invoking — each carries its own process.
 
 ### Security — 6 agents
@@ -1588,12 +1589,13 @@ Each covers its language's idioms, security and performance. Most state *"MUST B
 | `typescript-reviewer` | Expert TypeScript/JavaScript code reviewer specializing in type safety, async correctness, Node/web security, and idiomatic patterns. Use for all... | sonnet | ["Read", "Grep", "Glob", "Bash"] |
 | `vue-reviewer` | Expert Vue.js code reviewer specializing in Composition API correctness, reactivity pitfalls, component architecture, template security, and... | sonnet | ["Read", "Grep", "Glob", "Bash"] |
 
-### Other — 12 agents
+### Other — 13 agents
 
 | Agent | Role | Model |
 |---|---|---|
 | `cinematic-video-editor` | Video editor for narrative and cinematic work — assembly, pacing, transitions, colour grading, sound design, and final delivery. Use for story edits,... | sonnet |
 | `comfyui-workflow-builder` | ComfyUI workflow builder — constructing graph JSON for image and video generation, wiring checkpoints, samplers, ControlNet, IP-Adapter, LoRAs, VAEs,... | sonnet |
+| `dependency-lockfile-custodian` | Adds, upgrades, or removes a dependency the way the ecosystem expects — edits package.json, pyproject.toml, Cargo.toml, or go.mod and regenerates... | sonnet |
 | `image-art-director` | Image art director for generating and refining AI images — prompt construction, model and checkpoint selection, style consistency across a set,... | sonnet |
 | `lip-sync-technician` | Lip-sync technician for driving mouth movement from a replacement audio track — MuseTalk, LatentSync, Wav2Lip, VideoRetalking, and SadTalker, with... | sonnet |
 | `media-pipeline-engineer` | Media pipeline engineer — building reproducible ffmpeg-based pipelines that ingest, transcode, normalise, caption, and deliver video and audio for... | sonnet |

@@ -131,6 +131,10 @@ POSITIVE = [
     ('build an MCP server', 'mcp-server-patterns', []),
     ('write a prompt for an agent', 'prompt-optimizer', []),
     ('containerise the app with docker', 'docker-patterns', []),
+    ('fix the lockfile', 'dependency-lockfile-custodian', []),
+    ('regenerate the lockfile', 'dependency-lockfile-custodian', []),
+    ('install a package', 'dependency-lockfile-custodian', []),
+    ('add a dependency to package.json', 'dependency-lockfile-custodian', []),
 ]
 
 # (query, a skill that must NOT appear, or None for "nothing at all")
@@ -348,7 +352,13 @@ def measure(data, detail=False):
     # permit redistribution -- so the labelled set is filtered to what
     # is here, and the skipped labels are reported rather than
     # silently counted.
+    #
+    # The filter covers agents as well as skills: the search index
+    # holds both, so a label naming an agent is measurable too. A
+    # filter that only knew about skills would skip every agent label
+    # and quietly stop measuring the agent half of the corpus.
     published = {s['name'] for s in data['skills']}
+    published |= {a['name'] for a in data['agents']}
     positives = [p for p in POSITIVE if p[1] in published]
     skipped = [p for p in POSITIVE if p[1] not in published]
 

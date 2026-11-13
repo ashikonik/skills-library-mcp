@@ -2,7 +2,7 @@
 
 [![M8ven Score](https://m8ven.ai/badge/mcp/ashikonik-skills-library-mcp-e5ygie?v=1003ccc53c3fff3693ae5e86b16ba16e)](https://m8ven.ai/mcp/ashikonik-skills-library-mcp-e5ygie?s=readme)
 
-**1027 skills** and **114 agents** in one library, plus a local
+**1027 skills** and **115 agents** in one library, plus a local
 MCP server that lets any coding agent find them.
 
 The library is the content: markdown instruction files with YAML frontmatter —
@@ -46,7 +46,7 @@ connection is up.
 | Path | What it is |
 |---|---|
 | `skills/<name>/` | 1027 skills — `SKILL.md` plus every supporting file |
-| `agents/<name>.md` | 114 standalone agent definitions |
+| `agents/<name>.md` | 115 standalone agent definitions |
 | `agents/_agent-specific/` | 14 pipeline-internal agents, with a README explaining each |
 | `mcp/` | **The MCP server** — two implementations, one specification |
 | `ponytail/` | An upstream collection, kept whole under its own MIT licence |

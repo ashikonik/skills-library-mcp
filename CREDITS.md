@@ -12,7 +12,7 @@ away from what actually shipped.
 
 | | |
 |---|---:|
-| Published entries | 1155 |
+| Published entries | 1156 |
 | Distinct authors and organisations | 57 |
 
 ## By author
@@ -43,7 +43,7 @@ away from what actually shipped.
 | Prisma (prisma/prisma) | 9 | MIT | [prisma](https://github.com/prisma/prisma) |
 | Boltz | 8 | MIT | [boltz-api-skills](https://github.com/boltz-bio/boltz-api-skills) |
 | Datasite | 8 | MIT | [plugins](https://github.com/openai/plugins) |
-| This library (hand-authored) *(some under terms)* | 7 | Apache-2.0, MIT | — |
+| This library (hand-authored) *(some under terms)* | 8 | Apache-2.0, MIT | — |
 | Dietrich Gebert | 6 | MIT | [ponytail](https://github.com/dietrichgebert/ponytail) |
 | Atlassian | 5 | MIT | [plugins](https://github.com/openai/plugins) |
 | Deepnote | 5 | Apache-2.0 | [deepnote](https://github.com/openai/plugins/tree/main/plugins/deepnote) |
@@ -508,6 +508,7 @@ summarise it; this is the attribution itself.
 | `dart-build-resolver` | agent | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `database-reviewer` | agent | Affaan Mustafa (affaan-m/ECC) | MIT | [ECC](https://github.com/affaan-m/ECC) |
 | `debug` | agent | Microsoft | MIT | [Microsoft](https://github.com/microsoft) |
+| `dependency-lockfile-custodian` | agent | This library (hand-authored) | Apache-2.0 | This library (hand-authored) |
 | `deployment-expert` | agent | Vercel Labs | Apache-2.0 | [vercel-plugin](https://github.com/vercel/vercel-plugin) |
 | `design-parity-review-agent` | agent | Figma | LicenseRef-Figma-Developer-Terms | [Figma](https://www.figma.com) |
 | `design-system-rules-agent` | agent | Figma | LicenseRef-Figma-Developer-Terms | [Figma](https://www.figma.com) |

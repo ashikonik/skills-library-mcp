@@ -332,6 +332,17 @@
   },
   {
    "copies": 1,
+   "desc": "Add, upgrade, or remove a package dependency the way the ecosystem expects — edit package.json, pyproject.toml, Cargo.toml, or go.mod and regenerate package-lock.json, poetry.lock, uv.lock, Cargo.lock, or go.sum rather than hand-editing either, refuse to invent version ranges, and report a manifest/lockfile mismatch as a failure; covers npm, pnpm, yarn, bun, pip, poetry, uv, cargo, go, and composer",
+   "desc_source": "yaml",
+   "ensemble": "",
+   "model": "sonnet",
+   "name": "dependency-lockfile-custodian",
+   "path": "agents/dependency-lockfile-custodian.md",
+   "source": "this-library",
+   "tools": "[\"Read\", \"Glob\", \"Grep\", \"Bash\", \"Edit\", \"Write\", \"TodoWrite\"]"
+  },
+  {
+   "copies": 1,
    "desc": "Specializes in Vercel deployment strategies, CI/CD pipelines, preview URLs, production promotions, rollbacks, environment variables, and domain configuration. Use when troubleshooting deployments, setting up CI/CD, or optimizing the deploy pipeline.",
    "desc_source": "yaml",
    "ensemble": "",

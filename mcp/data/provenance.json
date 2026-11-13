@@ -15930,6 +15930,21 @@
     "verdict": "redistributable"
   },
   {
+    "container": "this-library",
+    "held_aside": false,
+    "kind": "agent",
+    "license": "Apache-2.0",
+    "license_source": "license file",
+    "name": "dependency-lockfile-custodian",
+    "owner": "This library (hand-authored)",
+    "path": "agents/dependency-lockfile-custodian.md",
+    "reason": "",
+    "repository": null,
+    "source": "this-library",
+    "url": null,
+    "verdict": "redistributable"
+  },
+  {
     "container": "plugin:vercel",
     "held_aside": false,
     "kind": "agent",
