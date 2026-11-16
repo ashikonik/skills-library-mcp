@@ -50,7 +50,7 @@ export const TARGET_DIRS: Record<Harness, string[]> = {
   'codex-agents': [join(HOME, '.codex', '.agents', 'skills')],
   opencode: [join(HOME, '.config', 'opencode', 'skills'), join(HOME, '.config', 'opencode', 'agents')],
   cline: [join(HOME, '.clinerules')],
-  'puku-cli': [join(HOME, '.puku-cli', 'skills')],
+  'puku-cli': [join(HOME, '.puku-cli', 'skills'), join(HOME, '.puku-cli', 'agents')],
   agentsmd: [], // resolved against the project root, below
 };
 
@@ -184,6 +184,11 @@ export function agentTargetPath(harness: Harness, name: string, projectRoot?: st
       return join(TARGET_DIRS['claude-code'][1], `${name}.md`);
     case 'opencode':
       return join(TARGET_DIRS.opencode[1], `${name}.md`);
+    case 'puku-cli':
+      // puku-cli reads personal agents from ~/.puku-cli/agents/*.md and
+      // project agents from .puku-cli/agents/*.md. The personal scope is
+      // the one a machine-wide install belongs to.
+      return join(TARGET_DIRS['puku-cli'][1], `${name}.md`);
     case 'agentsmd':
       return join(projectRoot ?? process.cwd(), 'AGENTS.md');
     default:

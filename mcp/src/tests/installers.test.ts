@@ -17,12 +17,12 @@
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, mkdirSync, cpSync, symlinkSync, lstatSync, readlinkSync, existsSync, rmSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, cpSync, symlinkSync, lstatSync, readlinkSync, existsSync, rmSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { resolve, join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { installSkill, uninstallTarget, uninstallSkillPath, TARGET_DIRS } from '../installers.js';
+import { installSkill, installAgent, uninstallTarget, uninstallSkillPath, agentTargetPath, TARGET_DIRS } from '../installers.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const BASE = resolve(HERE, '..', '..', '..');
@@ -145,4 +145,118 @@ test('AGENTS.md has no path of its own to uninstall', () => {
   const { path, error } = uninstallSkillPath('agentsmd', 'tdd-workflow');
   assert.equal(path, '');
   assert.ok(error && error.includes('shared file'), String(error));
+});
+
+// ---------------------------------------------------------------------------
+// Agents into puku-cli.
+//
+// puku-cli reads personal agents from `~/.puku-cli/agents/*.md`. An agent
+// whose frontmatter has a `name` but fails validation never loads, so the
+// test asserts on the frontmatter that is actually written, not merely on
+// the file's existence.
+// ---------------------------------------------------------------------------
+
+/** A temporary puku-cli agents directory, with a library copy of one agent. */
+function agentFixture() {
+  const root = mkdtempSync(join(tmpdir(), 'skills-library-agent-test-'));
+  const agents = join(root, 'agents');
+  const lib = join(root, 'library');
+  mkdirSync(agents, { recursive: true });
+  mkdirSync(lib, { recursive: true });
+  cpSync(join(BASE, 'agents', 'code-reviewer.md'), join(lib, 'code-reviewer.md'));
+  const original = TARGET_DIRS['puku-cli'];
+  TARGET_DIRS['puku-cli'] = [join(root, 'skills'), agents];
+  return {
+    root,
+    agents,
+    lib,
+    restore: () => {
+      TARGET_DIRS['puku-cli'] = original;
+    },
+  };
+}
+
+test('agentTargetPath puts a puku-cli agent in the agents directory', () => {
+  const { agents, restore } = agentFixture();
+  try {
+    assert.equal(agentTargetPath('puku-cli', 'code-reviewer'), join(agents, 'code-reviewer.md'));
+  } finally {
+    restore();
+  }
+});
+
+test('installing an agent into puku-cli writes frontmatter puku-cli accepts', () => {
+  const { root, agents, lib, restore } = agentFixture();
+  try {
+    const target = installAgent({
+      harness: 'puku-cli',
+      name: 'code-reviewer',
+      id: 'agent:code-reviewer',
+      description: 'Reviews code for bugs.',
+      agentAbs: join(lib, 'code-reviewer.md'),
+      libraryRoot: lib,
+      libPath: 'code-reviewer.md',
+      installMode: 'copy',
+      apply: true,
+      overwrite: false,
+    });
+
+    assert.equal(target.status, 'written');
+    const written = readFileSync(join(agents, 'code-reviewer.md'), 'utf-8');
+    assert.ok(written.startsWith('---\n'), 'the file has no frontmatter block');
+    assert.ok(/^name:\s*code-reviewer$/m.test(written), 'the frontmatter has no name');
+    assert.ok(/^description:\s*Reviews code for bugs\.$/m.test(written),
+      'the frontmatter has no description');
+  } finally {
+    restore();
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('an agent install into puku-cli is refused outside the agents directory', () => {
+  const { root, lib, restore } = agentFixture();
+  try {
+    const target = installAgent({
+      harness: 'puku-cli',
+      name: '../../escape',
+      id: 'agent:escape',
+      description: 'test',
+      agentAbs: join(lib, 'code-reviewer.md'),
+      libraryRoot: lib,
+      libPath: 'code-reviewer.md',
+      installMode: 'copy',
+      apply: true,
+      overwrite: false,
+    });
+
+    assert.equal(target.status, 'error');
+    assert.equal(target.wall, 'outside_whitelist');
+  } finally {
+    restore();
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('a dry run of an agent install writes nothing', () => {
+  const { root, agents, lib, restore } = agentFixture();
+  try {
+    const target = installAgent({
+      harness: 'puku-cli',
+      name: 'code-reviewer',
+      id: 'agent:code-reviewer',
+      description: 'test',
+      agentAbs: join(lib, 'code-reviewer.md'),
+      libraryRoot: lib,
+      libPath: 'code-reviewer.md',
+      installMode: 'copy',
+      apply: false,
+      overwrite: false,
+    });
+
+    assert.equal(target.status, 'planned');
+    assert.ok(!existsSync(join(agents, 'code-reviewer.md')), 'something was created');
+  } finally {
+    restore();
+    rmSync(root, { recursive: true, force: true });
+  }
 });
